@@ -58,7 +58,7 @@ export class DatabaseManager {
   static instance;
 
   static getInstance() {
-    // console.log('DatabaseManager.getInstance()');
+    console.log('DatabaseManager.getInstance()');
     if (!DatabaseManager.instance) {
       DatabaseManager.instance = new DatabaseManager();
     }
@@ -181,6 +181,17 @@ export class DatabaseManager {
             firstName: firstName,
             lastName: lastName,
           });
+          console.log('person', person);
+          console.log('person.fullName', person.fullName);
+          const list = this.realm.objects('Person');
+          console.log('list.length', list.length);
+          console.log('list.type', list.type);
+          console.log('list.optional', list.optional);
+          console.log('list.isEmpty', list.isEmpty());
+          console.log('list.isValid', list.isValid());
+          console.log('list.keys', [...list.keys()]);
+          console.log('list.values', [...list.values()]);
+          console.log('list', list);
           resolve(person);
         });
       } catch (e) {
@@ -196,7 +207,9 @@ export class DatabaseManager {
 }
 
 export function testWithRealm() {
-  Realm.open(schemas.getLatestConfig()).then(realm => {
+  const config = {...schemas.getLatestConfig()};
+  config.inMemory = true;
+  Realm.open(config).then(realm => {
     console.log('testWithRealm realm', realm);
     console.log('realm.empty', realm.empty);
     realm.write(() => {
@@ -204,9 +217,23 @@ export function testWithRealm() {
         firstName: 'John',
         lastName: 'Smith',
       });
+      console.log('john', john);
       john.lastName = 'Peterson';
-      console.log(john.fullName);
-    });///
+      console.log('john.fullName', john.fullName);
+      const list = realm.objects('Person');
+      console.log('list.length', list.length);
+      console.log('list.type', list.type);
+      console.log('list.optional', list.optional);
+      console.log('list.isEmpty', list.isEmpty());
+      console.log('list.isValid', list.isValid());
+      console.log('list.keys', [...list.keys()]);
+      console.log('list.values', [...list.values()]);
+      console.log('list', list);
+      list.forEach(p => {
+        console.log('list p', p);
+        console.log('list p.isValid()', p.isValid());
+        console.log('list p.objectSchema()', p.objectSchema());
+      });
+    });
   });
-
 }

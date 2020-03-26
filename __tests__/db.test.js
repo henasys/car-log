@@ -45,7 +45,7 @@ async function savePerson() {
   const lastName = 'Lee';
   db.savePerson(firstName, lastName)
     .then(person => {
-      console.log('person', JSON.stringify(person));
+      console.log('person', person.fullName);
     })
     .catch(e => {
       console.log(e);
