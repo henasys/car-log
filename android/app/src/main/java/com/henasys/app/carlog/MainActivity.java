@@ -1,4 +1,4 @@
-package com.carlog;
+package com.henasys.app.carlog;
 
 import com.facebook.react.ReactActivity;
 

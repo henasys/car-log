@@ -1,4 +1,4 @@
-package com.carlog;
+package com.henasys.app.carlog;
 
 import android.app.Application;
 import android.content.Context;
