@@ -57,3 +57,10 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# Jest with Realm
+default.realm.*
+default.realm
+
+# some running file
+android/*.hprof
