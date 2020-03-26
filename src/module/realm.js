@@ -118,8 +118,9 @@ export class DatabaseManager {
   }
 
   clearAllDatabase() {
-    this.realm.write(() => {
-      this.realm.deleteAll();
+    const thisRealm = this._getRealm();
+    thisRealm.write(() => {
+      thisRealm.deleteAll();
       console.log('realm.deleteAll()');
     });
   }
@@ -127,8 +128,9 @@ export class DatabaseManager {
   saveCarLog(latitude, longitude, created = null) {
     return new Promise((resolve, reject) => {
       try {
-        this.realm.write(() => {
-          const log = this.realm.create('CarLog', {
+        const thisRealm = this._getRealm();
+        thisRealm.write(() => {
+          const log = thisRealm.create('CarLog', {
             latitude: latitude,
             longitude: longitude,
             created: created ? created : new Date().getTime(),
