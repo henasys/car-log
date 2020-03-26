@@ -10,7 +10,7 @@ import {
 
 import {Header, Colors} from 'react-native/Libraries/NewAppScreen';
 
-import LocationScreen from './src/location';
+import LocationScreen from './src/module/location';
 
 const App: () => React$Node = () => {
   return (
