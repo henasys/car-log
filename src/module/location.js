@@ -16,11 +16,12 @@ export default class LocationScreen extends React.Component {
         const initialPosition = JSON.stringify(position);
         this.setState({initialPosition});
       },
-      error => Alert.alert('Error', JSON.stringify(error)),
+      error => console.log('Error', JSON.stringify(error)),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
     );
     this.watchID = Geolocation.watchPosition(position => {
       const lastPosition = JSON.stringify(position);
+      console.log('lastPosition', lastPosition);
       this.setState({lastPosition});
     });
   }
