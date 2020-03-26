@@ -143,15 +143,22 @@ export class DatabaseManager {
 
   saveCarLog(latitude, longitude, created = null) {
     return new Promise((resolve, reject) => {
+      console.log('realm', this.realm);
+      console.log('realm.empty', this.realm.empty);
+      console.log('realm.isClosed', this.realm.isClosed);
+      console.log('realm.readOnly', this.realm.readOnly);
+      console.log('realm.path', this.realm.path);
+      console.log('realm.schemaVersion', this.realm.schemaVersion);
+      console.log('realm.schema', this.realm.schema);
       try {
-        const thisRealm = this._getRealm();
-        thisRealm.write(() => {
-          const log = thisRealm.create('CarLog', {
-            latitude: latitude,
-            longitude: longitude,
-            created: created ? created : new Date().getTime(),
-          });
-          resolve(log);
+        this.realm.write(() => {
+          // const log = this.realm.create('CarLog', {
+          //   latitude: latitude,
+          //   longitude: longitude,
+          //   created: created ? created : new Date().getTime(),
+          // });
+          // resolve(log);
+          resolve(new CarLog());
         });
       } catch (e) {
         console.warn(e);
