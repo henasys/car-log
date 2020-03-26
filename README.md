@@ -4,5 +4,5 @@
 
 자세한 개발 과정은 아래 블로그 글 참조바람.
 
-https://blog.naver.com/henasys/221874201083
+https://blog.naver.com/PostList.nhn?blogId=henasys&from=postList&categoryNo=10
 
