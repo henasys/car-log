@@ -40,7 +40,7 @@ function migrationFunctionNothing(oldRealm, newRealm) {
 export const schemas = [
   {
     schema: schema0,
-    schemaVersion: 1,
+    schemaVersion: 0,
     migration: migrationFunctionNothing,
   },
 ];
@@ -68,7 +68,7 @@ export class DatabaseManager {
   realm = null;
 
   constructor(newConfig = null) {
-    // console.log('DatabaseManager.constructor()');
+    console.log('DatabaseManager.constructor()');
     if (newConfig) {
       this.realm = new Realm(newConfig);
     } else {
@@ -170,6 +170,12 @@ export class DatabaseManager {
     return new Promise((resolve, reject) => {
       try {
         console.log('realm', this.realm);
+        console.log('realm.empty', this.realm.empty);
+        console.log('realm.isClosed', this.realm.isClosed);
+        console.log('realm.readOnly', this.realm.readOnly);
+        console.log('realm.path', this.realm.path);
+        console.log('realm.schemaVersion', this.realm.schemaVersion);
+        console.log('realm.schema', this.realm.schema);
         this.realm.write(() => {
           const person = this.realm.create('Person', {
             firstName: firstName,
@@ -190,7 +196,9 @@ export class DatabaseManager {
 }
 
 export function testWithRealm() {
-  Realm.open({schema: [Person]}).then(realm => {
+  Realm.open(schemas.getLatestConfig()).then(realm => {
+    console.log('testWithRealm realm', realm);
+    console.log('realm.empty', realm.empty);
     realm.write(() => {
       const john = realm.create('Person', {
         firstName: 'John',
@@ -198,7 +206,7 @@ export function testWithRealm() {
       });
       john.lastName = 'Peterson';
       console.log(john.fullName);
-    });
+    });///
   });
 
 }
