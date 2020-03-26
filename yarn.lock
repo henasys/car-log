@@ -5667,7 +5667,7 @@ readable-stream@^2.0.1, readable-stream@^2.0.6, readable-stream@^2.2.2, readable
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
-realm@5.0.2:
+realm@^5.0.2:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/realm/-/realm-5.0.2.tgz#c7a88da5ce36410a1193fab114d905d118ca121c"
   integrity sha512-se7dXsi+hsPKM105IByG6kR95AuDYGJpCDxo4GiZbaH+AXsGz7KXowbQ2W1Ad7ynklGTQmQK4CDDNfv+a5LmZQ==

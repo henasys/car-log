@@ -1,4 +1,4 @@
-import Realm from 'realm';
+const Realm = require('realm');
 
 class CarLog {
   clone() {
@@ -64,6 +64,8 @@ export class DatabaseManager {
     }
     return DatabaseManager.instance;
   }
+
+  realm = null;
 
   constructor(newConfig = null) {
     // console.log('DatabaseManager.constructor()');
@@ -167,9 +169,9 @@ export class DatabaseManager {
   savePerson(firstName, lastName) {
     return new Promise((resolve, reject) => {
       try {
-        const thisRealm = this._getRealm();
-        thisRealm.write(() => {
-          const person = thisRealm.create('Person', {
+        console.log('realm', this.realm);
+        this.realm.write(() => {
+          const person = this.realm.create('Person', {
             firstName: firstName,
             lastName: lastName,
           });
@@ -185,4 +187,18 @@ export class DatabaseManager {
   getPersonList() {
     return this._getRealm().objects('Person');
   }
+}
+
+export function testWithRealm() {
+  Realm.open({schema: [Person]}).then(realm => {
+    realm.write(() => {
+      const john = realm.create('Person', {
+        firstName: 'John',
+        lastName: 'Smith',
+      });
+      john.lastName = 'Peterson';
+      console.log(john.fullName);
+    });
+  });
+
 }
