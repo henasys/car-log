@@ -7,9 +7,11 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "clean": "rm -rf node_modules && yarn install && watchman watch-del-all && rm -fr $TMPDIR/metro*"
   },
   "dependencies": {
+    "@react-native-community/geolocation": "^2.0.2",
     "react": "16.9.0",
     "react-native": "0.61.5"
   },
