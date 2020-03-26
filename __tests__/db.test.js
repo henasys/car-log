@@ -37,3 +37,21 @@ test('getCarLogList', async () => {
   const list = db.getCarLogList();
   console.log('list', list);
 });
+
+async function savePerson() {
+  const firstName = 'Alex';
+  const lastName = 'Lee';
+  db.savePerson(firstName, lastName)
+    .then(person => {
+      console.log('person', JSON.stringify(person));
+    })
+    .catch(e => {
+      console.log(e);
+    });
+}
+
+test('getPersonList', async () => {
+  await savePerson();
+  const list = db.getPersonList();
+  console.log('list', list);
+});

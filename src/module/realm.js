@@ -15,7 +15,21 @@ CarLog.schema = {
   },
 };
 
-const schema0 = [CarLog];
+class Person {
+  get fullName() {
+    return this.firstName + ' ' + this.lastName;
+  }
+}
+
+Person.schema = {
+  name: 'Person',
+  properties: {
+    firstName: 'string',
+    lastName: 'string',
+  },
+};
+
+const schema0 = [CarLog, Person];
 
 function migrationFunctionNothing(oldRealm, newRealm) {
   console.log('migrationFunctionNothing', oldRealm, newRealm);
@@ -26,7 +40,7 @@ function migrationFunctionNothing(oldRealm, newRealm) {
 export const schemas = [
   {
     schema: schema0,
-    schemaVersion: 0,
+    schemaVersion: 1,
     migration: migrationFunctionNothing,
   },
 ];
@@ -148,5 +162,27 @@ export class DatabaseManager {
     return this._getRealm()
       .objects('CarLog')
       .sorted('created', false);
+  }
+
+  savePerson(firstName, lastName) {
+    return new Promise((resolve, reject) => {
+      try {
+        const thisRealm = this._getRealm();
+        thisRealm.write(() => {
+          const person = thisRealm.create('Person', {
+            firstName: firstName,
+            lastName: lastName,
+          });
+          resolve(person);
+        });
+      } catch (e) {
+        console.warn(e);
+        reject(new Error(e));
+      }
+    });
+  }
+
+  getPersonList() {
+    return this._getRealm().objects('Person');
   }
 }
