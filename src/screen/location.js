@@ -45,24 +45,35 @@ export default class LocationScreen extends React.Component {
       error => console.log('getCurrentPosition Error', error),
       options,
     );
-    this.watchID = Geolocation.watchPosition(position => {
-      console.log('lastPosition', position);
-      const coords = position && position.coords;
-      if (!coords) {
-        return;
-      }
-      Database.saveCarLog(coords.latitude, coords.longitude, position.timestamp)
-        .then(log => {
-          console.log('saveCarLog done', log);
-        })
-        .catch(e => {
-          console.log('saveCarLog', e);
-        });
-    });
+    this.watchID = Geolocation.watchPosition(
+      position => {
+        console.log('lastPosition', position);
+        this.handleOnLocation(position);
+      },
+      error => console.log('getCurrentPosition Error', error),
+      options,
+    );
   }
 
   removeLocator() {
     this.watchID != null && Geolocation.clearWatch(this.watchID);
+  }
+
+  handleOnLocation(position) {
+    const coords = position && position.coords;
+    if (!coords) {
+      return;
+    }
+    if (!coords.speed || coords.speed < 1) {
+      return;
+    }
+    Database.saveCarLog(coords.latitude, coords.longitude, position.timestamp)
+      .then(log => {
+        console.log('saveCarLog done', log);
+      })
+      .catch(e => {
+        console.log('saveCarLog', e);
+      });
   }
 
   renderItem(item) {
