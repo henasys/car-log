@@ -152,17 +152,12 @@ export class DatabaseManager {
       // console.log('realm.schema', this.realm.schema);
       try {
         this.realm.write(() => {
-          try {
-            const log = this.realm.create('CarLog', {
-              latitude: latitude,
-              longitude: longitude,
-              created: created ? created : new Date().getTime(),
-            });
-            resolve(log);
-          } catch (error) {
-            console.warn(error);
-            reject(new Error(error));
-          }
+          const log = this.realm.create('CarLog', {
+            latitude: latitude,
+            longitude: longitude,
+            created: created ? created : new Date().getTime(),
+          });
+          resolve(log);
         });
       } catch (e) {
         console.warn(e);
