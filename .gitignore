@@ -64,3 +64,6 @@ default.realm
 
 # some running file
 android/*.hprof
+
+# Google Firebase
+google-services.json
