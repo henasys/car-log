@@ -1,6 +1,6 @@
 import React from 'react';
 
-import LocationScreen from './src/module/location';
+import LocationScreen from './src/screen/location';
 
 export default class App extends React.Component {
   constructor(props) {

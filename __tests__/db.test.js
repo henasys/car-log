@@ -1,4 +1,5 @@
-import {schemas, DatabaseManager} from '../src/module/realm';
+import {DatabaseManager} from '../src/module/realm';
+import {schemas} from '../src/module/schemas';
 
 let db = null;
 
@@ -44,25 +45,3 @@ test('getCarLogList', async () => {
     console.log('log.latitude', log.latitude);
   });
 });
-
-// async function savePerson() {
-//   const firstName = 'Alex';
-//   const lastName = 'Lee';
-//   db.savePerson(firstName, lastName)
-//     .then(person => {
-//       console.log('person', person.fullName);
-//     })
-//     .catch(e => {
-//       console.log(e);
-//     });
-// }
-
-// test('getPersonList', async () => {
-//   await savePerson();
-//   const list = db.getPersonList();
-//   console.log('list', list);
-// });
-
-// test('testWithRealm', async () => {
-//   await testWithRealm();
-// });

@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 
-import {DatabaseManager} from '../module/realm';
+import Database from '../module/database';
 
 export default class LocationScreen extends React.Component {
   state = {
@@ -21,11 +21,14 @@ export default class LocationScreen extends React.Component {
   }
 
   getList() {
-    const db = DatabaseManager.getInstance();
-    console.log('db', db);
-    const list = db.getCarLogList();
-    console.log('list', list);
-    this.setState({list});
+    Database.getCarLogList()
+      .then(list => {
+        console.log('list', list);
+        this.setState({list});
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   initLocator() {
@@ -48,13 +51,12 @@ export default class LocationScreen extends React.Component {
       if (!coords) {
         return;
       }
-      const db = DatabaseManager.getInstance();
-      db.saveCarLog(coords.latitude, coords.longitude, position.timestamp)
+      Database.saveCarLog(coords.latitude, coords.longitude, position.timestamp)
         .then(log => {
           console.log('saveCarLog done', log);
         })
         .catch(e => {
-          console.log(e);
+          console.log('saveCarLog', e);
         });
     });
   }
