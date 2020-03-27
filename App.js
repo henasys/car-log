@@ -1,6 +1,7 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 
-import LocationScreen from './src/screen/location';
+import MyStack from './src/screen/stack';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -18,6 +19,6 @@ export default class App extends React.Component {
 
   render() {
     console.log('App render');
-    return <LocationScreen />;
+    return MyStack();
   }
 }
