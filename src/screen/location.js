@@ -4,6 +4,20 @@ import Geolocation from '@react-native-community/geolocation';
 
 import Database from '../module/database';
 
+function msToTime(duration) {
+  var milliseconds = parseInt((duration % 1000) / 100)
+      , seconds = parseInt((duration / 1000) % 60)
+      , minutes = parseInt((duration / (1000 * 60)) % 60)
+      , hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+  hours = (hours < 10) ? "0" + hours : hours;
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+  seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+  //return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+  return hours + ":" + minutes + ":" + seconds;
+}
+
 export default class LocationScreen extends React.Component {
   state = {
     list: [],
@@ -24,7 +38,40 @@ export default class LocationScreen extends React.Component {
     Database.getCarLogList()
       .then(list => {
         // console.log('list', list);
-        this.setState({list});
+        let prevTime = 0;
+        let prevLatitude = 0;
+        let prevLongitude = 0;
+        let maxDistance = 0;
+        let maxTime = 0;
+        const calculated = [];
+        list.forEach((log, index) => {
+          log.dt = log.created - prevTime;
+          const dd =
+            100000 *
+            Math.sqrt(
+              Math.pow(log.latitude - prevLatitude, 2) +
+                Math.pow(log.longitude - prevLongitude, 2),
+          );
+          log.dd = dd.toFixed(0);
+          if (index < 3) {
+            console.log(log);
+          }
+          calculated.push(log);
+          if (prevTime > 0) {
+            if (maxDistance < log.dd) {
+              maxDistance = log.dd;
+            }
+            if (maxTime < log.dt) {
+              maxTime = log.dt;
+            }
+          }
+          prevTime = log.created;
+          prevLatitude = log.latitude;
+          prevLongitude = log.longitude;
+        });
+        console.log('maxDistance', maxDistance);
+        console.log('maxTime', maxTime, msToTime(maxTime));
+        this.setState({list: calculated});
       })
       .catch(e => {
         console.log(e);
@@ -77,9 +124,15 @@ export default class LocationScreen extends React.Component {
   renderItem(item) {
     return (
       <View style={styles.itemContainer}>
-        <Text>latitude: {item.latitude}</Text>
-        <Text>longitude: {item.longitude}</Text>
-        <Text>created: {new Date(item.created).toLocaleString()}</Text>
+        <View style={styles.itemColumnContainer}>
+          <Text>dd: {item.dd}</Text>
+          <Text>dt: {msToTime(item.dt)}</Text>
+        </View>
+        <View style={styles.itemColumnContainer}>
+          <Text>latitude: {item.latitude}</Text>
+          <Text>longitude: {item.longitude}</Text>
+          <Text>created: {new Date(item.created).toLocaleString()}</Text>
+        </View>
       </View>
     );
   }
@@ -97,7 +150,11 @@ export default class LocationScreen extends React.Component {
 
 const styles = StyleSheet.create({
   itemContainer: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     margin: 10,
+  },
+  itemColumnContainer: {
+    flexDirection: 'column',
+    marginLeft: 10,
   },
 });
