@@ -23,7 +23,7 @@ export default class LocationScreen extends React.Component {
   getList() {
     Database.getCarLogList()
       .then(list => {
-        console.log('list', list);
+        // console.log('list', list);
         this.setState({list});
       })
       .catch(e => {
@@ -64,12 +64,10 @@ export default class LocationScreen extends React.Component {
     if (!coords) {
       return;
     }
-    if (!coords.speed || coords.speed < 1) {
-      return;
-    }
     Database.saveCarLog(coords.latitude, coords.longitude, position.timestamp)
       .then(log => {
         console.log('saveCarLog done', log);
+        this.getList();
       })
       .catch(e => {
         console.log('saveCarLog', e);
