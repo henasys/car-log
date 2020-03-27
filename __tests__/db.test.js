@@ -1,4 +1,4 @@
-import {schemas, DatabaseManager, testWithRealm} from '../src/module/realm';
+import {schemas, DatabaseManager} from '../src/module/realm';
 
 let db = null;
 
@@ -38,26 +38,31 @@ test('getCarLogList', async () => {
   await saveCarLog();
   const list = db.getCarLogList();
   console.log('list', list);
+  console.log('list.isEmpty', list.isEmpty());
+  list.forEach(log => {
+    console.log('log', log);
+    console.log('log.latitude', log.latitude);
+  });
 });
 
-async function savePerson() {
-  const firstName = 'Alex';
-  const lastName = 'Lee';
-  db.savePerson(firstName, lastName)
-    .then(person => {
-      console.log('person', person.fullName);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-}
+// async function savePerson() {
+//   const firstName = 'Alex';
+//   const lastName = 'Lee';
+//   db.savePerson(firstName, lastName)
+//     .then(person => {
+//       console.log('person', person.fullName);
+//     })
+//     .catch(e => {
+//       console.log(e);
+//     });
+// }
 
-test('getPersonList', async () => {
-  await savePerson();
-  const list = db.getPersonList();
-  console.log('list', list);
-});
+// test('getPersonList', async () => {
+//   await savePerson();
+//   const list = db.getPersonList();
+//   console.log('list', list);
+// });
 
-test('testWithRealm', async () => {
-  await testWithRealm();
-});
+// test('testWithRealm', async () => {
+//   await testWithRealm();
+// });

@@ -24,8 +24,6 @@ export default class LocationScreen extends React.Component {
     const db = DatabaseManager.getInstance();
     console.log('db', db);
     const list = db.getCarLogList();
-    console.log('list.isEmpty', list.isEmpty());
-    console.log('list.isValid', list.isValid());
     console.log('list', list);
     this.setState({list});
   }
@@ -41,7 +39,7 @@ export default class LocationScreen extends React.Component {
         console.log('initPosition', position);
         this.initPosition = position;
       },
-      error => console.log('Error', error),
+      error => console.log('getCurrentPosition Error', error),
       options,
     );
     this.watchID = Geolocation.watchPosition(position => {
@@ -51,11 +49,6 @@ export default class LocationScreen extends React.Component {
         return;
       }
       const db = DatabaseManager.getInstance();
-      console.log('db', db);
-      const list = db.getCarLogList();
-      console.log('list.isEmpty', list.isEmpty());
-      console.log('list.isValid', list.isValid());
-      console.log('list', list);
       db.saveCarLog(coords.latitude, coords.longitude, position.timestamp)
         .then(log => {
           console.log('saveCarLog done', log);
