@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, StyleSheet, Button} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {Icon} from 'react-native-elements';
 
 import LocationScreen from '../screen/location';
 import {ShareScreen} from '../screen/share';
@@ -20,18 +21,17 @@ export default function MyStack() {
             title: '운행일지',
             headerRight: () => (
               <View style={styles.menuContainer}>
-                <Button
-                  style={styles.menuItem}
+                <Icon
+                  iconStyle={styles.menuItem}
                   onPress={() => navigation.navigate('Share')}
-                  title="Share"
-                  color="#000"
+                  name="share"
+                  type="material"
                 />
-                <View style={{marginHorizontal: 10}} />
-                <Button
-                  style={styles.menuItem}
+                <Icon
+                  iconStyle={styles.menuItem}
                   onPress={() => navigation.navigate('Setting')}
-                  title="Setting"
-                  color="#000"
+                  name="settings"
+                  type="material"
                 />
               </View>
             ),
@@ -55,9 +55,8 @@ export default function MyStack() {
 const styles = StyleSheet.create({
   menuContainer: {
     flexDirection: 'row',
-    marginHorizontal: 10,
   },
   menuItem: {
-    marginHorizontal: 10,
+    marginRight: 10,
   },
 });
