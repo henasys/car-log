@@ -68,9 +68,9 @@ export default class LocationScreen extends React.Component {
   renderItem(item) {
     return (
       <View style={styles.itemContainer}>
-        <Text>{item.latitude}</Text>
-        <Text>{item.longitude}</Text>
-        <Text>{item.created}</Text>
+        <Text>latitude: {item.latitude}</Text>
+        <Text>longitude: {item.longitude}</Text>
+        <Text>created: {new Date(item.created).toLocaleString()}</Text>
       </View>
     );
   }
@@ -89,6 +89,6 @@ export default class LocationScreen extends React.Component {
 const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'column',
-    marginRight: 10,
+    margin: 10,
   },
 });
