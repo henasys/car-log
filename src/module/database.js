@@ -41,7 +41,30 @@ const getCarLogList = () => {
   });
 };
 
+const clearAllDatabase = () => {
+  return new Promise((resolve, reject) => {
+    Realm.open(schemas.getLatestConfig())
+      .then(realm => {
+        try {
+          realm.write(() => {
+            realm.deleteAll();
+            console.log('realm.deleteAll()');
+            resolve();
+          });
+        } catch (e) {
+          console.warn('realm.write', e);
+          reject(new Error(e));
+        }
+      })
+      .catch(e => {
+        console.warn('Realm.open', e);
+        reject(new Error(e));
+      });
+  });
+};
+
 export default {
   saveCarLog,
   getCarLogList,
+  clearAllDatabase,
 };
