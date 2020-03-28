@@ -4,18 +4,22 @@ import Geolocation from '@react-native-community/geolocation';
 
 import Database from '../module/database';
 
-function msToTime(duration) {
-  var milliseconds = parseInt((duration % 1000) / 100)
-      , seconds = parseInt((duration / 1000) % 60)
-      , minutes = parseInt((duration / (1000 * 60)) % 60)
-      , hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+function msToTime(s) {
+  // Pad to 2 or 3 digits, default is 2
+  function pad(n, z) {
+    z = z || 2;
+    return ('00' + n).slice(-z);
+  }
 
-  hours = (hours < 10) ? "0" + hours : hours;
-  minutes = (minutes < 10) ? "0" + minutes : minutes;
-  seconds = (seconds < 10) ? "0" + seconds : seconds;
+  var ms = s % 1000;
+  s = (s - ms) / 1000;
+  var secs = s % 60;
+  s = (s - secs) / 60;
+  var mins = s % 60;
+  var hrs = (s - mins) / 60;
 
-  //return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
-  return hours + ":" + minutes + ":" + seconds;
+  return pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
+  // return pad(hrs) + ':' + pad(mins) + ':' + pad(secs) + '.' + pad(ms, 3);
 }
 
 export default class LocationScreen extends React.Component {
