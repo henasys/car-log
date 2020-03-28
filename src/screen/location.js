@@ -114,6 +114,9 @@ export default class LocationScreen extends React.Component {
     if (!coords) {
       return;
     }
+    if (!coords.speed || coords.speed === 0) {
+      return;
+    }
     Database.saveCarLog(coords.latitude, coords.longitude, position.timestamp)
       .then(log => {
         console.log('saveCarLog done', log);
