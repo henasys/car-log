@@ -7,6 +7,7 @@ import {Icon} from 'react-native-elements';
 import LocationScreen from '../screen/location';
 import {ShareScreen} from '../screen/share';
 import {SettingScreen} from '../screen/setting';
+import {StartPositionScreen} from '../screen/startPosition';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,12 @@ export default function MyStack() {
             title: '운행일지',
             headerRight: () => (
               <View style={styles.menuContainer}>
+                <Icon
+                  iconStyle={styles.menuItem}
+                  onPress={() => navigation.navigate('StartPosition')}
+                  name="search"
+                  type="material"
+                />
                 <Icon
                   iconStyle={styles.menuItem}
                   onPress={() => navigation.navigate('Share')}
@@ -46,6 +53,11 @@ export default function MyStack() {
           name="Setting"
           component={SettingScreen}
           options={{title: '설정'}}
+        />
+        <Stack.Screen
+          name="StartPosition"
+          component={StartPositionScreen}
+          options={{title: '출발지점 감출'}}
         />
       </Stack.Navigator>
     </NavigationContainer>
