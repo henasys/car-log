@@ -46,12 +46,11 @@ export default class LocationScreen extends React.Component {
         const calculated = [];
         list.forEach((log, index) => {
           log.dt = log.created - prevTime;
-          const dd =
-            100000 *
-            Math.sqrt(
-              Math.pow(log.latitude - prevLatitude, 2) +
-                Math.pow(log.longitude - prevLongitude, 2),
-          );
+          const dx = log.latitude - prevLatitude;
+          const dy = log.longitude - prevLongitude;
+          const dd = 100000 * Math.hypot(dx, dy);
+          const vc = (1000 * dd) / log.dt;
+          log.vc = vc.toFixed(2);
           log.dd = dd.toFixed(0);
           if (index < 3) {
             console.log(log);
@@ -127,6 +126,7 @@ export default class LocationScreen extends React.Component {
         <View style={styles.itemColumnContainer}>
           <Text>dd: {item.dd}</Text>
           <Text>dt: {msToTime(item.dt)}</Text>
+          <Text>vc: {item.vc}</Text>
         </View>
         <View style={styles.itemColumnContainer}>
           <Text>latitude: {item.latitude}</Text>
