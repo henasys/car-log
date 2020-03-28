@@ -1,29 +1,83 @@
-import React from 'react';
+import React, {Component, useState} from 'react';
 import {Text, View, StyleSheet, TextInput} from 'react-native';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
+import {msToTime} from '../module/util';
 
-const inputBox = (label, defaultValue, unit) => {
+const inputBox = (label, unitLabel, defaultValue, onChangeTextHandler) => {
   return (
     <View style={styles.inputBoxContainer}>
       <Text style={styles.textInputLabel}>{label}</Text>
-      <TextInput style={styles.textInput} defaultValue={defaultValue} />
-      <Text>{unit}</Text>
+      <TextInput
+        style={styles.textInput}
+        onChangeText={text => onChangeTextHandler(text)}
+        defaultValue={defaultValue}
+      />
+      <Text>{unitLabel}</Text>
     </View>
   );
 };
 
+const searchStartPositions = (velocity, period) => {
+  const floatVelocity = parseFloat(velocity);
+  const intPeriod = parseInt(period, 10);
+  console.log('intPeroid', intPeriod);
+  if (isNaN(floatVelocity)) {
+    console.warn('velocity is not number');
+    return;
+  }
+  if (isNaN(intPeriod)) {
+    console.warn('peroid is not number');
+    return;
+  }
+  const periodInMil = intPeriod * 60 * 1000;
+  Database.getCarLogList()
+    .then(list => {
+      // console.log('list', list);
+      let prevTime = 0;
+      let prevLatitude = 0;
+      let prevLongitude = 0;
+      list.forEach((log, index) => {
+        log.dt = log.created - prevTime;
+        const dx = log.latitude - prevLatitude;
+        const dy = log.longitude - prevLongitude;
+        const dd = 100000 * Math.hypot(dx, dy);
+        const vc = (1000 * dd) / log.dt;
+        log.vc = vc.toFixed(2);
+        log.dd = dd.toFixed(0);
+        if (vc <= floatVelocity) {
+          if (log.dt >= periodInMil) {
+            console.log('Found start position', index);
+            console.log('vc', log.vc, 'dd', log.dd);
+            console.log('dt', msToTime(log.dt));
+            console.log('created', new Date(log.created).toLocaleString());
+            console.log('log', log);
+          }
+        }
+        prevTime = log.created;
+        prevLatitude = log.latitude;
+        prevLongitude = log.longitude;
+      });
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
 export function StartPositionScreen() {
+  const [velocity, setVelocity] = useState('1.0');
+  const [period, setPeriod] = useState('10');
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        {inputBox('속도 <', '1.0', 'm/s')}
-        {inputBox('시간 <', '20', 'min')}
+        {inputBox('속도 <', 'm/s', velocity, setVelocity)}
+        {inputBox('시간 <', 'min', period, setPeriod)}
         <Icon
           iconStyle={styles.menuItem}
           onPress={() => {
-            console.log('search');
+            console.log('search', velocity, period);
+            searchStartPositions(velocity, period);
           }}
           name="search"
           type="material"
