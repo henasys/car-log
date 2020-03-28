@@ -1,9 +1,10 @@
-import React, {Component, useState} from 'react';
-import {Text, View, StyleSheet, TextInput} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useState} from 'react';
+import {Text, View, StyleSheet, TextInput, FlatList} from 'react-native';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
-import {msToTime} from '../module/util';
+import {msToTime, timeToDate, timeToWeek, timeToHourMin} from '../module/util';
 
 const inputBox = (label, unitLabel, defaultValue, onChangeTextHandler) => {
   return (
@@ -19,7 +20,7 @@ const inputBox = (label, unitLabel, defaultValue, onChangeTextHandler) => {
   );
 };
 
-const searchStartPositions = (velocity, period) => {
+const searchStartPositions = (velocity, period, setList) => {
   const floatVelocity = parseFloat(velocity);
   const intPeriod = parseInt(period, 10);
   console.log('intPeroid', intPeriod);
@@ -38,51 +39,81 @@ const searchStartPositions = (velocity, period) => {
       let prevTime = 0;
       let prevLatitude = 0;
       let prevLongitude = 0;
+      const calculated = [];
       list.forEach((log, index) => {
         log.dt = log.created - prevTime;
         const dx = log.latitude - prevLatitude;
         const dy = log.longitude - prevLongitude;
         const dd = 100000 * Math.hypot(dx, dy);
         const vc = (1000 * dd) / log.dt;
-        log.vc = vc.toFixed(2);
+        log.vc = vc.toFixed(3);
         log.dd = dd.toFixed(0);
         if (vc <= floatVelocity) {
           if (log.dt >= periodInMil) {
             console.log('Found start position', index);
             console.log('vc', log.vc, 'dd', log.dd);
             console.log('dt', msToTime(log.dt));
-            console.log('created', new Date(log.created).toLocaleString());
+            console.log('created', timeToDate(log.created));
             console.log('log', log);
+            calculated.push(log);
           }
         }
         prevTime = log.created;
         prevLatitude = log.latitude;
         prevLongitude = log.longitude;
       });
+      setList(calculated);
     })
     .catch(e => {
       console.log(e);
     });
 };
 
+const renderItem = item => {
+  return (
+    <View style={styles.itemContainer}>
+      <View style={[styles.itemColumnContainer, {alignItems: 'center'}]}>
+        <Text>{timeToDate(item.created)}</Text>
+        <Text>{timeToWeek(item.created)}</Text>
+        <Text>{timeToHourMin(item.created)}</Text>
+      </View>
+      <View style={styles.itemColumnContainer}>
+        <Text>간격: {msToTime(item.dt)}</Text>
+        <Text>
+          속도: {item.vc} [{item.dd}m / {(item.dt / 1000).toFixed(0)}s]
+        </Text>
+        <Text>
+          좌표: {item.latitude.toFixed(2)}, {item.longitude.toFixed(2)}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
 export function StartPositionScreen() {
   const [velocity, setVelocity] = useState('1.0');
   const [period, setPeriod] = useState('10');
+  const [list, setList] = useState([]);
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        {inputBox('속도 <', 'm/s', velocity, setVelocity)}
-        {inputBox('시간 <', 'min', period, setPeriod)}
+        {inputBox('속도 ≤', 'm/s', velocity, setVelocity)}
+        {inputBox('시간 ≥', 'min', period, setPeriod)}
         <Icon
           iconStyle={styles.menuItem}
           onPress={() => {
             console.log('search', velocity, period);
-            searchStartPositions(velocity, period);
+            searchStartPositions(velocity, period, setList);
           }}
           name="search"
           type="material"
         />
       </View>
+      <FlatList
+        data={list}
+        renderItem={({item}) => renderItem(item)}
+        keyExtractor={(item, index) => String(index)}
+      />
     </View>
   );
 }
