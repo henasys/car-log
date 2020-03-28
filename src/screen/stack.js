@@ -57,7 +57,7 @@ export default function MyStack() {
         <Stack.Screen
           name="StartPosition"
           component={StartPositionScreen}
-          options={{title: '출발지점 감출'}}
+          options={{title: '출발지점 검출'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

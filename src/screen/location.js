@@ -28,8 +28,6 @@ export default class LocationScreen extends React.Component {
         let prevTime = 0;
         let prevLatitude = 0;
         let prevLongitude = 0;
-        let maxDistance = 0;
-        let maxTime = 0;
         const calculated = [];
         list.forEach((log, index) => {
           log.dt = log.created - prevTime;
@@ -43,20 +41,10 @@ export default class LocationScreen extends React.Component {
             console.log(log);
           }
           calculated.push(log);
-          if (prevTime > 0) {
-            if (maxDistance < log.dd) {
-              maxDistance = log.dd;
-            }
-            if (maxTime < log.dt) {
-              maxTime = log.dt;
-            }
-          }
           prevTime = log.created;
           prevLatitude = log.latitude;
           prevLongitude = log.longitude;
         });
-        console.log('maxDistance', maxDistance);
-        console.log('maxTime', maxTime, msToTime(maxTime));
         this.setState({list: calculated});
       })
       .catch(e => {
