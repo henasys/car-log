@@ -20,7 +20,7 @@ export function msToTime(s) {
 }
 
 export function timeToDate(timestamp) {
-  return moment(timestamp).format('Y/DD/DD');
+  return moment(timestamp).format('Y/MM/DD');
 }
 
 export function timeToWeek(timestamp) {
