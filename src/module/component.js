@@ -11,23 +11,26 @@ export class DatabaseComponent extends React.Component {
     super(props);
   }
 
-  componentDidMount() {
+  componentDidMount(callback = null) {
     console.log('DatabaseComponent componentDidMount');
-    this.openDatabase();
+    this._openDatabase(callback);
   }
 
   componentWillUnmount() {
     console.log('DatabaseComponent componentWillUnmount');
-    this.closeDatabase();
+    this._closeDatabase();
   }
 
-  openDatabase() {
+  _openDatabase(callback = null) {
+    console.log('DatabaseComponent _openDatabase');
     Database.open(realm => {
       this.setState({realm});
+      callback && callback(realm);
     });
   }
 
-  closeDatabase() {
+  _closeDatabase() {
+    console.log('DatabaseComponent _closeDatabase');
     Database.close(this.state.realm);
   }
 }

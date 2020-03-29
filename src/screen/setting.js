@@ -12,39 +12,29 @@ export default class SettingScreen extends DatabaseComponent {
   state = {
     velocity: '1.0',
     period: '15',
-    // realm: null,
   };
 
   componentDidMount() {
     console.log('setting componentDidMount');
-    super.componentDidMount();
-    // this.openDatabase();
+    super.componentDidMount(realm => this.callbackForOpenDatabase(realm));
   }
 
   componentWillUnmount() {
     console.log('setting componentWillUnmount');
     super.componentWillUnmount();
-    // this.closeDatabase();
   }
 
-  openDatabase() {
-    Database.open(realm => {
-      const setting = Database.getSetting(realm);
-      if (!setting) {
-        this.setState({realm});
-        return;
-      }
-      const {velocity, period} = setting;
-      this.setState({
-        realm: realm,
-        velocity: String(velocity),
-        period: String(period),
-      });
+  callbackForOpenDatabase(realm) {
+    console.log('setting callbackForOpenDatabase');
+    const setting = Database.getSetting(realm);
+    if (!setting) {
+      return;
+    }
+    const {velocity, period} = setting;
+    this.setState({
+      velocity: String(velocity),
+      period: String(period),
     });
-  }
-
-  closeDatabase() {
-    Database.close(this.state.realm);
   }
 
   setVelocity(velocity) {
