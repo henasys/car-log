@@ -4,24 +4,27 @@ import {Text, View, StyleSheet, TextInput, FlatList} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Icon} from 'react-native-elements';
 
+import {DatabaseComponent} from '../module/component';
 import Database from '../module/database';
 import inputBox from '../view/inputBox';
 
-export default class SettingScreen extends React.Component {
+export default class SettingScreen extends DatabaseComponent {
   state = {
     velocity: '1.0',
     period: '15',
-    realm: null,
+    // realm: null,
   };
 
   componentDidMount() {
     console.log('setting componentDidMount');
-    this.openDatabase();
+    super.componentDidMount();
+    // this.openDatabase();
   }
 
   componentWillUnmount() {
     console.log('setting componentWillUnmount');
-    this.closeDatabase();
+    super.componentWillUnmount();
+    // this.closeDatabase();
   }
 
   openDatabase() {
