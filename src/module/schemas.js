@@ -58,6 +58,11 @@ export const schemas = [
     schemaVersion: 0,
     migration: migrationFunctionNothing,
   },
+  {
+    schema: schema1,
+    schemaVersion: 1,
+    migration: migrationFunctionNothing,
+  },
 ];
 
 schemas.getConfig = index => {
