@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, StyleSheet, TextInput, FlatList} from 'react-native';
 import {Icon} from 'react-native-elements';
 
@@ -20,7 +20,7 @@ const inputBox = (label, unitLabel, defaultValue, onChangeTextHandler) => {
   );
 };
 
-const searchStartPositions = (velocity, period, setList) => {
+const searchStartPositions = (realm, velocity, period, setList) => {
   const floatVelocity = parseFloat(velocity);
   const intPeriod = parseInt(period, 10);
   console.log('intPeroid', intPeriod);
@@ -33,40 +33,35 @@ const searchStartPositions = (velocity, period, setList) => {
     return;
   }
   const periodInMil = intPeriod * 60 * 1000;
-  Database.getCarLogList()
-    .then(list => {
-      // console.log('list', list);
-      let prevTime = 0;
-      let prevLatitude = 0;
-      let prevLongitude = 0;
-      const calculated = [];
-      list.forEach((log, index) => {
-        log.dt = log.created - prevTime;
-        const dx = log.latitude - prevLatitude;
-        const dy = log.longitude - prevLongitude;
-        const dd = 100000 * Math.hypot(dx, dy);
-        const vc = (1000 * dd) / log.dt;
-        log.vc = vc.toFixed(3);
-        log.dd = dd.toFixed(0);
-        if (vc <= floatVelocity) {
-          if (log.dt >= periodInMil) {
-            console.log('Found start position', index);
-            console.log('vc', log.vc, 'dd', log.dd);
-            console.log('dt', msToTime(log.dt));
-            console.log('created', timeToDate(log.created));
-            console.log('log', log);
-            calculated.push(log);
-          }
-        }
-        prevTime = log.created;
-        prevLatitude = log.latitude;
-        prevLongitude = log.longitude;
-      });
-      setList(calculated);
-    })
-    .catch(e => {
-      console.log(e);
-    });
+  const list = Database.getCarLogList(realm);
+  // console.log('list', list);
+  let prevTime = 0;
+  let prevLatitude = 0;
+  let prevLongitude = 0;
+  const calculated = [];
+  list.forEach((log, index) => {
+    log.dt = log.created - prevTime;
+    const dx = log.latitude - prevLatitude;
+    const dy = log.longitude - prevLongitude;
+    const dd = 100000 * Math.hypot(dx, dy);
+    const vc = (1000 * dd) / log.dt;
+    log.vc = vc.toFixed(3);
+    log.dd = dd.toFixed(0);
+    if (vc <= floatVelocity) {
+      if (log.dt >= periodInMil) {
+        console.log('Found start position', index);
+        console.log('vc', log.vc, 'dd', log.dd);
+        console.log('dt', msToTime(log.dt));
+        console.log('created', timeToDate(log.created));
+        console.log('log', log);
+        calculated.push(log);
+      }
+    }
+    prevTime = log.created;
+    prevLatitude = log.latitude;
+    prevLongitude = log.longitude;
+  });
+  setList(calculated);
 };
 
 const renderItem = item => {
@@ -90,7 +85,7 @@ const renderItem = item => {
   );
 };
 
-export function StartPositionScreen() {
+export function StartPositionScreen(props) {
   const [velocity, setVelocity] = useState('1.0');
   const [period, setPeriod] = useState('10');
   const [list, setList] = useState([]);
@@ -103,7 +98,9 @@ export function StartPositionScreen() {
           iconStyle={styles.menuItem}
           onPress={() => {
             console.log('search', velocity, period);
-            searchStartPositions(velocity, period, setList);
+            Database.open(realm => {
+              searchStartPositions(realm, velocity, period, setList);
+            });
           }}
           name="search"
           type="material"
