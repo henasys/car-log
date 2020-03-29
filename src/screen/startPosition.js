@@ -1,24 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, TextInput, FlatList} from 'react-native';
+import React, {useState} from 'react';
+import {Text, View, StyleSheet, FlatList} from 'react-native';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
 import {msToTime, timeToDate, timeToWeek, timeToHourMin} from '../module/util';
-
-const inputBox = (label, unitLabel, defaultValue, onChangeTextHandler) => {
-  return (
-    <View style={styles.inputBoxContainer}>
-      <Text style={styles.textInputLabel}>{label}</Text>
-      <TextInput
-        style={styles.textInput}
-        onChangeText={text => onChangeTextHandler(text)}
-        defaultValue={defaultValue}
-      />
-      <Text>{unitLabel}</Text>
-    </View>
-  );
-};
+import inputBox from '../view/inputBox';
 
 const searchStartPositions = (realm, velocity, period, setList) => {
   const floatVelocity = parseFloat(velocity);
@@ -124,20 +111,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 10,
-  },
-  inputBoxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 10,
-  },
-  textInputLabel: {
-    fontSize: 16,
-  },
-  textInput: {
-    height: 40,
-    width: 40,
-    borderWidth: 1,
-    marginHorizontal: 10,
   },
   itemContainer: {
     flexDirection: 'row',
