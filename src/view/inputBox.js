@@ -1,16 +1,16 @@
 import React from 'react';
 import {Text, View, StyleSheet, TextInput} from 'react-native';
 
-const inputBox = (label, unitLabel, defaultValue, onChangeTextHandler) => {
+const inputBox = props => {
   return (
     <View style={styles.inputBoxContainer}>
-      <Text style={styles.textInputLabel}>{label}</Text>
+      <Text style={styles.textInputLabel}>{props.label}</Text>
       <TextInput
-        style={styles.textInput}
-        onChangeText={text => onChangeTextHandler(text)}
-        defaultValue={defaultValue}
+        style={props.textInputStyle ? props.textInputStyle : styles.textInput}
+        onChangeText={text => props.onChangeTextHandler(text)}
+        defaultValue={props.defaultValue}
       />
-      <Text>{unitLabel}</Text>
+      <Text>{props.unitLabel}</Text>
     </View>
   );
 };
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 40,
-    width: 40,
+    // width: 40,
     borderWidth: 1,
     marginHorizontal: 10,
   },

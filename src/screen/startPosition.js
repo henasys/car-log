@@ -79,8 +79,18 @@ export function StartPositionScreen(props) {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        {inputBox('속도 ≤', 'm/s', velocity, setVelocity)}
-        {inputBox('시간 ≥', 'min', period, setPeriod)}
+        {inputBox({
+          label: '속도 ≤',
+          unitLabel: 'm/s',
+          defaultValue: velocity,
+          onChangeTextHandler: setVelocity,
+        })}
+        {inputBox({
+          label: '시간 ≥',
+          unitLabel: 'min',
+          defaultValue: period,
+          onChangeTextHandler: setPeriod,
+        })}
         <Icon
           iconStyle={styles.menuItem}
           onPress={() => {
