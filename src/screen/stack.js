@@ -6,7 +6,7 @@ import {Icon} from 'react-native-elements';
 
 import LocationScreen from '../screen/location';
 import {ShareScreen} from '../screen/share';
-import {SettingScreen} from '../screen/setting';
+import SettingScreen from '../screen/setting';
 import {StartPositionScreen} from '../screen/startPosition';
 
 const Stack = createStackNavigator();

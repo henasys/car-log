@@ -81,6 +81,41 @@ const getCarLogList = realm => {
   return realm.objects('CarLog');
 };
 
+const saveSetting = (realm, velocity, period) => {
+  return new Promise((resolve, reject) => {
+    const floatVelocity = parseFloat(velocity);
+    const intPeriod = parseInt(period, 10);
+    try {
+      realm.write(() => {
+        const rs = realm.objects('Setting');
+        if (!rs.isEmpty()) {
+          const setting = rs[0];
+          setting.velocity = floatVelocity;
+          setting.period = intPeriod;
+          resolve(setting);
+          return;
+        }
+        const setting = realm.create('Setting', {
+          velocity: floatVelocity,
+          period: intPeriod,
+        });
+        resolve(setting);
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
+};
+
+const getSetting = realm => {
+  const rs = realm.objects('Setting');
+  if (rs.isEmpty()) {
+    return null;
+  }
+  return rs[0];
+};
+
 const clearAllDatabase = () => {
   return new Promise((resolve, reject) => {
     Realm.open(schemas.getLatestConfig())
@@ -108,5 +143,7 @@ export default {
   close,
   saveCarLog,
   getCarLogList,
+  saveSetting,
+  getSetting,
   clearAllDatabase,
 };
