@@ -62,6 +62,7 @@ export default class LocationScreen extends React.Component {
   }
 
   initLocator() {
+    this.getCurrentPosition();
     this.watchPosition();
     // this.timer = setTimeout(() => {
     //   // console.log('Locator timer executed');
