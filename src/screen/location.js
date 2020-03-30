@@ -3,7 +3,7 @@ import {StyleSheet, Text, View, FlatList} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 
 import Database from '../module/database';
-import {msToTime, timeToDate} from '../module/util';
+import {msToTime, timeToDate, timeToHourMin} from '../module/util';
 
 export default class LocationScreen extends React.Component {
   state = {
@@ -123,7 +123,9 @@ export default class LocationScreen extends React.Component {
         <View style={styles.itemColumnContainer}>
           <Text>latitude: {item.latitude}</Text>
           <Text>longitude: {item.longitude}</Text>
-          <Text>created: {timeToDate(item.created)}</Text>
+          <Text>
+            created: {timeToDate(item.created)} {timeToHourMin(item.created)}
+          </Text>
         </View>
       </View>
     );
