@@ -77,9 +77,9 @@ export default class LocationScreen extends React.Component {
 
   getCurrentPosition() {
     const options = {
-      enableHighAccuracy: false,
+      enableHighAccuracy: true,
       timeout: 2000,
-      maximumAge: 3600000,
+      // maximumAge: 3600000,
     };
     Geolocation.getCurrentPosition(
       position => {
@@ -97,9 +97,9 @@ export default class LocationScreen extends React.Component {
 
   watchPosition() {
     const options = {
-      enableHighAccuracy: false,
+      enableHighAccuracy: true,
       timeout: 2000,
-      maximumAge: 3600000,
+      // maximumAge: 3600000,
     };
     this.watchID = Geolocation.watchPosition(
       position => {
