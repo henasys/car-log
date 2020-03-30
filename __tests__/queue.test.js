@@ -1,4 +1,4 @@
-import {Queue} from '../src/module/queue';
+import Queue from '../src/module/queue';
 
 it('queue_overflow', () => {
   const queue = new Queue(3, true);

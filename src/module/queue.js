@@ -2,7 +2,7 @@
  * original ref: https://www.tutorialspoint.com/The-Queue-Class-in-Javascript
  */
 
-export class Queue {
+class Queue {
   constructor(maxSize, isWarnPrint = false) {
     if (isNaN(maxSize)) {
       maxSize = 10;
@@ -53,3 +53,5 @@ export class Queue {
     return this.container;
   }
 }
+
+export default Queue;
