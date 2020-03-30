@@ -5,6 +5,8 @@ import Geolocation from '@react-native-community/geolocation';
 import Database from '../module/database';
 import {msToTime, timeToDate, timeToHourMin} from '../module/util';
 
+const timerInterval = 30000;
+
 export default class LocationScreen extends React.Component {
   state = {
     realm: null,
@@ -50,10 +52,8 @@ export default class LocationScreen extends React.Component {
       const vc = (1000 * dd) / log.dt;
       log.vc = vc.toFixed(2);
       log.dd = dd.toFixed(0);
-      if (index < 3) {
-        console.log(log);
-      }
       calculated.push(log);
+      // console.log(log);
       prevTime = log.created;
       prevLatitude = log.latitude;
       prevLongitude = log.longitude;
@@ -62,22 +62,32 @@ export default class LocationScreen extends React.Component {
   }
 
   initLocator() {
+    this.watchPosition();
+    this.timer = setTimeout(() => {
+      // console.log('Locator timer executed');
+      this.getCurrentPosition();
+      this.initLocator();
+    }, timerInterval);
+  }
+
+  removeLocator() {
+    clearTimeout(this.timer);
+    this.clearWatch();
+  }
+
+  getCurrentPosition() {
     const options = {
-      enableHighAccuracy: true,
-      timeout: 20000,
-      maximumAge: 1000,
+      enableHighAccuracy: false,
+      timeout: 2000,
+      maximumAge: 3600000,
     };
     Geolocation.getCurrentPosition(
       position => {
         console.log('initPosition', position);
-        this.initPosition = position;
-      },
-      error => console.log('getCurrentPosition Error', error),
-      options,
-    );
-    this.watchID = Geolocation.watchPosition(
-      position => {
-        console.log('lastPosition', position);
+        const coords = position && position.coords;
+        if (!coords) {
+          return;
+        }
         this.handleOnLocation(position);
       },
       error => console.log('getCurrentPosition Error', error),
@@ -85,16 +95,29 @@ export default class LocationScreen extends React.Component {
     );
   }
 
-  removeLocator() {
+  watchPosition() {
+    const options = {
+      enableHighAccuracy: false,
+      timeout: 2000,
+      maximumAge: 3600000,
+    };
+    this.watchID = Geolocation.watchPosition(
+      position => {
+        console.log('lastPosition', position);
+        this.handleOnLocation(position);
+      },
+      error => console.log('watchPosition Error', error),
+      options,
+    );
+  }
+
+  clearWatch() {
     this.watchID != null && Geolocation.clearWatch(this.watchID);
   }
 
   handleOnLocation(position) {
     const coords = position && position.coords;
     if (!coords) {
-      return;
-    }
-    if (!coords.speed || coords.speed === 0) {
       return;
     }
     Database.saveCarLog(
