@@ -67,3 +67,6 @@ android/*.hprof
 
 # Google Firebase
 google-services.json
+
+# data
+__tests__/car_log_data.js
