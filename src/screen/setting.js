@@ -1,14 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, TextInput, FlatList} from 'react-native';
+import React from 'react';
+import {Text, View, StyleSheet} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Icon} from 'react-native-elements';
 
-import {DatabaseComponent} from '../module/component';
 import Database from '../module/database';
 import inputBox from '../view/inputBox';
 
-export default class SettingScreen extends DatabaseComponent {
+export default class SettingScreen extends React.Component {
   state = {
     velocity: '1.0',
     period: '15',
@@ -16,16 +15,31 @@ export default class SettingScreen extends DatabaseComponent {
 
   componentDidMount() {
     console.log('setting componentDidMount');
-    super.componentDidMount(realm => this.callbackForOpenDatabase(realm));
+    this.openDatabase();
   }
 
   componentWillUnmount() {
     console.log('setting componentWillUnmount');
-    super.componentWillUnmount();
+    this.closeDatabase();
   }
 
-  callbackForOpenDatabase(realm) {
-    console.log('setting callbackForOpenDatabase');
+  openDatabase() {
+    Database.open(realm => {
+      this.setState({realm});
+      console.log('realm.open() done');
+      this.initStates();
+    });
+  }
+
+  closeDatabase() {
+    Database.close(this.state.realm);
+  }
+
+  initStates() {
+    const {realm} = this.state;
+    if (!realm) {
+      return;
+    }
     const setting = Database.getSetting(realm);
     if (!setting) {
       return;
