@@ -15,11 +15,20 @@ CarLog.schema = {
 
 class Setting {}
 
+Setting.schema1 = {
+  name: 'Setting',
+  properties: {
+    velocity: {type: 'double'},
+    period: {type: 'int'},
+  },
+};
+
 Setting.schema = {
   name: 'Setting',
   properties: {
     velocity: {type: 'double'},
     period: {type: 'int'},
+    gpsError: {type: 'int', default: 500},
   },
 };
 
@@ -44,7 +53,8 @@ Position.schema = {
 };
 
 const schema0 = [CarLog];
-const schema1 = [CarLog, Setting, Position];
+const schema1 = [CarLog, Setting.schema1, Position];
+const schema2 = [CarLog, Setting, Position];
 
 function migrationFunctionNothing(oldRealm, newRealm) {
   console.log('migrationFunctionNothing', oldRealm, newRealm);
@@ -61,6 +71,11 @@ export const schemas = [
   {
     schema: schema1,
     schemaVersion: 1,
+    migration: migrationFunctionNothing,
+  },
+  {
+    schema: schema2,
+    schemaVersion: 2,
     migration: migrationFunctionNothing,
   },
 ];

@@ -11,6 +11,7 @@ export default class SettingScreen extends React.Component {
   state = {
     velocity: '1.0',
     period: '15',
+    gpsError: '500',
   };
 
   componentDidMount() {
@@ -44,17 +45,18 @@ export default class SettingScreen extends React.Component {
     if (!setting) {
       return;
     }
-    const {velocity, period} = setting;
+    const {velocity, period, gpsError} = setting;
     this.setState({
-      velocity: String(velocity),
-      period: String(period),
+      velocity: velocity ? String(velocity) : this.state.velocity,
+      period: period ? String(period) : this.state.period,
+      gpsError: gpsError ? String(gpsError) : this.state.gpsError,
     });
   }
 
   setVelocity(velocity) {
     this.setState({velocity});
-    const {realm, period} = this.state;
-    Database.saveSetting(realm, velocity, period)
+    const {realm, period, gpsError} = this.state;
+    Database.saveSetting(realm, velocity, period, gpsError)
       .then(setting => {
         console.log(setting);
       })
@@ -65,8 +67,20 @@ export default class SettingScreen extends React.Component {
 
   setPeriod(period) {
     this.setState({period});
-    const {realm, velocity} = this.state;
-    Database.saveSetting(realm, velocity, period)
+    const {realm, velocity, gpsError} = this.state;
+    Database.saveSetting(realm, velocity, period, gpsError)
+      .then(setting => {
+        console.log(setting);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  setGpsError(gpsError) {
+    this.setState({gpsError});
+    const {realm, velocity, period} = this.state;
+    Database.saveSetting(realm, velocity, period, gpsError)
       .then(setting => {
         console.log(setting);
       })
@@ -76,7 +90,7 @@ export default class SettingScreen extends React.Component {
   }
 
   render() {
-    const {velocity, period} = this.state;
+    const {velocity, period, gpsError} = this.state;
     return (
       <View style={styles.container}>
         <Text style={styles.sectionLabel}>{'출발점 검출 기준'}</Text>
@@ -98,6 +112,16 @@ export default class SettingScreen extends React.Component {
             onChangeTextHandler: text => {
               this.setPeriod(text);
               console.log('period onChange');
+            },
+            textInputStyle: styles.textInput,
+          })}
+          {inputBox({
+            label: ' GPS오차 ≥',
+            unitLabel: 'meters     ',
+            defaultValue: gpsError,
+            onChangeTextHandler: text => {
+              this.setGpsError(text);
+              console.log('gpsError onChange');
             },
             textInputStyle: styles.textInput,
           })}
@@ -147,7 +171,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 40,
-    width: '60%',
+    width: '50%',
     borderWidth: 1,
     marginHorizontal: 10,
     marginVertical: 10,
