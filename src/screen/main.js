@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, FlatList} from 'react-native';
+import {StyleSheet, Text, View, FlatList, ToastAndroid} from 'react-native';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
@@ -57,6 +57,10 @@ export default class MainScreen extends React.Component {
     this.setState({list});
   }
 
+  showToast(msg) {
+    ToastAndroid.show(msg, ToastAndroid.SHORT);
+  }
+
   handleOnLocation(position) {
     const coords = position && position.coords;
     if (!coords) {
@@ -71,6 +75,8 @@ export default class MainScreen extends React.Component {
       .then(log => {
         console.log('saveCarLog done', log);
         this.getList();
+        const msg = `new position: ${coords.latitude}, ${coords.longitude}`;
+        this.showToast(msg);
       })
       .catch(e => {
         console.log('saveCarLog', e);
