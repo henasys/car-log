@@ -6,7 +6,7 @@ import {Locator} from '../module/locator';
 import {msToTime, timeToDate, timeToHourMin} from '../module/util';
 import {calculateLocationList, fixLastLocation} from '../module/util';
 
-const NUMBERS_PER_PAGE = 20;
+const NUMBERS_PER_PAGE = 50;
 
 export default class LocationScreen extends React.Component {
   state = {
@@ -32,7 +32,6 @@ export default class LocationScreen extends React.Component {
   openDatabase() {
     Database.open(realm => {
       this.setState({realm});
-      console.log('LocationScreen realm.open() done');
       this.initList();
     });
   }
@@ -64,7 +63,7 @@ export default class LocationScreen extends React.Component {
   }
 
   onLoadPreviousList() {
-    console.log('onLoadPreviousList()', this.pagingStartIndex);
+    console.log('onLoadPreviousList', this.pagingStartIndex);
     const logs = this.getList(this.pagingStartIndex + NUMBERS_PER_PAGE);
     if (logs.length !== 0) {
       this.pagingStartIndex += NUMBERS_PER_PAGE;

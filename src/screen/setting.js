@@ -27,7 +27,6 @@ export default class SettingScreen extends React.Component {
   openDatabase() {
     Database.open(realm => {
       this.setState({realm});
-      console.log('realm.open() done');
       this.initStates();
     });
   }

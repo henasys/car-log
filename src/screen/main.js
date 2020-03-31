@@ -14,13 +14,13 @@ export default class MainScreen extends React.Component {
   locator = Locator.getInstance();
 
   componentDidMount() {
-    console.log('location componentDidMount');
+    console.log('main componentDidMount');
     this.openDatabase();
     this.locator.initLocator(this.handleOnLocation.bind(this));
   }
 
   componentWillUnmount() {
-    console.log('location componentWillUnmount');
+    console.log('main componentWillUnmount');
     this.closeDatabase();
     this.locator.removeLocator();
   }
@@ -28,7 +28,6 @@ export default class MainScreen extends React.Component {
   openDatabase() {
     Database.open(realm => {
       this.setState({realm});
-      console.log('realm.open() done');
       this.getLatestLocation();
       this.getSetting();
       this.getList();

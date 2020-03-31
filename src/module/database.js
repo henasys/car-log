@@ -16,7 +16,7 @@ const open = handler => {
 const close = realm => {
   if (realm !== null && !realm.isClosed) {
     realm.close();
-    console.log('realm.close() done');
+    // console.log('realm.close() done');
   }
 };
 
