@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
 
 import Database from '../module/database';
+import {Locator} from '../module/locator';
 import {msToTime, timeToDate, timeToHourMin} from '../module/util';
 
-const timerInterval = 30000;
+const locator = new Locator();
 
 export default class LocationScreen extends React.Component {
   state = {
@@ -16,13 +16,13 @@ export default class LocationScreen extends React.Component {
   componentDidMount() {
     console.log('location componentDidMount');
     this.openDatabase();
-    this.initLocator();
+    locator.initLocator(this.handleOnLocation.bind(this));
   }
 
   componentWillUnmount() {
     console.log('location componentWillUnmount');
     this.closeDatabase();
-    this.removeLocator();
+    locator.removeLocator();
   }
 
   openDatabase() {
@@ -59,61 +59,6 @@ export default class LocationScreen extends React.Component {
       prevLongitude = log.longitude;
     });
     this.setState({list: calculated});
-  }
-
-  initLocator() {
-    this.getCurrentPosition();
-    this.watchPosition();
-    // this.timer = setTimeout(() => {
-    //   // console.log('Locator timer executed');
-    //   this.getCurrentPosition();
-    //   this.initLocator();
-    // }, timerInterval);
-  }
-
-  removeLocator() {
-    clearTimeout(this.timer);
-    this.clearWatch();
-  }
-
-  getCurrentPosition() {
-    const options = {
-      enableHighAccuracy: true,
-      timeout: 2000,
-      // maximumAge: 3600000,
-    };
-    Geolocation.getCurrentPosition(
-      position => {
-        console.log('initPosition', position);
-        const coords = position && position.coords;
-        if (!coords) {
-          return;
-        }
-        // this.handleOnLocation(position);
-      },
-      error => console.log('getCurrentPosition Error', error),
-      options,
-    );
-  }
-
-  watchPosition() {
-    const options = {
-      enableHighAccuracy: true,
-      timeout: 2000,
-      // maximumAge: 3600000,
-    };
-    this.watchID = Geolocation.watchPosition(
-      position => {
-        console.log('lastPosition', position);
-        this.handleOnLocation(position);
-      },
-      error => console.log('watchPosition Error', error),
-      options,
-    );
-  }
-
-  clearWatch() {
-    this.watchID != null && Geolocation.clearWatch(this.watchID);
   }
 
   handleOnLocation(position) {
