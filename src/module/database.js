@@ -119,6 +119,52 @@ const getSetting = realm => {
   return rs[0];
 };
 
+const savePosition = (realm, latitude, longitude, type, distance, created) => {
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        const position = realm.create('Position', {
+          latitude: latitude,
+          longitude: longitude,
+          type: type,
+          distance: distance,
+          created: created,
+        });
+        resolve(position);
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
+};
+
+const getPositionList = realm => {
+  return realm.objects('Position');
+};
+
+const updatePositionAddress = (realm, pk, address) => {
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        const rs = realm.objects('Position');
+        if (!rs.isEmpty()) {
+          const position = rs[0];
+          position.address = address;
+          resolve(position);
+          return;
+        }
+        const msg = 'No Position ';
+        console.warn(msg);
+        reject(new Error(msg));
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
+};
+
 const clearAllDatabase = () => {
   return new Promise((resolve, reject) => {
     Realm.open(schemas.getLatestConfig())
@@ -148,5 +194,8 @@ export default {
   getCarLogList,
   saveSetting,
   getSetting,
+  savePosition,
+  getPositionList,
+  updatePositionAddress,
   clearAllDatabase,
 };

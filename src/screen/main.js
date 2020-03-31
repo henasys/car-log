@@ -29,6 +29,8 @@ export default class MainScreen extends React.Component {
     Database.open(realm => {
       this.setState({realm});
       console.log('realm.open() done');
+      this.getLatestLocation();
+      this.getSetting();
       this.getList();
     });
   }
@@ -37,7 +39,23 @@ export default class MainScreen extends React.Component {
     Database.close(this.state.realm);
   }
 
-  getList() {}
+  getSetting() {
+    const setting = Database.getSetting(this.state.realm);
+    this.setting = setting;
+  }
+
+  getLatestLocation() {
+    const logs = Database.getCarLogList(this.state.realm).sorted(
+      'created',
+      true,
+    );
+    this.latestLocation = logs.slice(0, 1);
+  }
+
+  getList() {
+    const list = Database.getPositionList(this.state.realm);
+    this.setState({list});
+  }
 
   handleOnLocation(position) {
     const coords = position && position.coords;
