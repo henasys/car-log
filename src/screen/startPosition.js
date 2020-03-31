@@ -5,51 +5,10 @@ import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
 import {msToTime, timeToDate, timeToWeek, timeToHourMin} from '../module/util';
+import {searchStartPositions} from '../module/util';
 import inputBox from '../view/inputBox';
 
-const searchStartPositions = (realm, velocity, period, setList) => {
-  const floatVelocity = parseFloat(velocity);
-  const intPeriod = parseInt(period, 10);
-  console.log('intPeroid', intPeriod);
-  if (isNaN(floatVelocity)) {
-    console.warn('velocity is not number');
-    return;
-  }
-  if (isNaN(intPeriod)) {
-    console.warn('peroid is not number');
-    return;
-  }
-  const periodInMil = intPeriod * 60 * 1000;
-  const list = Database.getCarLogList(realm);
-  // console.log('list', list);
-  let prevTime = 0;
-  let prevLatitude = 0;
-  let prevLongitude = 0;
-  const calculated = [];
-  list.forEach((log, index) => {
-    log.dt = log.created - prevTime;
-    const dx = log.latitude - prevLatitude;
-    const dy = log.longitude - prevLongitude;
-    const dd = 100000 * Math.hypot(dx, dy);
-    const vc = (1000 * dd) / log.dt;
-    log.vc = vc.toFixed(3);
-    log.dd = dd.toFixed(0);
-    if (vc <= floatVelocity) {
-      if (log.dt >= periodInMil) {
-        console.log('Found start position', index);
-        console.log('vc', log.vc, 'dd', log.dd);
-        console.log('dt', msToTime(log.dt));
-        console.log('created', timeToDate(log.created));
-        console.log('log', log);
-        calculated.push(log);
-      }
-    }
-    prevTime = log.created;
-    prevLatitude = log.latitude;
-    prevLongitude = log.longitude;
-  });
-  setList(calculated);
-};
+const gpsErrorMargin = 500;
 
 const renderItem = item => {
   return (
@@ -96,7 +55,14 @@ export function StartPositionScreen(props) {
           onPress={() => {
             console.log('search', velocity, period);
             Database.open(realm => {
-              searchStartPositions(realm, velocity, period, setList);
+              const logs = Database.getCarLogList(realm);
+              const positions = searchStartPositions(
+                logs,
+                velocity,
+                period,
+                gpsErrorMargin,
+              );
+              setList(positions);
             });
           }}
           name="search"

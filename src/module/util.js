@@ -62,7 +62,7 @@ export const searchStartPositions = (
   list,
   velocity,
   period,
-  gpsErrorMargin,
+  gpsErrorMargin = 1000,
 ) => {
   const fVelocity = parseFloat(velocity);
   const iPeriod = parseInt(period, 10);
