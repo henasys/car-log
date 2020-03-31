@@ -8,8 +8,6 @@ import {msToTime, timeToDate, timeToWeek, timeToHourMin} from '../module/util';
 import {searchStartPositions} from '../module/util';
 import inputBox from '../view/inputBox';
 
-const gpsErrorMargin = 500;
-
 const renderItem = item => {
   return (
     <View style={styles.itemContainer}>
@@ -34,22 +32,33 @@ const renderItem = item => {
 export function StartPositionScreen(props) {
   const [velocity, setVelocity] = useState('1.0');
   const [period, setPeriod] = useState('10');
+  const [gpsError, setGpsError] = useState('500');
   const [list, setList] = useState([]);
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        {inputBox({
-          label: '속도 ≤',
-          unitLabel: 'm/s',
-          defaultValue: velocity,
-          onChangeTextHandler: setVelocity,
-        })}
-        {inputBox({
-          label: '시간 ≥',
-          unitLabel: 'min',
-          defaultValue: period,
-          onChangeTextHandler: setPeriod,
-        })}
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{flexDirection: 'row'}}>
+            {inputBox({
+              label: '속도 ≤',
+              unitLabel: 'm/s',
+              defaultValue: velocity,
+              onChangeTextHandler: setVelocity,
+            })}
+            {inputBox({
+              label: '시간 ≥',
+              unitLabel: 'min',
+              defaultValue: period,
+              onChangeTextHandler: setPeriod,
+            })}
+          </View>
+          {inputBox({
+            label: 'GPS오차 ≥',
+            unitLabel: 'm',
+            defaultValue: gpsError,
+            onChangeTextHandler: setGpsError,
+          })}
+        </View>
         <Icon
           iconStyle={styles.menuItem}
           onPress={() => {
@@ -60,13 +69,14 @@ export function StartPositionScreen(props) {
                 logs,
                 velocity,
                 period,
-                gpsErrorMargin,
+                gpsError,
               );
               setList(positions);
             });
           }}
           name="search"
           type="material"
+          size={48}
         />
       </View>
       <FlatList
