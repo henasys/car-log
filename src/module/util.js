@@ -31,6 +31,10 @@ export function timeToHourMin(timestamp) {
   return moment(timestamp).format('HH:mm');
 }
 
+export function timeToDateHourMin(timestamp) {
+  return moment(timestamp).format('Y/MM/DD HH:mm');
+}
+
 // ref: https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 export function measure(lat1, lon1, lat2, lon2) {
   // generally used geo measurement function
@@ -47,3 +51,71 @@ export function measure(lat1, lon1, lat2, lon2) {
   var d = R * c;
   return d * 1000; // meters
 }
+
+export function distance(lat1, lon1, lat2, lon2) {
+  const dx = lat2 - lat1;
+  const dy = lon2 - lon1;
+  return 100000 * Math.hypot(dx, dy);
+}
+
+export const searchStartPositions = (
+  list,
+  velocity,
+  period,
+  gpsErrorMargin,
+) => {
+  const fVelocity = parseFloat(velocity);
+  const iPeriod = parseInt(period, 10);
+  if (isNaN(fVelocity)) {
+    console.warn('velocity is not number');
+    return;
+  }
+  if (isNaN(iPeriod)) {
+    console.warn('peroid is not number');
+    return;
+  }
+  const periodInMil = iPeriod * 60 * 1000;
+  let prev = {latitude: 0.0, longitude: 0.0, created: 0};
+  const calculated = [];
+  list.forEach((log, index) => {
+    log.dt = log.created - prev.created;
+    const dd = measure(
+      prev.latitude,
+      prev.longitude,
+      log.latitude,
+      log.longitude,
+    );
+    if (dd > gpsErrorMargin) {
+      const vc = (1000 * dd) / log.dt;
+      log.vc = vc.toFixed(3);
+      log.dd = dd.toFixed(0);
+      if (vc <= fVelocity) {
+        if (log.dt >= periodInMil) {
+          console.log('Found start position', index);
+          console.log('vc', log.vc, 'dd', log.dd);
+          console.log('dt', msToTime(log.dt));
+          console.log('log', log);
+          console.log('log.created', timeToDateHourMin(log.created));
+          console.log('prev', prev);
+          console.log('prev.created', timeToDateHourMin(prev.created));
+          if (prev.created !== 0) {
+            calculated.push(prev);
+          }
+        }
+      }
+      prev = log;
+    }
+  });
+  return calculated;
+};
+
+export const showStartPositions = list => {
+  list.forEach((log, index) => {
+    console.log(
+      index,
+      timeToDateHourMin(log.created),
+      log.latitude,
+      log.longitude,
+    );
+  });
+};

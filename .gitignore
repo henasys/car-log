@@ -69,4 +69,4 @@ android/*.hprof
 google-services.json
 
 # data
-__tests__/car_log_data.js
+__tests__/data/
