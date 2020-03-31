@@ -89,7 +89,7 @@ export default class LocationScreen extends React.Component {
         if (!coords) {
           return;
         }
-        this.handleOnLocation(position);
+        // this.handleOnLocation(position);
       },
       error => console.log('getCurrentPosition Error', error),
       options,
