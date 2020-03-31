@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Icon} from 'react-native-elements';
 
+import MainScreen from '../screen/main';
 import LocationScreen from '../screen/location';
 import {ShareScreen} from '../screen/share';
 import SettingScreen from '../screen/setting';
@@ -16,15 +17,15 @@ export default function MyStack() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Home"
-          component={LocationScreen}
+          name="Main"
+          component={MainScreen}
           options={({navigation, route}) => ({
             title: '운행일지',
             headerRight: () => (
               <View style={styles.menuContainer}>
                 <Icon
                   iconStyle={styles.menuItem}
-                  onPress={() => navigation.navigate('StartPosition')}
+                  onPress={() => navigation.navigate('Search')}
                   name="search"
                   type="material"
                 />
@@ -52,12 +53,29 @@ export default function MyStack() {
         <Stack.Screen
           name="Setting"
           component={SettingScreen}
-          options={{title: '설정'}}
+          options={({navigation}) => ({
+            title: '설정',
+            headerRight: () => (
+              <View style={styles.menuContainer}>
+                <Icon
+                  iconStyle={styles.menuItem}
+                  onPress={() => navigation.navigate('Location')}
+                  name="location-pin"
+                  type="entypo"
+                />
+              </View>
+            ),
+          })}
         />
         <Stack.Screen
-          name="StartPosition"
+          name="Search"
           component={StartPositionScreen}
           options={{title: '출발지점 검출'}}
+        />
+        <Stack.Screen
+          name="Location"
+          component={LocationScreen}
+          options={{title: '운행 기록'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

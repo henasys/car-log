@@ -2,9 +2,12 @@ import React from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
 
 import Database from '../module/database';
+import {Locator} from '../module/locator';
 import {msToTime, timeToDate, timeToHourMin} from '../module/util';
 
-export default class LocationScreen extends React.Component {
+const locator = new Locator();
+
+export default class MainScreen extends React.Component {
   state = {
     realm: null,
     list: [],
@@ -13,11 +16,13 @@ export default class LocationScreen extends React.Component {
   componentDidMount() {
     console.log('location componentDidMount');
     this.openDatabase();
+    locator.initLocator(this.handleOnLocation.bind(this));
   }
 
   componentWillUnmount() {
     console.log('location componentWillUnmount');
     this.closeDatabase();
+    locator.removeLocator();
   }
 
   openDatabase() {
@@ -32,28 +37,26 @@ export default class LocationScreen extends React.Component {
     Database.close(this.state.realm);
   }
 
-  getList() {
-    const list = Database.getCarLogList(this.state.realm);
-    // console.log('list', list);
-    let prevTime = 0;
-    let prevLatitude = 0;
-    let prevLongitude = 0;
-    const calculated = [];
-    list.forEach((log, index) => {
-      log.dt = log.created - prevTime;
-      const dx = log.latitude - prevLatitude;
-      const dy = log.longitude - prevLongitude;
-      const dd = 100000 * Math.hypot(dx, dy);
-      const vc = (1000 * dd) / log.dt;
-      log.vc = vc.toFixed(2);
-      log.dd = dd.toFixed(0);
-      calculated.push(log);
-      // console.log(log);
-      prevTime = log.created;
-      prevLatitude = log.latitude;
-      prevLongitude = log.longitude;
-    });
-    this.setState({list: calculated});
+  getList() {}
+
+  handleOnLocation(position) {
+    const coords = position && position.coords;
+    if (!coords) {
+      return;
+    }
+    Database.saveCarLog(
+      this.state.realm,
+      coords.latitude,
+      coords.longitude,
+      position.timestamp,
+    )
+      .then(log => {
+        console.log('saveCarLog done', log);
+        this.getList();
+      })
+      .catch(e => {
+        console.log('saveCarLog', e);
+      });
   }
 
   renderItem(item) {
@@ -78,7 +81,6 @@ export default class LocationScreen extends React.Component {
   render() {
     return (
       <FlatList
-        ref={ref => (this.flatList = ref)}
         data={this.state.list}
         renderItem={({item}) => this.renderItem(item)}
         keyExtractor={(item, index) => String(index)}
