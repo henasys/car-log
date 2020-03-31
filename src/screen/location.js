@@ -38,6 +38,7 @@ export default class LocationScreen extends React.Component {
   }
 
   initList() {
+    this.pagingStartIndex = 0;
     const list = this.getList(this.pagingStartIndex);
     // console.log('list', list);
     this.setState({list});
@@ -56,6 +57,7 @@ export default class LocationScreen extends React.Component {
 
   onRefreshList() {
     console.log('onRefreshList');
+    this.initList();
   }
 
   getList(startIndex) {
@@ -96,8 +98,8 @@ export default class LocationScreen extends React.Component {
           renderItem={({item}) => this.renderItem(item)}
           keyExtractor={(item, index) => `${item.created}_${index}`}
           onEndReached={this.onLoadPreviousList.bind(this)}
-          // onRefresh={this.onRefreshList.bind(this)}
-          // refreshing={true}
+          onRefresh={this.onRefreshList.bind(this)}
+          refreshing={false}
         />
       </View>
     );
