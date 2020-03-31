@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     margin: 10,
-    // transform: [{scaleY: -1}],
+    transform: [{scaleY: -1}],
   },
   itemColumnContainer: {
     flexDirection: 'column',
