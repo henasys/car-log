@@ -30,7 +30,7 @@ const renderItem = item => {
 };
 
 export function StartPositionScreen(props) {
-  const [velocity, setVelocity] = useState('1.0');
+  const [velocity, setVelocity] = useState('5.0');
   const [period, setPeriod] = useState('10');
   const [gpsError, setGpsError] = useState('500');
   const [list, setList] = useState([]);
