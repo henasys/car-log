@@ -3,12 +3,17 @@ import {StyleSheet, Text, View, FlatList} from 'react-native';
 
 import Database from '../module/database';
 import {msToTime, timeToDate, timeToHourMin} from '../module/util';
+import {calculateLocationList, fixLastLocation} from '../module/util';
+
+const NUMBERS_PER_PAGE = 20;
 
 export default class LocationScreen extends React.Component {
   state = {
     realm: null,
     list: [],
   };
+
+  pagingStartIndex = 0;
 
   componentDidMount() {
     console.log('location componentDidMount');
@@ -23,8 +28,8 @@ export default class LocationScreen extends React.Component {
   openDatabase() {
     Database.open(realm => {
       this.setState({realm});
-      console.log('realm.open() done');
-      this.getList();
+      console.log('LocationScreen realm.open() done');
+      this.initList();
     });
   }
 
@@ -32,28 +37,35 @@ export default class LocationScreen extends React.Component {
     Database.close(this.state.realm);
   }
 
-  getList() {
-    const list = Database.getCarLogList(this.state.realm);
+  initList() {
+    const list = this.getList(this.pagingStartIndex);
     // console.log('list', list);
-    let prevTime = 0;
-    let prevLatitude = 0;
-    let prevLongitude = 0;
-    const calculated = [];
-    list.forEach((log, index) => {
-      log.dt = log.created - prevTime;
-      const dx = log.latitude - prevLatitude;
-      const dy = log.longitude - prevLongitude;
-      const dd = 100000 * Math.hypot(dx, dy);
-      const vc = (1000 * dd) / log.dt;
-      log.vc = vc.toFixed(2);
-      log.dd = dd.toFixed(0);
-      calculated.push(log);
-      // console.log(log);
-      prevTime = log.created;
-      prevLatitude = log.latitude;
-      prevLongitude = log.longitude;
-    });
-    this.setState({list: calculated});
+    this.setState({list});
+  }
+
+  onLoadPreviousList() {
+    console.log('onLoadPreviousList()', this.pagingStartIndex);
+    const logs = this.getList(this.pagingStartIndex + NUMBERS_PER_PAGE);
+    if (logs.length !== 0) {
+      this.pagingStartIndex += NUMBERS_PER_PAGE;
+      const {list} = this.state;
+      fixLastLocation(list, logs[0]);
+      this.setState({list: list.concat(logs)});
+    }
+  }
+
+  onRefreshList() {
+    console.log('onRefreshList');
+  }
+
+  getList(startIndex) {
+    const list = Database.getCarLogList(this.state.realm).sorted(
+      'created',
+      true,
+    );
+    const sliced = list.slice(startIndex, startIndex + NUMBERS_PER_PAGE);
+    // console.log('getList', sliced);
+    return calculateLocationList(sliced);
   }
 
   renderItem(item) {
@@ -77,12 +89,17 @@ export default class LocationScreen extends React.Component {
 
   render() {
     return (
-      <FlatList
-        ref={ref => (this.flatList = ref)}
-        data={this.state.list}
-        renderItem={({item}) => this.renderItem(item)}
-        keyExtractor={(item, index) => String(index)}
-      />
+      <View style={styles.ListContainer}>
+        <FlatList
+          ref={ref => (this.flatList = ref)}
+          data={this.state.list}
+          renderItem={({item}) => this.renderItem(item)}
+          keyExtractor={(item, index) => `${item.created}_${index}`}
+          onEndReached={this.onLoadPreviousList.bind(this)}
+          // onRefresh={this.onRefreshList.bind(this)}
+          // refreshing={true}
+        />
+      </View>
     );
   }
 }
@@ -91,9 +108,16 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     margin: 10,
+    // transform: [{scaleY: -1}],
   },
   itemColumnContainer: {
     flexDirection: 'column',
     marginLeft: 10,
+  },
+  ListContainer: {
+    flex: 1,
+    padding: 0,
+    margin: 0,
+    transform: [{scaleY: -1}],
   },
 });

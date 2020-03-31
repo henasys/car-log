@@ -119,3 +119,32 @@ export const showStartPositions = list => {
     );
   });
 };
+
+export const calculateLocationList = list => {
+  let prev = {latitude: 0.0, longitude: 0.0, created: 0};
+  list.reverse().forEach((log, index) => {
+    calculateLocation(log, prev);
+    prev = log;
+  });
+  return list.reverse();
+};
+
+export const fixLastLocation = (list, prev) => {
+  const lastIndex = list.length - 1;
+  calculateLocation(list[lastIndex], prev);
+  return list;
+};
+
+function calculateLocation(log, prev) {
+  log.dt = log.created - prev.created;
+  const dd = measure(
+    prev.latitude,
+    prev.longitude,
+    log.latitude,
+    log.longitude,
+  );
+  const vc = (1000 * dd) / log.dt;
+  log.vc = vc.toFixed(3);
+  log.dd = dd.toFixed(0);
+  return log;
+}
