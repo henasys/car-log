@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
 
 import Database from '../module/database';
+import {Locator} from '../module/locator';
 import {msToTime, timeToDate, timeToHourMin} from '../module/util';
 import {calculateLocationList, fixLastLocation} from '../module/util';
 
@@ -14,14 +15,17 @@ export default class LocationScreen extends React.Component {
   };
 
   pagingStartIndex = 0;
+  locator = Locator.getInstance();
 
   componentDidMount() {
     console.log('location componentDidMount');
+    this.addLocatorUpdater();
     this.openDatabase();
   }
 
   componentWillUnmount() {
     console.log('location componentWillUnmount');
+    this.removeLocatorUpdater();
     this.closeDatabase();
   }
 
@@ -35,6 +39,21 @@ export default class LocationScreen extends React.Component {
 
   closeDatabase() {
     Database.close(this.state.realm);
+  }
+
+  addLocatorUpdater() {
+    this.locatorUpdater = Locator.getInstance()
+      .getUpdater()
+      .subscribe({
+        next: payload => {
+          console.log('Locator updater observer', payload);
+          this.initList();
+        },
+      });
+  }
+
+  removeLocatorUpdater() {
+    this.locatorUpdater && this.locatorUpdater.unsubscribe();
   }
 
   initList() {

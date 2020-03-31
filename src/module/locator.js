@@ -1,4 +1,5 @@
 import Geolocation from '@react-native-community/geolocation';
+import {Subject} from 'rxjs';
 
 export class Locator {
   options = {
@@ -6,10 +7,25 @@ export class Locator {
     timeout: 2000,
   };
 
+  static instance;
+
+  static getInstance() {
+    // console.log('Locator.getInstance()');
+    if (!Locator.instance) {
+      Locator.instance = new Locator();
+    }
+    return Locator.instance;
+  }
+
   constructor(options = null) {
     if (!options) {
       this.options = options;
     }
+    this.updater = new Subject();
+  }
+
+  getUpdater() {
+    return this.updater;
   }
 
   initLocator(callback = null) {

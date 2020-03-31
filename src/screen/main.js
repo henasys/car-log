@@ -5,24 +5,24 @@ import Database from '../module/database';
 import {Locator} from '../module/locator';
 import {msToTime, timeToDate, timeToHourMin} from '../module/util';
 
-const locator = new Locator();
-
 export default class MainScreen extends React.Component {
   state = {
     realm: null,
     list: [],
   };
 
+  locator = Locator.getInstance();
+
   componentDidMount() {
     console.log('location componentDidMount');
     this.openDatabase();
-    locator.initLocator(this.handleOnLocation.bind(this));
+    this.locator.initLocator(this.handleOnLocation.bind(this));
   }
 
   componentWillUnmount() {
     console.log('location componentWillUnmount');
     this.closeDatabase();
-    locator.removeLocator();
+    this.locator.removeLocator();
   }
 
   openDatabase() {
@@ -77,6 +77,8 @@ export default class MainScreen extends React.Component {
         this.getList();
         const msg = `new position: ${coords.latitude}, ${coords.longitude}`;
         this.showToast(msg);
+        const updater = this.locator.getUpdater();
+        updater.next(coords);
       })
       .catch(e => {
         console.log('saveCarLog', e);
