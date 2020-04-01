@@ -24,6 +24,14 @@ export class Locator {
     this.updater = new Subject();
   }
 
+  setOptions(options) {
+    this.options = options;
+  }
+
+  getOptions() {
+    return this.options;
+  }
+
   getUpdater() {
     return this.updater;
   }
