@@ -77,6 +77,9 @@ export default class MainScreen extends React.Component {
       this.state.realm,
       coords.latitude,
       coords.longitude,
+      coords.speed,
+      coords.heading,
+      coords.accuracy,
       position.timestamp,
     )
       .then(log => {

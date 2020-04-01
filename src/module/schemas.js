@@ -4,11 +4,23 @@ class CarLog {
   }
 }
 
+CarLog.schema2 = {
+  name: 'CarLog',
+  properties: {
+    latitude: {type: 'double'},
+    longitude: {type: 'double'},
+    created: {type: 'int', indexed: true},
+  },
+};
+
 CarLog.schema = {
   name: 'CarLog',
   properties: {
     latitude: {type: 'double'},
     longitude: {type: 'double'},
+    speed: {type: 'double'},
+    heading: {type: 'double', optional: true},
+    accuracy: {type: 'double'},
     created: {type: 'int', indexed: true},
   },
 };
@@ -54,7 +66,8 @@ Position.schema = {
 
 const schema0 = [CarLog];
 const schema1 = [CarLog, Setting.schema1, Position];
-const schema2 = [CarLog, Setting, Position];
+const schema2 = [CarLog.schema2, Setting, Position];
+const schema3 = [CarLog, Setting, Position];
 
 function migrationFunctionNothing(oldRealm, newRealm) {
   console.log('migrationFunctionNothing', oldRealm, newRealm);
@@ -76,6 +89,11 @@ export const schemas = [
   {
     schema: schema2,
     schemaVersion: 2,
+    migration: migrationFunctionNothing,
+  },
+  {
+    schema: schema3,
+    schemaVersion: 3,
     migration: migrationFunctionNothing,
   },
 ];

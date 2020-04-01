@@ -59,13 +59,24 @@ const migrate = () => {
   }
 };
 
-const saveCarLog = (realm, latitude, longitude, created = null) => {
+const saveCarLog = (
+  realm,
+  latitude,
+  longitude,
+  speed,
+  heading,
+  accuracy,
+  created = null,
+) => {
   return new Promise((resolve, reject) => {
     try {
       realm.write(() => {
         const log = realm.create('CarLog', {
           latitude: latitude,
           longitude: longitude,
+          speed: speed,
+          heading: isNaN(heading) ? null : heading,
+          accuracy: accuracy,
           created: created ? created : new Date().getTime(),
         });
         resolve(log);

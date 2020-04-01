@@ -102,6 +102,9 @@ export default class LocationScreen extends React.Component {
           <Text>
             created: {timeToDate(item.created)} {timeToHourMin(item.created)}
           </Text>
+          <Text>speed: {item.speed}</Text>
+          <Text>heading: {item.heading}</Text>
+          <Text>accuracy: {item.accuracy}</Text>
         </View>
       </View>
     );
