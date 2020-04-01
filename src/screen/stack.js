@@ -25,6 +25,12 @@ export default function MyStack() {
               <View style={styles.menuContainer}>
                 <Icon
                   iconStyle={styles.menuItem}
+                  onPress={() => navigation.navigate('Location')}
+                  name="location-pin"
+                  type="entypo"
+                />
+                <Icon
+                  iconStyle={styles.menuItem}
                   onPress={() => navigation.navigate('Search')}
                   name="search"
                   type="material"
@@ -55,16 +61,7 @@ export default function MyStack() {
           component={SettingScreen}
           options={({navigation}) => ({
             title: '설정',
-            headerRight: () => (
-              <View style={styles.menuContainer}>
-                <Icon
-                  iconStyle={styles.menuItem}
-                  onPress={() => navigation.navigate('Location')}
-                  name="location-pin"
-                  type="entypo"
-                />
-              </View>
-            ),
+            headerRight: () => <View style={styles.menuContainer} />,
           })}
         />
         <Stack.Screen
