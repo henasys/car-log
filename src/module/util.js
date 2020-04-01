@@ -85,22 +85,21 @@ export const searchStartPositions = (
       log.latitude,
       log.longitude,
     );
+    console.log(index, dd.toFixed(0), prev.created);
     if (dd > gpsErrorMargin) {
       const vc = (1000 * dd) / log.dt;
       log.vc = vc.toFixed(3);
       log.dd = dd.toFixed(0);
-      if (vc <= fVelocity) {
-        if (log.dt >= periodInMil) {
-          console.log('Found start position', index);
-          console.log('vc', log.vc, 'dd', log.dd);
-          console.log('dt', msToTime(log.dt));
-          console.log('log', log);
-          console.log('log.created', timeToDateHourMin(log.created));
-          console.log('prev', prev);
-          console.log('prev.created', timeToDateHourMin(prev.created));
-          if (prev.created !== 0) {
-            calculated.push(prev);
-          }
+      if (log.dt >= periodInMil) {
+        console.log('Found start position', index);
+        console.log('vc', log.vc, 'dd', log.dd);
+        console.log('dt', msToTime(log.dt));
+        console.log('log', log);
+        console.log('log.created', timeToDateHourMin(log.created));
+        console.log('prev', prev);
+        console.log('prev.created', timeToDateHourMin(prev.created));
+        if (prev.created !== 0) {
+          calculated.push(log);
         }
       }
       prev = log;
