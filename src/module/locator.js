@@ -17,10 +17,7 @@ export class Locator {
     return Locator.instance;
   }
 
-  constructor(options = null) {
-    if (!options) {
-      this.options = options;
-    }
+  constructor() {
     this.updater = new Subject();
   }
 
