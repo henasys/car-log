@@ -4,7 +4,7 @@ import {Subject} from 'rxjs';
 export class Locator {
   options = {
     enableHighAccuracy: true,
-    timeout: 2000,
+    timeout: 10000,
   };
 
   static instance;
