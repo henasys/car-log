@@ -17,6 +17,14 @@ export default class MainScreen extends React.Component {
     console.log('main componentDidMount');
     this.openDatabase();
     this.locator.initLocator(this.handleOnLocation.bind(this));
+    this.locator.getCurrentPosition(position => {
+      const coords = position && position.coords;
+      if (!coords) {
+        return;
+      }
+      const msg = `init: ${coords.latitude}, ${coords.longitude}`;
+      this.showToast(msg);
+    });
   }
 
   componentWillUnmount() {
@@ -74,7 +82,7 @@ export default class MainScreen extends React.Component {
       .then(log => {
         console.log('saveCarLog done', log);
         this.getList();
-        const msg = `new position: ${coords.latitude}, ${coords.longitude}`;
+        const msg = `new: ${coords.latitude}, ${coords.longitude}`;
         this.showToast(msg);
         const updater = this.locator.getUpdater();
         updater.next(coords);
