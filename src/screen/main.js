@@ -18,14 +18,19 @@ export default class MainScreen extends React.Component {
     console.log('main componentDidMount');
     this.openDatabase();
     this.locator.initLocator(this.handleOnLocation.bind(this));
-    this.locator.getCurrentPosition(position => {
+    const callback = position => {
       const coords = position && position.coords;
       if (!coords) {
         return;
       }
       const msg = `init: ${coords.latitude}, ${coords.longitude}`;
       toast(msg);
-    });
+    };
+    const errorCallback = error => {
+      const msg = `${error.code}: ${error.message}`;
+      toast(msg);
+    };
+    this.locator.getCurrentPosition(callback, errorCallback);
   }
 
   componentWillUnmount() {

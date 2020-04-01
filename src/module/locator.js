@@ -41,13 +41,16 @@ export class Locator {
     this.clearWatch();
   }
 
-  getCurrentPosition(callback = null) {
+  getCurrentPosition(callback = null, errorCallback = null) {
     Geolocation.getCurrentPosition(
       position => {
         console.log('initPosition', position);
         callback && callback(position);
       },
-      error => console.log('getCurrentPosition Error', error),
+      error => {
+        console.log('getCurrentPosition Error', error);
+        errorCallback && errorCallback(error);
+      },
       this.options,
     );
   }
