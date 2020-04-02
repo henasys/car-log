@@ -46,6 +46,7 @@ export default class MainScreen extends React.Component {
       this.getLatestLocation();
       this.getSetting();
       this.getList();
+      this.getCarLogList();
     });
   }
 

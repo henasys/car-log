@@ -1,4 +1,4 @@
-import {carLogs} from './data/car_log_20200401';
+import {carLogs} from './data/car_log_data_1';
 import {searchStartPositions, showStartPositions} from '../src/module/util';
 import {
   detectSpeedZeroPoints,
@@ -39,4 +39,17 @@ it('print_data_for_map', () => {
     });
   });
   console.log(result.slice(164, 164 + 20));
+});
+
+it('count_accuracy', () => {
+  const result = {};
+  carLogs.forEach((log, index) => {
+    const key = log.accuracy;
+    if (key in result) {
+      result[key] += 1;
+    } else {
+      result[key] = 1;
+    }
+  });
+  console.log(result);
 });
