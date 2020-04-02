@@ -1,6 +1,10 @@
 import {carLogs} from './data/car_log_20200401';
 import {searchStartPositions, showStartPositions} from '../src/module/util';
-import {detectSpeedZeroPoints, toFixed} from '../src/module/util';
+import {
+  detectSpeedZeroPoints,
+  toFixed,
+  timeToHourMin,
+} from '../src/module/util';
 
 it('search_start_position1', () => {
   const list = carLogs;
@@ -23,4 +27,16 @@ it('detectSpeedZeroPoints', () => {
       console.log(log);
     });
   });
+});
+
+it('print_data_for_map', () => {
+  const result = [];
+  carLogs.forEach((log, index) => {
+    result.push({
+      title: timeToHourMin(log.created),
+      lat: log.latitude,
+      lng: log.longitude,
+    });
+  });
+  console.log(result.slice(120, 130));
 });

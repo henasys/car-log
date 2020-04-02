@@ -70,3 +70,4 @@ google-services.json
 
 # data
 __tests__/data/
+__tests__/map/
