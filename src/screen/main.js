@@ -4,6 +4,7 @@ import {StyleSheet, Text, View, FlatList} from 'react-native';
 import Database from '../module/database';
 import {Locator} from '../module/locator';
 import {msToTime, timeToDate, timeToHourMin} from '../module/util';
+import {timeToDateHourMin} from '../module/util';
 import {toast} from '../module/toast';
 
 export default class MainScreen extends React.Component {
@@ -68,6 +69,14 @@ export default class MainScreen extends React.Component {
   getList() {
     const list = Database.getPositionList(this.state.realm);
     this.setState({list});
+  }
+
+  getCarLogList() {
+    const list = Database.getCarLogList(this.state.realm);
+    list.forEach(log => {
+      log.date = timeToDateHourMin(log.created);
+      console.log(log);
+    });
   }
 
   handleOnLocation(position) {
