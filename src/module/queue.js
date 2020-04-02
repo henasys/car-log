@@ -25,6 +25,12 @@ export class Queue {
   isFull() {
     return this.container.length >= this.maxSize;
   }
+  getMaxSize() {
+    return this.maxSize;
+  }
+  getSize() {
+    return this.container.length;
+  }
   enqueue(element) {
     if (this.isFull()) {
       this._log('Queue Overflow!');
@@ -49,17 +55,17 @@ export class Queue {
   clear() {
     this.container = [];
   }
-  getAll() {
+  peekAll() {
     return this.container;
   }
-  getLast() {
+  peekLast() {
     const length = this.container.length;
     if (length < 1) {
       return;
     }
     return this.container[length - 1];
   }
-  getLastMinusOne() {
+  peekLastMinusOne() {
     const length = this.container.length;
     if (length < 2) {
       return;
@@ -80,7 +86,7 @@ export class LocationQueue {
   }
 
   averageOfLatitude() {
-    const list = this.queue.getAll().map(x => x.latitude);
+    const list = this.queue.peekAll().map(x => x.latitude);
     if (list.length === 0) {
       return 0.0;
     }
@@ -90,7 +96,7 @@ export class LocationQueue {
   }
 
   averageOfLongitude() {
-    const list = this.queue.getAll().map(x => x.longitude);
+    const list = this.queue.peekAll().map(x => x.longitude);
     if (list.length === 0) {
       return 0.0;
     }
@@ -99,8 +105,8 @@ export class LocationQueue {
   }
 
   deltaOfLatitude() {
-    const last = this.queue.getLast();
-    const minusOne = this.queue.getLastMinusOne();
+    const last = this.queue.peekLast();
+    const minusOne = this.queue.peekLastMinusOne();
     if (!last) {
       return 0.0;
     }
@@ -111,8 +117,8 @@ export class LocationQueue {
   }
 
   deltaOfLongitude() {
-    const last = this.queue.getLast();
-    const minusOne = this.queue.getLastMinusOne();
+    const last = this.queue.peekLast();
+    const minusOne = this.queue.peekLastMinusOne();
     if (!last) {
       return 0.0;
     }

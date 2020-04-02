@@ -1,6 +1,8 @@
 import moment from 'moment';
 import 'moment/locale/ko';
 
+import {Queue} from './queue';
+
 export function msToTime(s) {
   // Pad to 2 or 3 digits, default is 2
   function pad(n, z) {
@@ -147,3 +149,23 @@ function calculateLocation(log, prev) {
   log.dd = dd.toFixed(0);
   return log;
 }
+
+export const detectSpeedZeroPoints = list => {
+  const queueSize = 2;
+  const prevQueue = new Queue(queueSize);
+  const result = [];
+  list.forEach((log, index) => {
+    const last = prevQueue.peekLast();
+    const size = prevQueue.getSize();
+    if (size === queueSize && last && last.speed === 0) {
+      const points = [...prevQueue.peekAll(), log];
+      result.push(points);
+    }
+    prevQueue.enqueue(log);
+  });
+  return result;
+};
+
+export const toFixed = (number, digits = 2) => {
+  return Number.parseFloat(number).toFixed(digits);
+};
