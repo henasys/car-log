@@ -38,5 +38,5 @@ it('print_data_for_map', () => {
       lng: log.longitude,
     });
   });
-  console.log(result.slice(120, 130));
+  console.log(result.slice(164, 164 + 20));
 });
