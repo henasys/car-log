@@ -4,6 +4,7 @@ import {
   detectSpeedZeroPoints,
   toFixed,
   timeToHourMin,
+  detectEdgePoints,
 } from '../src/module/util';
 
 it('search_start_position1', () => {
@@ -62,5 +63,10 @@ it('count_big_accuracy', () => {
       result.push(log);
     }
   });
+  console.log(result);
+});
+
+it('detectEdgePoints', () => {
+  const result = detectEdgePoints(carLogs);
   console.log(result);
 });

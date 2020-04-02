@@ -169,3 +169,19 @@ export const detectSpeedZeroPoints = list => {
 export const toFixed = (number, digits = 2) => {
   return Number.parseFloat(number).toFixed(digits);
 };
+
+export const detectEdgePoints = list => {
+  const result = [];
+  let prev = {speed: 0};
+  list.forEach((log, index) => {
+    if (prev.speed === 0 && log.speed !== 0) {
+      log.type = 'depart';
+      result.push(log);
+    } else if (prev.speed !== 0 && log.speed === 0) {
+      log.type = 'arrive';
+      result.push(log);
+    }
+    prev = log;
+  });
+  return result;
+};
