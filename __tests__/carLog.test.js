@@ -41,7 +41,7 @@ it('print_data_for_map', () => {
   console.log(result.slice(164, 164 + 20));
 });
 
-it('count_accuracy', () => {
+it('histogram_accuracy', () => {
   const result = {};
   carLogs.forEach((log, index) => {
     const key = log.accuracy;
@@ -49,6 +49,17 @@ it('count_accuracy', () => {
       result[key] += 1;
     } else {
       result[key] = 1;
+    }
+  });
+  console.log(result);
+});
+
+it('count_big_accuracy', () => {
+  const value = 40;
+  const result = [];
+  carLogs.forEach((log, index) => {
+    if (log.accuracy >= value) {
+      result.push(log);
     }
   });
   console.log(result);
