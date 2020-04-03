@@ -179,47 +179,67 @@ export const detectEdgePoints = ({
   const fAccuracyMargin = parseFloat(accuracyMargin);
   const fRadiusOfArea = parseFloat(radiusOfArea);
   const iPeriodInMin = parseInt(periodInMin, 10);
-  const periodInMil = iPeriodInMin * 60 * 1000;
+  const iPeriodInMil = iPeriodInMin * 60 * 1000;
   let prev = {latitude: 0.0, longitude: 0.0, created: 0};
-  const calculated = [];
-  list.forEach((log, index) => {
-    log.dt = log.created - prev.created;
-    const dd = measure(
-      prev.latitude,
-      prev.longitude,
-      log.latitude,
-      log.longitude,
-    );
-    // console.log(index, dd.toFixed(0), prev.created);
-    if (log.accuracy < fAccuracyMargin && dd > fRadiusOfArea) {
-      const vc = (1000 * dd) / log.dt;
-      log.vc = vc.toFixed(3);
-      log.dd = dd.toFixed(0);
-      if (log.dt >= periodInMil) {
-        // console.log('Found start position', index);
-        // console.log('vc', log.vc, 'dd', log.dd);
-        // console.log('dt', msToTime(log.dt));
-        // console.log('log', log);
-        // console.log('log.created', timeToDateHourMin(log.created));
-        // console.log('prev', prev);
-        // console.log('prev.created', timeToDateHourMin(prev.created));
-        if (prev.created !== 0) {
-          prev.type = 'arrive';
-          calculated.push(prev);
-          log.type = 'depart';
-          calculated.push(log);
-        }
-      }
-      prev = log;
+  let calculated = [];
+  const lastIndex = list.length - 1;
+  let isNotFirstArrival = false;
+  for (let index = 0; index < list.length; index++) {
+    const log = list[index];
+    if (log.accuracy >= fAccuracyMargin) {
+      continue;
     }
-  });
+    const dt = log.created - prev.created;
+    const dd = distanceLog(log, prev);
+    log.dt = dt;
+    log.dd = dd;
+    if (dd <= fRadiusOfArea) {
+      continue;
+    }
+    if (index === lastIndex) {
+      calculated.push(assignNewLog(prev, 'arrive'));
+      continue;
+    }
+    if (index <= 10) {
+      console.log('prev', index, prev);
+      console.log('curr', log);
+    }
+    if (prev.created !== 0 && dt >= iPeriodInMil) {
+      if (isNotFirstArrival) {
+        calculated.push(assignNewLog(prev, 'arrive'));
+      }
+      isNotFirstArrival = true;
+      calculated.push(assignNewLog(log, 'depart'));
+    }
+    prev = log;
+  }
   return calculated;
+};
+
+const distanceLog = (current, previous) => {
+  return measure(
+    previous.latitude,
+    previous.longitude,
+    current.latitude,
+    current.longitude,
+  );
+};
+
+const assignNewLog = (log, type) => {
+  const newLog = Object.assign({}, log);
+  newLog.type = type;
+  return newLog;
 };
 
 export const showSimpleLocation = list => {
   const result = [];
   list.forEach(log => {
-    const newLog = {date: log.date, type: log.type, created: log.created};
+    const newLog = {
+      date: log.date,
+      type: log.type,
+      created: log.created,
+      dd: log.dd,
+    };
     newLog.latitude = toFixed(log.latitude);
     newLog.longitude = toFixed(log.longitude);
     result.push(newLog);
