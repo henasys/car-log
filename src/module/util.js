@@ -170,18 +170,59 @@ export const toFixed = (number, digits = 2) => {
   return Number.parseFloat(number).toFixed(digits);
 };
 
-export const detectEdgePoints = list => {
-  const result = [];
-  let prev = {speed: 0};
+export const detectEdgePoints = ({
+  list,
+  periodInMin,
+  accuracyMargin = '40',
+  radiusOfArea = '100',
+}) => {
+  const fAccuracyMargin = parseFloat(accuracyMargin);
+  const fRadiusOfArea = parseFloat(radiusOfArea);
+  const iPeriodInMin = parseInt(periodInMin, 10);
+  const periodInMil = iPeriodInMin * 60 * 1000;
+  let prev = {latitude: 0.0, longitude: 0.0, created: 0};
+  const calculated = [];
   list.forEach((log, index) => {
-    if (prev.speed === 0 && log.speed !== 0) {
-      log.type = 'depart';
-      result.push(log);
-    } else if (prev.speed !== 0 && log.speed === 0) {
-      log.type = 'arrive';
-      result.push(log);
+    log.dt = log.created - prev.created;
+    const dd = measure(
+      prev.latitude,
+      prev.longitude,
+      log.latitude,
+      log.longitude,
+    );
+    // console.log(index, dd.toFixed(0), prev.created);
+    if (log.accuracy < fAccuracyMargin && dd > fRadiusOfArea) {
+      const vc = (1000 * dd) / log.dt;
+      log.vc = vc.toFixed(3);
+      log.dd = dd.toFixed(0);
+      if (log.dt >= periodInMil) {
+        // console.log('Found start position', index);
+        // console.log('vc', log.vc, 'dd', log.dd);
+        // console.log('dt', msToTime(log.dt));
+        // console.log('log', log);
+        // console.log('log.created', timeToDateHourMin(log.created));
+        // console.log('prev', prev);
+        // console.log('prev.created', timeToDateHourMin(prev.created));
+        if (prev.created !== 0) {
+          prev.type = 'arrive';
+          calculated.push(prev);
+          log.type = 'depart';
+          calculated.push(log);
+        }
+      }
+      prev = log;
     }
-    prev = log;
+  });
+  return calculated;
+};
+
+export const showSimpleLocation = list => {
+  const result = [];
+  list.forEach(log => {
+    const newLog = {date: log.date, type: log.type, created: log.created};
+    newLog.latitude = toFixed(log.latitude);
+    newLog.longitude = toFixed(log.longitude);
+    result.push(newLog);
   });
   return result;
 };

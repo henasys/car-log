@@ -5,6 +5,7 @@ import {
   toFixed,
   timeToHourMin,
   detectEdgePoints,
+  showSimpleLocation,
 } from '../src/module/util';
 
 it('search_start_position1', () => {
@@ -67,6 +68,15 @@ it('count_big_accuracy', () => {
 });
 
 it('detectEdgePoints', () => {
-  const result = detectEdgePoints(carLogs);
-  console.log(result);
+  const list = carLogs;
+  const periodInMin = '30';
+  const accuracyMargin = '40';
+  // const radiusOfArea = '100';
+  const result = detectEdgePoints({
+    list,
+    periodInMin,
+    accuracyMargin,
+    // radiusOfArea,
+  });
+  console.log(showSimpleLocation(result));
 });
