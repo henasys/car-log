@@ -9,9 +9,9 @@ import inputBox from '../view/inputBox';
 
 export default class SettingScreen extends React.Component {
   state = {
-    velocity: '1.0',
     period: '15',
-    gpsError: '500',
+    accuracyMargin: '40',
+    radiusOfArea: '100',
   };
 
   componentDidMount() {
@@ -44,18 +44,25 @@ export default class SettingScreen extends React.Component {
     if (!setting) {
       return;
     }
-    const {velocity, period, gpsError} = setting;
+    const {period, accuracyMargin, radiusOfArea} = setting;
     this.setState({
-      velocity: velocity ? String(velocity) : this.state.velocity,
       period: period ? String(period) : this.state.period,
-      gpsError: gpsError ? String(gpsError) : this.state.gpsError,
+      accuracyMargin: accuracyMargin
+        ? String(accuracyMargin)
+        : this.state.accuracyMargin,
+      radiusOfArea: radiusOfArea
+        ? String(radiusOfArea)
+        : this.state.radiusOfArea,
     });
   }
 
-  setVelocity(velocity) {
-    this.setState({velocity});
-    const {realm, period, gpsError} = this.state;
-    Database.saveSetting(realm, velocity, period, gpsError)
+  setAccuracyMargin(accuracyMargin) {
+    if (!accuracyMargin) {
+      return;
+    }
+    this.setState({accuracyMargin});
+    const {realm, period, radiusOfArea} = this.state;
+    Database.saveSetting(realm, period, accuracyMargin, radiusOfArea)
       .then(setting => {
         console.log(setting);
       })
@@ -65,9 +72,12 @@ export default class SettingScreen extends React.Component {
   }
 
   setPeriod(period) {
+    if (!period) {
+      return;
+    }
     this.setState({period});
-    const {realm, velocity, gpsError} = this.state;
-    Database.saveSetting(realm, velocity, period, gpsError)
+    const {realm, accuracyMargin, radiusOfArea} = this.state;
+    Database.saveSetting(realm, period, accuracyMargin, radiusOfArea)
       .then(setting => {
         console.log(setting);
       })
@@ -76,10 +86,13 @@ export default class SettingScreen extends React.Component {
       });
   }
 
-  setGpsError(gpsError) {
-    this.setState({gpsError});
-    const {realm, velocity, period} = this.state;
-    Database.saveSetting(realm, velocity, period, gpsError)
+  setRadiusOfArea(radiusOfArea) {
+    if (!radiusOfArea) {
+      return;
+    }
+    this.setState({radiusOfArea});
+    const {realm, period, accuracyMargin} = this.state;
+    Database.saveSetting(realm, period, accuracyMargin, radiusOfArea)
       .then(setting => {
         console.log(setting);
       })
@@ -89,23 +102,13 @@ export default class SettingScreen extends React.Component {
   }
 
   render() {
-    const {velocity, period, gpsError} = this.state;
+    const {period, accuracyMargin, radiusOfArea} = this.state;
     return (
       <View style={styles.container}>
         <Text style={styles.sectionLabel}>{'출발점 검출 기준'}</Text>
         <View style={styles.inputContainer}>
           {inputBox({
-            label: '속도 ≤',
-            unitLabel: 'm/s',
-            defaultValue: velocity,
-            onChangeTextHandler: text => {
-              this.setVelocity(text);
-              console.log('velocity onChange');
-            },
-            textInputStyle: styles.textInput,
-          })}
-          {inputBox({
-            label: '시간 ≥',
+            label: '정차시간 ≥',
             unitLabel: 'min',
             defaultValue: period,
             onChangeTextHandler: text => {
@@ -115,12 +118,22 @@ export default class SettingScreen extends React.Component {
             textInputStyle: styles.textInput,
           })}
           {inputBox({
-            label: ' GPS오차 ≥',
-            unitLabel: 'meters     ',
-            defaultValue: gpsError,
+            label: 'GPS 정확도 ≤',
+            unitLabel: 'm',
+            defaultValue: accuracyMargin,
             onChangeTextHandler: text => {
-              this.setGpsError(text);
-              console.log('gpsError onChange');
+              this.setAccuracyMargin(text);
+              console.log('accuracyMargin onChange');
+            },
+            textInputStyle: styles.textInput,
+          })}
+          {inputBox({
+            label: '영역반경 ≤',
+            unitLabel: 'm',
+            defaultValue: radiusOfArea,
+            onChangeTextHandler: text => {
+              this.setRadiusOfArea(text);
+              console.log('radiusOfArea onChange');
             },
             textInputStyle: styles.textInput,
           })}

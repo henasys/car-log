@@ -92,26 +92,26 @@ const getCarLogList = realm => {
   return realm.objects('CarLog');
 };
 
-const saveSetting = (realm, velocity, period, gpsError) => {
+const saveSetting = (realm, period, accuracyMargin, radiusOfArea) => {
   return new Promise((resolve, reject) => {
-    const fVelocity = parseFloat(velocity);
-    const iPeriod = parseInt(period, 10);
-    const iGpsError = parseInt(gpsError, 10);
     try {
+      const iPeriod = parseInt(period, 10);
+      const fAccuracyMargin = parseFloat(accuracyMargin);
+      const fRadiusOfArea = parseFloat(radiusOfArea);
       realm.write(() => {
         const rs = realm.objects('Setting');
         if (!rs.isEmpty()) {
           const setting = rs[0];
-          setting.velocity = fVelocity;
+          setting.accuracyMargin = fAccuracyMargin;
           setting.period = iPeriod;
-          setting.gpsError = iGpsError;
+          setting.radiusOfArea = fRadiusOfArea;
           resolve(setting);
           return;
         }
         const setting = realm.create('Setting', {
-          velocity: fVelocity,
+          accuracyMargin: fAccuracyMargin,
           period: iPeriod,
-          gpsError: iGpsError,
+          radiusOfArea: fRadiusOfArea,
         });
         resolve(setting);
       });

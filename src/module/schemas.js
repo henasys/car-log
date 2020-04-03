@@ -35,12 +35,21 @@ Setting.schema1 = {
   },
 };
 
-Setting.schema = {
+Setting.schema3 = {
   name: 'Setting',
   properties: {
     velocity: {type: 'double'},
     period: {type: 'int'},
     gpsError: {type: 'int', default: 500},
+  },
+};
+
+Setting.schema = {
+  name: 'Setting',
+  properties: {
+    period: {type: 'int'},
+    accuracyMargin: {type: 'double'},
+    radiusOfArea: {type: 'double'},
   },
 };
 
@@ -67,12 +76,23 @@ Position.schema = {
 const schema0 = [CarLog];
 const schema1 = [CarLog, Setting.schema1, Position];
 const schema2 = [CarLog.schema2, Setting, Position];
-const schema3 = [CarLog, Setting, Position];
+const schema3 = [CarLog, Setting.schema3, Position];
+const schema4 = [CarLog, Setting, Position];
 
 function migrationFunctionNothing(oldRealm, newRealm) {
   console.log('migrationFunctionNothing', oldRealm, newRealm);
   console.log('oldRealm.schemaVersion', oldRealm.schemaVersion);
   console.log('newRealm.schemaVersion', newRealm.schemaVersion);
+}
+
+function migrationFunction4(oldRealm, newRealm) {
+  const oldObjects = oldRealm.objects('Setting');
+  const newObjects = newRealm.objects('Setting');
+
+  for (let i = 0; i < oldObjects.length; i++) {
+    newObjects[i].radiusOfArea = 100;
+    newObjects[i].accuracyMargin = 40;
+  }
 }
 
 export const schemas = [
@@ -95,6 +115,11 @@ export const schemas = [
     schema: schema3,
     schemaVersion: 3,
     migration: migrationFunctionNothing,
+  },
+  {
+    schema: schema4,
+    schemaVersion: 4,
+    migration: migrationFunction4,
   },
 ];
 
