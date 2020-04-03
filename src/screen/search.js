@@ -17,12 +17,10 @@ const renderItem = item => {
         <Text>{timeToHourMin(item.created)}</Text>
       </View>
       <View style={styles.itemColumnContainer}>
-        <Text>간격: {msToTime(item.dt)}</Text>
+        <Text>{item.type}</Text>
+        <Text>시간간격: {msToTime(item.dt)}</Text>
         <Text>
-          속도: {item.vc} [{item.dd}m / {toFixed(item.dt / 1000)}s]
-        </Text>
-        <Text>
-          좌표: {toFixed(item.latitude)}, {toFixed(item.longitude)}
+          좌표: {toFixed(item.latitude, 4)}, {toFixed(item.longitude, 4)}
         </Text>
       </View>
     </View>
@@ -30,9 +28,9 @@ const renderItem = item => {
 };
 
 export function SearchScreen(props) {
-  const [velocity, setVelocity] = useState('5.0');
-  const [period, setPeriod] = useState('10');
-  const [gpsError, setGpsError] = useState('500');
+  const [accuracyMargin, setAccuracyMargin] = useState('40');
+  const [period, setPeriod] = useState('30');
+  const [radiusOfArea, setRadiusOfArea] = useState('100');
   const [list, setList] = useState([]);
   return (
     <View style={styles.container}>
@@ -40,41 +38,37 @@ export function SearchScreen(props) {
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <View style={{flexDirection: 'row'}}>
             {inputBox({
-              label: '속도 ≤',
-              unitLabel: 'm/s',
-              defaultValue: velocity,
-              onChangeTextHandler: setVelocity,
+              label: '영역반경 ≤',
+              unitLabel: 'm',
+              defaultValue: radiusOfArea,
+              onChangeTextHandler: setRadiusOfArea,
             })}
             {inputBox({
-              label: '시간 ≥',
+              label: '정차시간 ≥',
               unitLabel: 'min',
               defaultValue: period,
               onChangeTextHandler: setPeriod,
             })}
           </View>
           {inputBox({
-            label: 'GPS오차 ≥',
+            label: 'GPS 정확도 ≤',
             unitLabel: 'm',
-            defaultValue: gpsError,
-            onChangeTextHandler: setGpsError,
+            defaultValue: accuracyMargin,
+            onChangeTextHandler: setAccuracyMargin,
           })}
         </View>
         <Icon
           iconStyle={styles.menuItem}
           onPress={() => {
-            console.log('search', velocity, period);
+            console.log('search');
             Database.open(realm => {
               const logs = Database.getCarLogList(realm);
-              const periodInMin = '30';
-              const accuracyMargin = '40';
-              const radiusOfArea = '100';
               const result = detectEdgePoints(
                 logs,
-                periodInMin,
+                period,
                 accuracyMargin,
                 radiusOfArea,
               );
-              console.log(result);
               setList(result);
             });
           }}
