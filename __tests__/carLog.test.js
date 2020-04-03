@@ -1,4 +1,4 @@
-import {carLogs} from './data/car_log_data_1';
+import {carLogs} from './data/car_log_data_park';
 import {searchStartPositions, showStartPositions} from '../src/module/util';
 import {
   detectSpeedZeroPoints,
@@ -11,7 +11,7 @@ it('search_start_position1', () => {
   const list = carLogs;
   const velocity = '1.0';
   const period = '20';
-  const gpsErrorMargin = 300;
+  const gpsErrorMargin = 100;
   const result = searchStartPositions(list, velocity, period, gpsErrorMargin);
   showStartPositions(result);
 });

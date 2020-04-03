@@ -87,7 +87,7 @@ export const searchStartPositions = (
       log.latitude,
       log.longitude,
     );
-    console.log(index, dd.toFixed(0), prev.created);
+    // console.log(index, dd.toFixed(0), prev.created);
     if (dd > gpsErrorMargin) {
       const vc = (1000 * dd) / log.dt;
       log.vc = vc.toFixed(3);
