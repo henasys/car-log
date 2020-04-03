@@ -1,4 +1,4 @@
-import {distanceCarLog} from '../module/util';
+import {distanceCarLog, timeToDateHourMin} from '../module/util';
 import {CarLog} from '../module/schemas';
 
 export class EdgeDetector {
@@ -40,11 +40,12 @@ export class EdgeDetector {
     const dd = distanceCarLog(current, previous);
     current.dt = dt;
     current.dd = dd;
+    current.date = timeToDateHourMin(current.created);
     this.totalDistance = this.totalDistance + dd;
     if (dd <= this.radiusOfArea) {
       return previous;
     }
-    if (previous.created !== 0 && dt >= this.period) {
+    if (dt >= this.period) {
       this.number += 1;
       if (this.isNotFirstArrival) {
         previous.type = 'arrive';
