@@ -5,8 +5,9 @@ import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
 import {msToTime, timeToDate, timeToWeek, timeToHourMin} from '../module/util';
-import {detectEdgePoints, toFixed} from '../module/util';
+import {toFixed} from '../module/util';
 import inputBox from '../view/inputBox';
+import {EdgeDetector} from '../module/detector';
 
 const renderItem = item => {
   return (
@@ -17,7 +18,9 @@ const renderItem = item => {
         <Text>{timeToHourMin(item.created)}</Text>
       </View>
       <View style={styles.itemColumnContainer}>
-        <Text>{item.type}</Text>
+        <Text>
+          {item.type} {item.number}
+        </Text>
         <Text>시간간격: {msToTime(item.totalTime)}</Text>
         <Text>거리합산: {toFixed(item.totalDistance / 1000)} km</Text>
         <Text>
@@ -64,12 +67,14 @@ export function SearchScreen(props) {
             console.log('search');
             Database.open(realm => {
               const logs = Database.getCarLogList(realm);
-              const result = detectEdgePoints(
-                logs,
+              const detector = new EdgeDetector(
                 period,
                 accuracyMargin,
                 radiusOfArea,
               );
+              detector.detectList(logs);
+              const result = detector.getResult();
+              console.log(result);
               setList(result);
             });
           }}

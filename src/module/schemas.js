@@ -1,4 +1,4 @@
-class CarLog {
+export class CarLog {
   clone() {
     return Object.assign(new CarLog(), {...this});
   }
