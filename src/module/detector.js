@@ -41,7 +41,7 @@ export class EdgeDetector {
     current.dt = dt;
     current.dd = dd;
     this.totalDistance = this.totalDistance + dd;
-    if (dd <= this.adiusOfArea) {
+    if (dd <= this.radiusOfArea) {
       return previous;
     }
     if (previous.created !== 0 && dt >= this.period) {
