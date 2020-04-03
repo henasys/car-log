@@ -18,7 +18,8 @@ const renderItem = item => {
       </View>
       <View style={styles.itemColumnContainer}>
         <Text>{item.type}</Text>
-        <Text>시간간격: {msToTime(item.dt)}</Text>
+        <Text>시간간격: {msToTime(item.totalTime)}</Text>
+        <Text>거리합산: {toFixed(item.totalDistance / 1000)} km</Text>
         <Text>
           좌표: {toFixed(item.latitude, 4)}, {toFixed(item.longitude, 4)}
         </Text>

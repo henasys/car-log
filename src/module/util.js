@@ -184,6 +184,8 @@ export const detectEdgePoints = (
   let calculated = [];
   const lastIndex = list.length - 1;
   let isNotFirstArrival = false;
+  let totalDistance = 0;
+  let departTime = 0;
   for (let index = 0; index < list.length; index++) {
     const log = list[index];
     if (log.accuracy >= fAccuracyMargin) {
@@ -193,21 +195,30 @@ export const detectEdgePoints = (
     const dd = distanceLog(log, prev);
     log.dt = dt;
     log.dd = dd;
+    totalDistance = totalDistance + dd;
     if (dd <= fRadiusOfArea) {
       continue;
     }
     if (index === lastIndex) {
-      prev.type = 'arrive';
-      calculated.push(prev);
+      log.type = 'arrive';
+      log.totalDistance = totalDistance;
+      log.totalTime = log.created - departTime;
+      calculated.push(log);
       continue;
     }
     if (prev.created !== 0 && dt >= iPeriodInMil) {
       if (isNotFirstArrival) {
         prev.type = 'arrive';
+        prev.totalDistance = totalDistance;
+        prev.totalTime = prev.created - departTime;
         calculated.push(prev);
       }
       isNotFirstArrival = true;
+      totalDistance = 0.0;
+      departTime = log.created;
       log.type = 'depart';
+      log.totalDistance = 0;
+      log.totalTime = 0;
       calculated.push(log);
     }
     prev = log;
