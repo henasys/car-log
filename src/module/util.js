@@ -170,12 +170,12 @@ export const toFixed = (number, digits = 2) => {
   return Number.parseFloat(number).toFixed(digits);
 };
 
-export const detectEdgePoints = ({
+export const detectEdgePoints = (
   list,
   periodInMin,
   accuracyMargin = '40',
   radiusOfArea = '100',
-}) => {
+) => {
   const fAccuracyMargin = parseFloat(accuracyMargin);
   const fRadiusOfArea = parseFloat(radiusOfArea);
   const iPeriodInMin = parseInt(periodInMin, 10);
@@ -197,19 +197,18 @@ export const detectEdgePoints = ({
       continue;
     }
     if (index === lastIndex) {
-      calculated.push(assignNewLog(prev, 'arrive'));
+      prev.type = 'arrive';
+      calculated.push(prev);
       continue;
-    }
-    if (index <= 10) {
-      console.log('prev', index, prev);
-      console.log('curr', log);
     }
     if (prev.created !== 0 && dt >= iPeriodInMil) {
       if (isNotFirstArrival) {
-        calculated.push(assignNewLog(prev, 'arrive'));
+        prev.type = 'arrive';
+        calculated.push(prev);
       }
       isNotFirstArrival = true;
-      calculated.push(assignNewLog(log, 'depart'));
+      log.type = 'depart';
+      calculated.push(log);
     }
     prev = log;
   }
@@ -223,12 +222,6 @@ const distanceLog = (current, previous) => {
     current.latitude,
     current.longitude,
   );
-};
-
-const assignNewLog = (log, type) => {
-  const newLog = Object.assign({}, log);
-  newLog.type = type;
-  return newLog;
 };
 
 export const showSimpleLocation = list => {

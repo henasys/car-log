@@ -72,11 +72,11 @@ it('detectEdgePoints', () => {
   const periodInMin = '30';
   const accuracyMargin = '40';
   // const radiusOfArea = '100';
-  const result = detectEdgePoints({
+  const result = detectEdgePoints(
     list,
     periodInMin,
     accuracyMargin,
     // radiusOfArea,
-  });
+  );
   console.log(showSimpleLocation(result));
 });
