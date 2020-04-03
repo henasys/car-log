@@ -8,7 +8,7 @@ import MainScreen from '../screen/main';
 import LocationScreen from '../screen/location';
 import {ShareScreen} from '../screen/share';
 import SettingScreen from '../screen/setting';
-import {StartPositionScreen} from '../screen/startPosition';
+import {SearchScreen} from './search';
 
 const Stack = createStackNavigator();
 
@@ -66,8 +66,8 @@ export default function MyStack() {
         />
         <Stack.Screen
           name="Search"
-          component={StartPositionScreen}
-          options={{title: '출발지점 검출'}}
+          component={SearchScreen}
+          options={{title: '출발/도착지 검출'}}
         />
         <Stack.Screen
           name="Location"

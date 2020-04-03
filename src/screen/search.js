@@ -5,7 +5,7 @@ import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
 import {msToTime, timeToDate, timeToWeek, timeToHourMin} from '../module/util';
-import {searchStartPositions} from '../module/util';
+import {detectEdgePoints, toFixed} from '../module/util';
 import inputBox from '../view/inputBox';
 
 const renderItem = item => {
@@ -19,17 +19,17 @@ const renderItem = item => {
       <View style={styles.itemColumnContainer}>
         <Text>간격: {msToTime(item.dt)}</Text>
         <Text>
-          속도: {item.vc} [{item.dd}m / {(item.dt / 1000).toFixed(0)}s]
+          속도: {item.vc} [{item.dd}m / {toFixed(item.dt / 1000)}s]
         </Text>
         <Text>
-          좌표: {item.latitude.toFixed(2)}, {item.longitude.toFixed(2)}
+          좌표: {toFixed(item.latitude)}, {toFixed(item.longitude)}
         </Text>
       </View>
     </View>
   );
 };
 
-export function StartPositionScreen(props) {
+export function SearchScreen(props) {
   const [velocity, setVelocity] = useState('5.0');
   const [period, setPeriod] = useState('10');
   const [gpsError, setGpsError] = useState('500');
@@ -65,13 +65,17 @@ export function StartPositionScreen(props) {
             console.log('search', velocity, period);
             Database.open(realm => {
               const logs = Database.getCarLogList(realm);
-              const positions = searchStartPositions(
+              const periodInMin = '30';
+              const accuracyMargin = '40';
+              const radiusOfArea = '100';
+              const result = detectEdgePoints(
                 logs,
-                velocity,
-                period,
-                gpsError,
+                periodInMin,
+                accuracyMargin,
+                radiusOfArea,
               );
-              setList(positions);
+              console.log(result);
+              setList(result);
             });
           }}
           name="search"
