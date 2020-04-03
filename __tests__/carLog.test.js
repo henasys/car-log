@@ -7,6 +7,7 @@ import {
   detectEdgePoints,
   showSimpleLocation,
 } from '../src/module/util';
+import {EdgeDetector} from '../src/module/detector';
 
 it('search_start_position1', () => {
   const list = carLogs;
@@ -79,4 +80,17 @@ it('detectEdgePoints', () => {
     // radiusOfArea,
   );
   console.log(showSimpleLocation(result));
+  expect(result.length).toEqual(6);
+});
+
+it('detectEdgePointsClass', () => {
+  const list = carLogs;
+  const periodInMin = '30';
+  const accuracyMargin = '40';
+  const radiusOfArea = '100';
+  const detector = new EdgeDetector(periodInMin, accuracyMargin, radiusOfArea);
+  detector.detectList(list);
+  const result = detector.getResult();
+  console.log(result);
+  expect(result.length).toEqual(6);
 });

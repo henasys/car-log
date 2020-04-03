@@ -192,7 +192,7 @@ export const detectEdgePoints = (
       continue;
     }
     const dt = log.created - prev.created;
-    const dd = distanceLog(log, prev);
+    const dd = distanceCarLog(log, prev);
     log.dt = dt;
     log.dd = dd;
     totalDistance = totalDistance + dd;
@@ -226,7 +226,7 @@ export const detectEdgePoints = (
   return calculated;
 };
 
-const distanceLog = (current, previous) => {
+export const distanceCarLog = (current, previous) => {
   return measure(
     previous.latitude,
     previous.longitude,
