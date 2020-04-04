@@ -62,7 +62,7 @@ export default function MyStack() {
         <Stack.Screen
           name="Setting"
           component={SettingScreen}
-          options={({navigation}) => ({
+          options={({navigation, route}) => ({
             title: '설정',
             headerRight: () => <View style={styles.menuContainer} />,
           })}
@@ -77,28 +77,7 @@ export default function MyStack() {
                 <Icon
                   iconStyle={styles.menuItem}
                   onPress={() => {
-                    console.log('route', route);
-                    const result = route.params && route.params.result;
-                    console.log('save', result);
-                    Database.open(realm => {
-                      result.forEach(log => {
-                        database
-                          .savePosition(
-                            realm,
-                            log.latitude,
-                            log.longitude,
-                            log.type,
-                            log.totalDistance,
-                            log.created,
-                          )
-                          .then(position => {
-                            console.log('savePosition done');
-                          })
-                          .catch(e => {
-                            console.log('savePosition error', e);
-                          });
-                      });
-                    });
+                    doSaveTrips(route);
                   }}
                   name="save"
                   type="material"
@@ -110,7 +89,22 @@ export default function MyStack() {
         <Stack.Screen
           name="Location"
           component={LocationScreen}
-          options={{title: '운행 기록'}}
+          options={({navigation, route}) => ({
+            title: '운행 기록',
+            headerRight: () => (
+              <View style={styles.menuContainer}>
+                <Icon
+                  iconStyle={styles.menuItem}
+                  onPress={() => {
+                    console.log('route', route);
+                    doSaveCarLogs(navigation, route);
+                  }}
+                  name="save"
+                  type="material"
+                />
+              </View>
+            ),
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -125,3 +119,26 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
 });
+
+function doSaveTrips(route) {
+  console.log('route', route);
+  const result = route.params && route.params.result;
+  console.log('save', result);
+  Database.open(realm => {
+    result.forEach(log => {
+      database
+        .savePosition(realm, log.latitude, log.longitude, log.type, log.totalDistance, log.created)
+        .then(position => {
+          console.log('savePosition done');
+        })
+        .catch(e => {
+          console.log('savePosition error', e);
+        });
+    });
+  });
+}
+
+function doSaveCarLogs(navigation, route) {
+  Database.open(realm => {
+  });
+}
