@@ -65,12 +65,14 @@ export function SearchScreen(props) {
           iconStyle={styles.menuItem}
           onPress={() => {
             console.log('search');
+            const speedMargin = 0.0;
             Database.open(realm => {
               const logs = Database.getCarLogList(realm);
               const detector = new EdgeDetector(
                 period,
                 accuracyMargin,
                 radiusOfArea,
+                speedMargin,
               );
               detector.detectList(logs);
               const result = detector.getResult();

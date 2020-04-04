@@ -88,7 +88,13 @@ it('detectEdgePointsClass', () => {
   const periodInMin = '30';
   const accuracyMargin = '40';
   const radiusOfArea = '100';
-  const detector = new EdgeDetector(periodInMin, accuracyMargin, radiusOfArea);
+  const speedMargin = '0.0';
+  const detector = new EdgeDetector(
+    periodInMin,
+    accuracyMargin,
+    radiusOfArea,
+    speedMargin,
+  );
   detector.detectList(list);
   const result = detector.getResult();
   console.log(result);

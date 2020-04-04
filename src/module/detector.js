@@ -8,10 +8,11 @@ export class EdgeDetector {
   departTime = 0;
   calculated = [];
 
-  constructor(period, accuracyMargin, radiusOfArea) {
+  constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
     this.period = parseInt(period, 10) * 60 * 1000;
     this.accuracyMargin = parseFloat(accuracyMargin);
     this.radiusOfArea = parseFloat(radiusOfArea);
+    this.speedMargin = parseFloat(speedMargin);
     this.initPrevCarLog();
   }
 
@@ -36,7 +37,7 @@ export class EdgeDetector {
     if (current.accuracy >= this.accuracyMargin) {
       return previous;
     }
-    if (current.speed === 0) {
+    if (current.speed <= this.speedMargin) {
       return previous;
     }
     const dt = current.created - previous.created;
