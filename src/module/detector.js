@@ -1,4 +1,5 @@
 import {distanceCarLog, timeToDateHourMin, msToTime} from '../module/util';
+import Database from '../module/database';
 
 export class EdgeDetector {
   number = 0;
@@ -70,7 +71,7 @@ export class EdgeDetector {
   }
 
   makeArrrive(item) {
-    item.type = 'arrive';
+    item.type = Database.Position.Type.ARRIVE.index;
     item.totalDistance = this.totalDistance;
     item.totalTime = item.created - this.departTime;
     item.number = this.number - 1;
@@ -78,7 +79,7 @@ export class EdgeDetector {
   }
 
   makeDepart(item) {
-    item.type = 'depart';
+    item.type = Database.Position.Type.DEPART.index;
     item.totalDistance = 0;
     item.totalTime = 0;
     item.number = this.number;

@@ -1,7 +1,9 @@
 import Realm from 'realm';
+import 'react-native-get-random-values';
 import {v1 as uuidv1} from 'uuid';
 
 import {schemas} from '../module/schemas';
+import {CarLog, Setting, Position} from '../module/schemas';
 
 const open = handler => {
   migrate();
@@ -201,6 +203,9 @@ const clearAllDatabase = () => {
 };
 
 export default {
+  CarLog,
+  Setting,
+  Position,
   open,
   close,
   saveCarLog,

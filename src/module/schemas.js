@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import {v1 as uuidv1} from 'uuid';
 
 export class CarLog {
@@ -27,7 +28,7 @@ CarLog.schema = {
   },
 };
 
-class Setting {}
+export class Setting {}
 
 Setting.schema1 = {
   name: 'Setting',
@@ -55,12 +56,34 @@ Setting.schema = {
   },
 };
 
-class Position {}
+export class Position {}
 
 Position.Type = {
-  ERROR: 0,
-  START: 1,
-  END: 2,
+  ERROR: {index: 0, label: 'ERROR'},
+  DEPART: {index: 1, label: 'DEPART'},
+  ARRIVE: {index: 2, label: 'ARRIVE'},
+};
+
+Position.getTypeIndex = index => {
+  switch (index) {
+    case Position.Type.DEPART.index:
+      return Position.Type.DEPART;
+    case Position.Type.ARRIVE.index:
+      return Position.Type.ARRIVE;
+    default:
+      return Position.Type.ERROR;
+  }
+};
+
+Position.getTypeLabel = label => {
+  switch (label) {
+    case Position.Type.DEPART.label:
+      return Position.Type.DEPART;
+    case Position.Type.ARRIVE.label:
+      return Position.Type.ARRIVE;
+    default:
+      return Position.Type.ERROR;
+  }
 };
 
 Position.schema4 = {

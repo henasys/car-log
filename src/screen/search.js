@@ -19,7 +19,7 @@ const renderItem = item => {
       </View>
       <View style={styles.itemColumnContainer}>
         <Text>
-          {item.type} {item.number}
+          {Database.Position.getTypeIndex(item.type).label} {item.number}
         </Text>
         <Text>시간간격: {msToTime(item.totalTime)}</Text>
         <Text>거리합산: {toFixed(item.totalDistance / 1000)} km</Text>
@@ -76,7 +76,8 @@ export function SearchScreen(props) {
               );
               detector.detectList(logs);
               const result = detector.getResult();
-              console.log(result);
+              // console.log(result);
+              props.navigation.setParams({result: result});
               setList(result);
             });
           }}

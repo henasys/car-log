@@ -10,6 +10,9 @@ import {ShareScreen} from '../screen/share';
 import SettingScreen from '../screen/setting';
 import {SearchScreen} from './search';
 
+import Database from '../module/database';
+import database from '../module/database';
+
 const Stack = createStackNavigator();
 
 export default function MyStack() {
@@ -67,7 +70,42 @@ export default function MyStack() {
         <Stack.Screen
           name="Search"
           component={SearchScreen}
-          options={{title: '출발/도착지 검출'}}
+          options={({navigation, route}) => ({
+            title: '출발/도착지 검출',
+            headerRight: () => (
+              <View style={styles.menuContainer}>
+                <Icon
+                  iconStyle={styles.menuItem}
+                  onPress={() => {
+                    console.log('route', route);
+                    const result = route.params && route.params.result;
+                    console.log('save', result);
+                    Database.open(realm => {
+                      result.forEach(log => {
+                        database
+                          .savePosition(
+                            realm,
+                            log.latitude,
+                            log.longitude,
+                            log.type,
+                            log.totalDistance,
+                            log.created,
+                          )
+                          .then(position => {
+                            console.log('savePosition done');
+                          })
+                          .catch(e => {
+                            console.log('savePosition error', e);
+                          });
+                      });
+                    });
+                  }}
+                  name="save"
+                  type="material"
+                />
+              </View>
+            ),
+          })}
         />
         <Stack.Screen
           name="Location"
