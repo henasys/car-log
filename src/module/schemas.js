@@ -213,6 +213,11 @@ export const schemas = [
     schemaVersion: 6,
     migration: migrationFunctionNothing,
   },
+  {
+    schema: schema7,
+    schemaVersion: 7,
+    migration: migrationFunctionNothing,
+  },
 ];
 
 schemas.getConfig = index => {
