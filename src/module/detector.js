@@ -32,6 +32,9 @@ export class TripDetector {
   }
 
   detectList(list) {
+    if (list.length === 0) {
+      return;
+    }
     for (let index = 0; index < list.length; index++) {
       const current = this.cloneCarLog(list[index]);
       this.prev = this.detect(current, this.cloneCarLog(this.prev));
@@ -75,7 +78,7 @@ export class TripDetector {
   }
 
   makeArrrive(item) {
-    // item.type = 'END';
+    item.type = TripType.END;
     item.totalDistance = this.totalDistance;
     item.totalTime = item.created - this.departTime;
     item.number = this.number - 1;
@@ -83,7 +86,7 @@ export class TripDetector {
   }
 
   makeDepart(item) {
-    // item.type = 'START';
+    item.type = TripType.START;
     item.totalDistance = 0;
     item.totalTime = 0;
     item.number = this.number;
