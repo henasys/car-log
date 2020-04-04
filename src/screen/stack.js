@@ -152,27 +152,30 @@ function doSaveTrips(route) {
   });
 }
 
-// import {carLogs} from './car_log_data_room.js';
-
 function doSaveCarLogs(navigation, route) {
-  // console.log('carLogs.length', carLogs.length);
-  // Database.open(realm => {
-  //   carLogs.forEach(log => {
-  //     Database.saveCarLog(
-  //       realm,
-  //       log.latitude,
-  //       log.longitude,
-  //       log.speed,
-  //       log.heading,
-  //       log.accuracy,
-  //       log.created,
-  //     )
-  //       .then(carLog => {
-  //         console.log('saveCarLog done', carLog.created);
-  //       })
-  //       .catch(e => {
-  //         console.log('saveCarLog', e);
-  //       });
-  //   });
-  // });
+  const goOrNot = true;
+  if (goOrNot) {
+    return;
+  }
+  const carLogs = require('../../__tests__/data/car_log_data_room');
+  console.log('carLogs.length', carLogs.length);
+  Database.open(realm => {
+    carLogs.forEach(log => {
+      Database.saveCarLog(
+        realm,
+        log.latitude,
+        log.longitude,
+        log.speed,
+        log.heading,
+        log.accuracy,
+        log.created,
+      )
+        .then(carLog => {
+          console.log('saveCarLog done', carLog.created);
+        })
+        .catch(e => {
+          console.log('saveCarLog', e);
+        });
+    });
+  });
 }
