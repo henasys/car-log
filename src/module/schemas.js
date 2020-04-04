@@ -1,21 +1,3 @@
-export class CarLog {
-  clone() {
-    return Object.assign(new CarLog(), {...this});
-  }
-}
-
-CarLog.schema = {
-  name: 'CarLog',
-  properties: {
-    latitude: {type: 'double'},
-    longitude: {type: 'double'},
-    speed: {type: 'double'},
-    heading: {type: 'double', optional: true},
-    accuracy: {type: 'double'},
-    created: {type: 'int', indexed: true},
-  },
-};
-
 export class Location {}
 
 Location.schema = {
@@ -72,8 +54,6 @@ Trip.schema = {
   },
 };
 
-const schema6 = [CarLog, Setting.schema6, Trip];
-const schema7 = [CarLog, Setting, Trip];
 const schema8 = [Location, Setting, Trip];
 const schema9 = [Location, Setting, Trip];
 
@@ -106,16 +86,6 @@ function migrationFunction9(oldRealm, newRealm) {
 }
 
 export const schemas = [
-  {
-    schema: schema6,
-    schemaVersion: 6,
-    migration: migrationFunctionNothing,
-  },
-  {
-    schema: schema7,
-    schemaVersion: 7,
-    migration: migrationFunctionNothing,
-  },
   {
     schema: schema8,
     schemaVersion: 8,

@@ -62,39 +62,6 @@ const migrate = () => {
   }
 };
 
-const saveCarLog = (
-  realm,
-  latitude,
-  longitude,
-  speed,
-  heading,
-  accuracy,
-  created = null,
-) => {
-  return new Promise((resolve, reject) => {
-    try {
-      realm.write(() => {
-        const log = realm.create('CarLog', {
-          latitude: latitude,
-          longitude: longitude,
-          speed: speed,
-          heading: isNaN(heading) ? null : heading,
-          accuracy: accuracy,
-          created: created ? created : new Date().getTime(),
-        });
-        resolve(log);
-      });
-    } catch (e) {
-      console.warn('realm.write', e);
-      reject(new Error(e));
-    }
-  });
-};
-
-const getCarLogList = realm => {
-  return realm.objects('CarLog');
-};
-
 const saveLocation = (
   realm,
   latitude,
@@ -261,8 +228,6 @@ export default {
   Trip,
   open,
   close,
-  saveCarLog,
-  getCarLogList,
   saveLocation,
   getLocationList,
   saveSetting,
