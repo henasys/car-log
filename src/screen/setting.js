@@ -12,6 +12,7 @@ export default class SettingScreen extends React.Component {
     period: '15',
     accuracyMargin: '40',
     radiusOfArea: '100',
+    speedMargin: '0',
   };
 
   componentDidMount() {
@@ -44,7 +45,7 @@ export default class SettingScreen extends React.Component {
     if (!setting) {
       return;
     }
-    const {period, accuracyMargin, radiusOfArea} = setting;
+    const {period, accuracyMargin, radiusOfArea, speedMargin} = setting;
     this.setState({
       period: period ? String(period) : this.state.period,
       accuracyMargin: accuracyMargin
@@ -53,6 +54,7 @@ export default class SettingScreen extends React.Component {
       radiusOfArea: radiusOfArea
         ? String(radiusOfArea)
         : this.state.radiusOfArea,
+      speedMargin: speedMargin ? String(speedMargin) : this.state.speedMargin,
     });
   }
 
@@ -61,8 +63,14 @@ export default class SettingScreen extends React.Component {
       return;
     }
     this.setState({accuracyMargin});
-    const {realm, period, radiusOfArea} = this.state;
-    Database.saveSetting(realm, period, accuracyMargin, radiusOfArea)
+    const {realm, period, radiusOfArea, speedMargin} = this.state;
+    Database.saveSetting(
+      realm,
+      period,
+      accuracyMargin,
+      radiusOfArea,
+      speedMargin,
+    )
       .then(setting => {
         console.log(setting);
       })
@@ -76,8 +84,14 @@ export default class SettingScreen extends React.Component {
       return;
     }
     this.setState({period});
-    const {realm, accuracyMargin, radiusOfArea} = this.state;
-    Database.saveSetting(realm, period, accuracyMargin, radiusOfArea)
+    const {realm, accuracyMargin, radiusOfArea, speedMargin} = this.state;
+    Database.saveSetting(
+      realm,
+      period,
+      accuracyMargin,
+      radiusOfArea,
+      speedMargin,
+    )
       .then(setting => {
         console.log(setting);
       })
@@ -91,8 +105,35 @@ export default class SettingScreen extends React.Component {
       return;
     }
     this.setState({radiusOfArea});
-    const {realm, period, accuracyMargin} = this.state;
-    Database.saveSetting(realm, period, accuracyMargin, radiusOfArea)
+    const {realm, period, accuracyMargin, speedMargin} = this.state;
+    Database.saveSetting(
+      realm,
+      period,
+      accuracyMargin,
+      radiusOfArea,
+      speedMargin,
+    )
+      .then(setting => {
+        console.log(setting);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  setSpeedMargin(speedMargin) {
+    if (!speedMargin) {
+      return;
+    }
+    this.setState({speedMargin});
+    const {realm, period, accuracyMargin, radiusOfArea} = this.state;
+    Database.saveSetting(
+      realm,
+      period,
+      accuracyMargin,
+      radiusOfArea,
+      speedMargin,
+    )
       .then(setting => {
         console.log(setting);
       })
@@ -102,14 +143,24 @@ export default class SettingScreen extends React.Component {
   }
 
   render() {
-    const {period, accuracyMargin, radiusOfArea} = this.state;
+    const {period, accuracyMargin, radiusOfArea, speedMargin} = this.state;
     return (
       <View style={styles.container}>
         <Text style={styles.sectionLabel}>{'출발점 검출 기준'}</Text>
         <View style={styles.inputContainer}>
           {inputBox({
+            label: '영역반경 ≤',
+            unitLabel: 'm',
+            defaultValue: radiusOfArea,
+            onChangeTextHandler: text => {
+              this.setRadiusOfArea(text);
+              console.log('radiusOfArea onChange');
+            },
+            textInputStyle: styles.textInput,
+          })}
+          {inputBox({
             label: '정차시간 ≥',
-            unitLabel: 'min',
+            unitLabel: '분',
             defaultValue: period,
             onChangeTextHandler: text => {
               this.setPeriod(text);
@@ -118,7 +169,7 @@ export default class SettingScreen extends React.Component {
             textInputStyle: styles.textInput,
           })}
           {inputBox({
-            label: 'GPS 정확도 ≤',
+            label: 'Accuracy ≤',
             unitLabel: 'm',
             defaultValue: accuracyMargin,
             onChangeTextHandler: text => {
@@ -128,12 +179,12 @@ export default class SettingScreen extends React.Component {
             textInputStyle: styles.textInput,
           })}
           {inputBox({
-            label: '영역반경 ≤',
-            unitLabel: 'm',
-            defaultValue: radiusOfArea,
+            label: 'GPS Speed ≤',
+            unitLabel: 'm/s',
+            defaultValue: speedMargin,
             onChangeTextHandler: text => {
-              this.setRadiusOfArea(text);
-              console.log('radiusOfArea onChange');
+              this.setSpeedMargin(text);
+              console.log('speedMargin onChange');
             },
             textInputStyle: styles.textInput,
           })}

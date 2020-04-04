@@ -47,12 +47,22 @@ Setting.schema3 = {
   },
 };
 
+Setting.schema6 = {
+  name: 'Setting',
+  properties: {
+    period: {type: 'int'},
+    accuracyMargin: {type: 'double'},
+    radiusOfArea: {type: 'double'},
+  },
+};
+
 Setting.schema = {
   name: 'Setting',
   properties: {
     period: {type: 'int'},
     accuracyMargin: {type: 'double'},
     radiusOfArea: {type: 'double'},
+    speedMargin: {type: 'double'},
   },
 };
 
@@ -139,7 +149,8 @@ const schema2 = [CarLog.schema2, Setting, Position];
 const schema3 = [CarLog, Setting.schema3, Position];
 const schema4 = [CarLog, Setting, Position.schema4];
 const schema5 = [CarLog, Setting, Position];
-const schema6 = [CarLog, Setting, Trip];
+const schema6 = [CarLog, Setting.schema6, Trip];
+const schema7 = [CarLog, Setting, Trip];
 
 function migrationFunctionNothing(oldRealm, newRealm) {
   console.log('migrationFunctionNothing', oldRealm, newRealm);
