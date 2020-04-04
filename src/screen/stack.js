@@ -91,19 +91,19 @@ export default function MyStack() {
           component={LocationScreen}
           options={({navigation, route}) => ({
             title: '운행 기록',
-            headerRight: () => (
-              <View style={styles.menuContainer}>
-                <Icon
-                  iconStyle={styles.menuItem}
-                  onPress={() => {
-                    console.log('route', route);
-                    doSaveCarLogs(navigation, route);
-                  }}
-                  name="save"
-                  type="material"
-                />
-              </View>
-            ),
+            // headerRight: () => (
+            //   <View style={styles.menuContainer}>
+            //     <Icon
+            //       iconStyle={styles.menuItem}
+            //       onPress={() => {
+            //         console.log('route', route);
+            //         doSaveCarLogs(navigation, route);
+            //       }}
+            //       name="save"
+            //       type="material"
+            //     />
+            //   </View>
+            // ),
           })}
         />
       </Stack.Navigator>
