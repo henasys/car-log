@@ -121,25 +121,32 @@ const styles = StyleSheet.create({
 });
 
 function doSaveTrips(route) {
-  console.log('route', route);
+  // console.log('route', route);
   const result = route.params && route.params.result;
-  console.log('save', result);
+  console.log('doSaveTrips', result);
+  const startList = [];
+  const endList = [];
+  for (let index = 0; index < result.length; index++) {
+    const log = result[index];
+    if (index % 2 === 0) {
+      startList.push(log);
+    } else {
+      endList.push(log);
+    }
+  }
+  console.log(
+    'length startList == endList',
+    startList.length === endList.length,
+  );
   Database.open(realm => {
-    result.forEach(log => {
-      database
-        .savePosition(
-          realm,
-          log.latitude,
-          log.longitude,
-          log.type,
-          log.totalDistance,
-          log.created,
-        )
-        .then(position => {
-          console.log('savePosition done');
+    startList.forEach((start, index) => {
+      const end = endList[index];
+      Database.saveTrip(realm, start, end, end.totalDistance)
+        .then(trip => {
+          console.log('saveTrip done', trip);
         })
         .catch(e => {
-          console.log('savePosition error', e);
+          console.log('saveTrip error', e);
         });
     });
   });

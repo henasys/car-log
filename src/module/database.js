@@ -169,7 +169,7 @@ const saveTrip = (realm, start, end, totalDistance) => {
   return new Promise((resolve, reject) => {
     try {
       realm.write(() => {
-        const position = realm.create('Trip', {
+        const trip = realm.create('Trip', {
           id: uuidv1(),
           startLatitude: start.latitude,
           startLongitude: start.longitude,
@@ -181,7 +181,7 @@ const saveTrip = (realm, start, end, totalDistance) => {
           totalTime: end.created - start.created,
           created: new Date().getTime(),
         });
-        resolve(position);
+        resolve(trip);
       });
     } catch (e) {
       console.warn('realm.write', e);
