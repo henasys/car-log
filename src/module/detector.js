@@ -31,6 +31,7 @@ export class EdgeDetector {
     for (let index = 0; index < list.length; index++) {
       this.prev = this.detect(list[index].clone(), this.prev.clone());
     }
+    this.makeArrrive(this.lastPrevious);
   }
 
   detect(current, previous) {
@@ -47,27 +48,36 @@ export class EdgeDetector {
     current.dd = dd;
     current.date = timeToDateHourMin(current.created);
     this.totalDistance = this.totalDistance + dd;
+    this.lastPrevious = previous;
     if (dd <= this.radiusOfArea) {
       return previous;
     }
     if (dt >= this.period) {
       this.number += 1;
       if (this.isNotFirstArrival) {
-        previous.type = 'arrive';
-        previous.totalDistance = this.totalDistance;
-        previous.totalTime = previous.created - this.departTime;
-        previous.number = this.number - 1;
-        this.calculated.push(previous);
+        this.makeArrrive(previous);
       }
       this.isNotFirstArrival = true;
       this.totalDistance = 0.0;
       this.departTime = current.created;
-      current.type = 'depart';
-      current.totalDistance = 0;
-      current.totalTime = 0;
-      current.number = this.number;
-      this.calculated.push(current);
+      this.makeDepart(current);
     }
     return current;
+  }
+
+  makeArrrive(item) {
+    item.type = 'arrive';
+    item.totalDistance = this.totalDistance;
+    item.totalTime = item.created - this.departTime;
+    item.number = this.number - 1;
+    this.calculated.push(item);
+  }
+
+  makeDepart(item) {
+    item.type = 'depart';
+    item.totalDistance = 0;
+    item.totalTime = 0;
+    item.number = this.number;
+    this.calculated.push(item);
   }
 }

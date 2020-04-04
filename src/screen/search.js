@@ -34,7 +34,7 @@ const renderItem = item => {
 export function SearchScreen(props) {
   const [accuracyMargin, setAccuracyMargin] = useState('40');
   const [period, setPeriod] = useState('30');
-  const [radiusOfArea, setRadiusOfArea] = useState('100');
+  const [radiusOfArea, setRadiusOfArea] = useState('300');
   const [list, setList] = useState([]);
   return (
     <View style={styles.container}>
