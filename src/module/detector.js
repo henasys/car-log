@@ -47,11 +47,11 @@ export class EdgeDetector {
     current.dt_date = msToTime(dt);
     current.dd = dd;
     current.date = timeToDateHourMin(current.created);
-    this.totalDistance = this.totalDistance + dd;
     this.lastPrevious = previous;
     if (dd <= this.radiusOfArea) {
       return previous;
     }
+    this.totalDistance = this.totalDistance + dd;
     if (dt >= this.period) {
       this.number += 1;
       if (this.isNotFirstArrival) {
