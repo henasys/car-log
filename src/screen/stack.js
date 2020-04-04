@@ -72,18 +72,18 @@ export default function MyStack() {
           component={SearchScreen}
           options={({navigation, route}) => ({
             title: '출발/도착지 검출',
-            headerRight: () => (
-              <View style={styles.menuContainer}>
-                <Icon
-                  iconStyle={styles.menuItem}
-                  onPress={() => {
-                    doSaveTrips(route);
-                  }}
-                  name="save"
-                  type="material"
-                />
-              </View>
-            ),
+            // headerRight: () => (
+            //   <View style={styles.menuContainer}>
+            //     <Icon
+            //       iconStyle={styles.menuItem}
+            //       onPress={() => {
+            //         doSaveTrips(route);
+            //       }}
+            //       name="save"
+            //       type="material"
+            //     />
+            //   </View>
+            // ),
           })}
         />
         <Stack.Screen
