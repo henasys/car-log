@@ -1,4 +1,4 @@
-import {distanceCarLog, timeToDateHourMin} from '../module/util';
+import {distanceCarLog, timeToDateHourMin, msToTime} from '../module/util';
 import {CarLog} from '../module/schemas';
 
 export class EdgeDetector {
@@ -36,9 +36,13 @@ export class EdgeDetector {
     if (current.accuracy >= this.accuracyMargin) {
       return previous;
     }
+    if (current.speed === 0) {
+      return previous;
+    }
     const dt = current.created - previous.created;
     const dd = distanceCarLog(current, previous);
     current.dt = dt;
+    current.dt_date = msToTime(dt);
     current.dd = dd;
     current.date = timeToDateHourMin(current.created);
     this.totalDistance = this.totalDistance + dd;
