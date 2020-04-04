@@ -68,7 +68,7 @@ export default class MainScreen extends React.Component {
   }
 
   getList() {
-    const list = Database.getPositionList(this.state.realm).sorted('created');
+    const list = Database.getTripList(this.state.realm).sorted('created');
     console.log('list', list);
     this.setState({list});
   }

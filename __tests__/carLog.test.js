@@ -7,7 +7,7 @@ import {
   detectEdgePoints,
   showSimpleLocation,
 } from '../src/module/util';
-import {EdgeDetector} from '../src/module/detector';
+import {TripDetector} from '../src/module/detector';
 
 it('search_start_position1', () => {
   const list = carLogs;
@@ -89,7 +89,7 @@ it('detectEdgePointsClass', () => {
   const accuracyMargin = '40';
   const radiusOfArea = '100';
   const speedMargin = '0.0';
-  const detector = new EdgeDetector(
+  const detector = new TripDetector(
     periodInMin,
     accuracyMargin,
     radiusOfArea,

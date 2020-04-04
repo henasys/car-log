@@ -7,7 +7,7 @@ import Database from '../module/database';
 import {msToTime, timeToDate, timeToWeek, timeToHourMin} from '../module/util';
 import {toFixed} from '../module/util';
 import inputBox from '../view/inputBox';
-import {EdgeDetector} from '../module/detector';
+import {TripDetector} from '../module/detector';
 
 const renderItem = item => {
   return (
@@ -19,7 +19,7 @@ const renderItem = item => {
       </View>
       <View style={styles.itemColumnContainer}>
         <Text>
-          {Database.Position.getTypeIndex(item.type).label} {item.number}
+          {item.type} {item.number}
         </Text>
         <Text>시간간격: {msToTime(item.totalTime)}</Text>
         <Text>거리합산: {toFixed(item.totalDistance / 1000)} km</Text>
@@ -68,7 +68,7 @@ export function SearchScreen(props) {
             const speedMargin = 0.0;
             Database.open(realm => {
               const logs = Database.getCarLogList(realm);
-              const detector = new EdgeDetector(
+              const detector = new TripDetector(
                 period,
                 accuracyMargin,
                 radiusOfArea,
