@@ -28,8 +28,8 @@ export class EdgeDetector {
 
   detectList(list) {
     for (let index = 0; index < list.length; index++) {
-      const current = this.makeClone(list[index]);
-      this.prev = this.detect(current, this.makeClone(this.prev));
+      const current = this.cloneCarLog(list[index]);
+      this.prev = this.detect(current, this.cloneCarLog(this.prev));
     }
     this.makeArrrive(this.lastPrevious);
   }
@@ -65,7 +65,7 @@ export class EdgeDetector {
     return current;
   }
 
-  makeClone(item) {
+  cloneCarLog(item) {
     return Object.assign({}, {...item});
   }
 
