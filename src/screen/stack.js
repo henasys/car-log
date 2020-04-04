@@ -153,11 +153,8 @@ function doSaveTrips(route) {
 }
 
 function doSaveCarLogs(navigation, route) {
-  const goOrNot = true;
-  if (goOrNot) {
-    return;
-  }
-  const carLogs = require('../../__tests__/data/car_log_data_room');
+  // const carLogs = require('./car_log_data_room');
+  const carLogs = [];
   console.log('carLogs.length', carLogs.length);
   Database.open(realm => {
     carLogs.forEach(log => {
