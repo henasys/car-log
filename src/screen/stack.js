@@ -127,7 +127,14 @@ function doSaveTrips(route) {
   Database.open(realm => {
     result.forEach(log => {
       database
-        .savePosition(realm, log.latitude, log.longitude, log.type, log.totalDistance, log.created)
+        .savePosition(
+          realm,
+          log.latitude,
+          log.longitude,
+          log.type,
+          log.totalDistance,
+          log.created,
+        )
         .then(position => {
           console.log('savePosition done');
         })
@@ -138,7 +145,27 @@ function doSaveTrips(route) {
   });
 }
 
+// import {carLogs} from './car_log_data_room.js';
+
 function doSaveCarLogs(navigation, route) {
-  Database.open(realm => {
-  });
+  // console.log('carLogs.length', carLogs.length);
+  // Database.open(realm => {
+  //   carLogs.forEach(log => {
+  //     Database.saveCarLog(
+  //       realm,
+  //       log.latitude,
+  //       log.longitude,
+  //       log.speed,
+  //       log.heading,
+  //       log.accuracy,
+  //       log.created,
+  //     )
+  //       .then(carLog => {
+  //         console.log('saveCarLog done', carLog.created);
+  //       })
+  //       .catch(e => {
+  //         console.log('saveCarLog', e);
+  //       });
+  //   });
+  // });
 }
