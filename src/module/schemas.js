@@ -200,7 +200,7 @@ export const schemas = [
   {
     schema: schema6,
     schemaVersion: 6,
-    deleteRealmIfMigrationNeeded: true,
+    migration: migrationFunctionNothing,
   },
 ];
 
