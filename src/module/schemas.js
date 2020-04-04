@@ -1,3 +1,5 @@
+import {v1 as uuidv1} from 'uuid';
+
 export class CarLog {
   clone() {
     return Object.assign(new CarLog(), {...this});
@@ -61,9 +63,23 @@ Position.Type = {
   END: 2,
 };
 
-Position.schema = {
+Position.schema4 = {
   name: 'Position',
   properties: {
+    latitude: {type: 'double'},
+    longitude: {type: 'double'},
+    type: {type: 'int', indexed: true},
+    distance: {type: 'double', default: 0},
+    address: {type: 'string', optional: true},
+    created: {type: 'int', indexed: true},
+  },
+};
+
+Position.schema = {
+  name: 'Position',
+  primaryKey: 'id',
+  properties: {
+    id: {type: 'string'},
     latitude: {type: 'double'},
     longitude: {type: 'double'},
     type: {type: 'int', indexed: true},
@@ -77,7 +93,8 @@ const schema0 = [CarLog];
 const schema1 = [CarLog, Setting.schema1, Position];
 const schema2 = [CarLog.schema2, Setting, Position];
 const schema3 = [CarLog, Setting.schema3, Position];
-const schema4 = [CarLog, Setting, Position];
+const schema4 = [CarLog, Setting, Position.schema4];
+const schema5 = [CarLog, Setting, Position];
 
 function migrationFunctionNothing(oldRealm, newRealm) {
   console.log('migrationFunctionNothing', oldRealm, newRealm);
@@ -92,6 +109,15 @@ function migrationFunction4(oldRealm, newRealm) {
   for (let i = 0; i < oldObjects.length; i++) {
     newObjects[i].radiusOfArea = 100;
     newObjects[i].accuracyMargin = 40;
+  }
+}
+
+function migrationFunction5(oldRealm, newRealm) {
+  const oldObjects = oldRealm.objects('Position');
+  const newObjects = newRealm.objects('Position');
+
+  for (let i = 0; i < oldObjects.length; i++) {
+    newObjects[i].id = uuidv1();
   }
 }
 
@@ -120,6 +146,11 @@ export const schemas = [
     schema: schema4,
     schemaVersion: 4,
     migration: migrationFunction4,
+  },
+  {
+    schema: schema5,
+    schemaVersion: 5,
+    migration: migrationFunction5,
   },
 ];
 

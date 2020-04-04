@@ -1,4 +1,5 @@
 import Realm from 'realm';
+import {v1 as uuidv1} from 'uuid';
 
 import {schemas} from '../module/schemas';
 
@@ -135,6 +136,7 @@ const savePosition = (realm, latitude, longitude, type, distance, created) => {
     try {
       realm.write(() => {
         const position = realm.create('Position', {
+          id: uuidv1(),
           latitude: latitude,
           longitude: longitude,
           type: type,
