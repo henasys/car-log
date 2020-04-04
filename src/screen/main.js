@@ -3,8 +3,13 @@ import {StyleSheet, Text, View, FlatList} from 'react-native';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
-import {timeToWeek, timeToDate, timeToHourMin, timeToMonthDay} from '../module/util';
-import {timeToDateHourMin, toFixed} from '../module/util';
+import {
+  timeToWeek,
+  timeToDate,
+  timeToHourMin,
+  timeToMonthDay,
+} from '../module/util';
+import {timeToDateHourMin, toFixed, msToTime} from '../module/util';
 import {toast} from '../module/toast';
 
 export default class MainScreen extends React.Component {
@@ -46,7 +51,6 @@ export default class MainScreen extends React.Component {
       this.getLatestLocation();
       this.getSetting();
       this.getList();
-      // this.getCarLogList();
     });
   }
 
@@ -68,17 +72,9 @@ export default class MainScreen extends React.Component {
   }
 
   getList() {
-    const list = Database.getTripList(this.state.realm).sorted('created');
-    console.log('list', list);
+    const list = Database.getTripList(this.state.realm).sorted('created', true);
+    // console.log('list', list);
     this.setState({list});
-  }
-
-  getCarLogList() {
-    const list = Database.getCarLogList(this.state.realm);
-    list.forEach(log => {
-      log.date = timeToDateHourMin(log.created);
-      console.log(log);
-    });
   }
 
   handleOnLocation(position) {
@@ -109,24 +105,33 @@ export default class MainScreen extends React.Component {
   }
 
   renderItem(item) {
-    const distance = item.distance === 0 ? '' : toFixed(item.distance / 1000) + ' km';
+    const totalDistance = toFixed(item.totalDistance / 1000) + ' km';
     return (
       <View style={styles.itemContainer}>
         <View style={styles.itemColumnContainer}>
-          <Text>{timeToMonthDay(item.created)}</Text>
-          <Text>{timeToWeek(item.created)}</Text>
+          <Text style={styles.dateText}>
+            {timeToMonthDay(item.startCreated)}
+          </Text>
+          <Text>{timeToWeek(item.startCreated)}</Text>
         </View>
         <View style={styles.itemColumnContainer}>
-          <Text>
-            {Database.Position.getTypeIndex(item.type).label}{' '}
-            {timeToHourMin(item.created)}
+          <Text style={styles.titleText}>
+            {'출발'} {timeToHourMin(item.startCreated)}
           </Text>
-          <Text>
-            좌표: {toFixed(item.latitude)}, {toFixed(item.longitude)}
+          <Text style={styles.addressText}>
+            {'    '} 좌표: {toFixed(item.startLatitude)},{' '}
+            {toFixed(item.startLongitude)}
+          </Text>
+          <Text style={styles.titleText}>
+            {'도착'} {timeToHourMin(item.endCreated)}
+          </Text>
+          <Text style={styles.addressText}>
+            {'    '} 좌표: {toFixed(item.endLatitude)},{' '}
+            {toFixed(item.endLongitude)}
           </Text>
         </View>
         <View style={styles.itemColumnContainer}>
-          <Text>{distance}</Text>
+          <Text style={styles.totalDistanceText}>{totalDistance}</Text>
         </View>
       </View>
     );
@@ -147,10 +152,28 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     margin: 10,
+    // borderWidth: 1,
   },
   itemColumnContainer: {
     flexDirection: 'column',
     marginLeft: 10,
+    // borderWidth: 1,
+  },
+  dateText: {
+    fontSize: 16,
+    fontWeight: 'normal',
+  },
+  titleText: {
+    fontSize: 16,
+    fontWeight: 'normal',
+  },
+  totalDistanceText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  addressText: {
+    fontSize: 14,
   },
 });
