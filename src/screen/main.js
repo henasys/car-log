@@ -3,8 +3,8 @@ import {StyleSheet, Text, View, FlatList} from 'react-native';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
-import {msToTime, timeToDate, timeToHourMin} from '../module/util';
-import {timeToDateHourMin} from '../module/util';
+import {timeToWeek, timeToDate, timeToHourMin, timeToMonthDay} from '../module/util';
+import {timeToDateHourMin, toFixed} from '../module/util';
 import {toast} from '../module/toast';
 
 export default class MainScreen extends React.Component {
@@ -68,7 +68,8 @@ export default class MainScreen extends React.Component {
   }
 
   getList() {
-    const list = Database.getPositionList(this.state.realm);
+    const list = Database.getPositionList(this.state.realm).sorted('created');
+    console.log('list', list);
     this.setState({list});
   }
 
@@ -108,19 +109,24 @@ export default class MainScreen extends React.Component {
   }
 
   renderItem(item) {
+    const distance = item.distance === 0 ? '' : toFixed(item.distance / 1000) + ' km';
     return (
       <View style={styles.itemContainer}>
         <View style={styles.itemColumnContainer}>
-          <Text>dd: {item.dd}</Text>
-          <Text>dt: {msToTime(item.dt)}</Text>
-          <Text>vc: {item.vc}</Text>
+          <Text>{timeToMonthDay(item.created)}</Text>
+          <Text>{timeToWeek(item.created)}</Text>
         </View>
         <View style={styles.itemColumnContainer}>
-          <Text>latitude: {item.latitude}</Text>
-          <Text>longitude: {item.longitude}</Text>
           <Text>
-            created: {timeToDate(item.created)} {timeToHourMin(item.created)}
+            {Database.Position.getTypeIndex(item.type).label}{' '}
+            {timeToHourMin(item.created)}
           </Text>
+          <Text>
+            좌표: {toFixed(item.latitude)}, {toFixed(item.longitude)}
+          </Text>
+        </View>
+        <View style={styles.itemColumnContainer}>
+          <Text>{distance}</Text>
         </View>
       </View>
     );
@@ -140,6 +146,7 @@ export default class MainScreen extends React.Component {
 const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     margin: 10,
   },
   itemColumnContainer: {

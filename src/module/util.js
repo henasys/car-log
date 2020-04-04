@@ -37,6 +37,10 @@ export function timeToDateHourMin(timestamp) {
   return moment(timestamp).format('Y/MM/DD HH:mm');
 }
 
+export function timeToMonthDay(timestamp) {
+  return moment(timestamp).format('MM/DD');
+}
+
 // ref: https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 export function measure(lat1, lon1, lat2, lon2) {
   // generally used geo measurement function
