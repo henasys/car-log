@@ -112,12 +112,34 @@ Position.schema = {
   },
 };
 
+export class Trip {}
+
+Trip.schema = {
+  name: 'Trip',
+  primaryKey: 'id',
+  properties: {
+    id: {type: 'string'},
+    startLatitude: {type: 'double'},
+    startLongitude: {type: 'double'},
+    startAddress: {type: 'string', optional: true},
+    startCreated: {type: 'int'},
+    endLatitude: {type: 'double'},
+    endLongitude: {type: 'double'},
+    endAddress: {type: 'string', optional: true},
+    endCreated: {type: 'int'},
+    totalDistance: {type: 'double', default: 0},
+    totalTime: {type: 'int'},
+    created: {type: 'int', indexed: true},
+  },
+};
+
 const schema0 = [CarLog];
 const schema1 = [CarLog, Setting.schema1, Position];
 const schema2 = [CarLog.schema2, Setting, Position];
 const schema3 = [CarLog, Setting.schema3, Position];
 const schema4 = [CarLog, Setting, Position.schema4];
 const schema5 = [CarLog, Setting, Position];
+const schema6 = [CarLog, Setting, Trip];
 
 function migrationFunctionNothing(oldRealm, newRealm) {
   console.log('migrationFunctionNothing', oldRealm, newRealm);
@@ -174,6 +196,12 @@ export const schemas = [
     schema: schema5,
     schemaVersion: 5,
     migration: migrationFunction5,
+  },
+  {
+    schema: schema6,
+    schemaVersion: 6,
+    deleteRealmIfMigrationNeeded: true,
+    migration: migrationFunctionNothing,
   },
 ];
 

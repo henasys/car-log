@@ -158,6 +158,42 @@ const getPositionList = realm => {
   return realm.objects('Position');
 };
 
+/**
+ * save Trip info
+ * @param {*} realm Ream object
+ * @param {*} start {latitude, longitude, created}
+ * @param {*} end {latitude, longitude, created}
+ * @param {*} totalDistance start ~ end
+ */
+const saveTrip = (realm, start, end, totalDistance) => {
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        const position = realm.create('Trip', {
+          id: uuidv1(),
+          startLatitude: start.latitude,
+          startLongitude: start.longitude,
+          startCreated: start.created,
+          endLatitude: end.latitude,
+          endLongitude: end.longitude,
+          endCreated: end.created,
+          totalDistance: totalDistance,
+          totalTime: end.created - start.created,
+          created: new Date().getTime(),
+        });
+        resolve(position);
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
+};
+
+const getTripList = realm => {
+  return realm.objects('Trip');
+};
+
 const updatePositionAddress = (realm, pk, address) => {
   return new Promise((resolve, reject) => {
     try {
@@ -214,6 +250,8 @@ export default {
   getSetting,
   savePosition,
   getPositionList,
+  saveTrip,
+  getTripList,
   updatePositionAddress,
   clearAllDatabase,
 };
