@@ -3,7 +3,7 @@ import 'react-native-get-random-values';
 import {v1 as uuidv1} from 'uuid';
 
 import {schemas} from '../module/schemas';
-import {CarLog, Setting, Position} from '../module/schemas';
+import {CarLog, Setting, Trip} from '../module/schemas';
 
 const open = handler => {
   migrate();
@@ -142,31 +142,6 @@ const getSetting = realm => {
   return rs[0];
 };
 
-const savePosition = (realm, latitude, longitude, type, distance, created) => {
-  return new Promise((resolve, reject) => {
-    try {
-      realm.write(() => {
-        const position = realm.create('Position', {
-          id: uuidv1(),
-          latitude: latitude,
-          longitude: longitude,
-          type: type,
-          distance: distance,
-          created: created,
-        });
-        resolve(position);
-      });
-    } catch (e) {
-      console.warn('realm.write', e);
-      reject(new Error(e));
-    }
-  });
-};
-
-const getPositionList = realm => {
-  return realm.objects('Position');
-};
-
 /**
  * save Trip info
  * @param {*} realm Ream object
@@ -250,15 +225,13 @@ const clearAllDatabase = () => {
 export default {
   CarLog,
   Setting,
-  Position,
+  Trip,
   open,
   close,
   saveCarLog,
   getCarLogList,
   saveSetting,
   getSetting,
-  savePosition,
-  getPositionList,
   saveTrip,
   getTripList,
   updatePositionAddress,
