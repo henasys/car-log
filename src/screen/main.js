@@ -64,11 +64,11 @@ export default class MainScreen extends React.Component {
   }
 
   getLatestLocation() {
-    const logs = Database.getCarLogList(this.state.realm).sorted(
+    const locations = Database.getLocationList(this.state.realm).sorted(
       'created',
       true,
     );
-    this.latestLocation = logs.slice(0, 1);
+    this.latestLocation = locations.slice(0, 1);
   }
 
   getList() {

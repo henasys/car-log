@@ -79,7 +79,7 @@ export default class LocationScreen extends React.Component {
   }
 
   getList(startIndex) {
-    const list = Database.getCarLogList(this.state.realm).sorted(
+    const list = Database.getLocationList(this.state.realm).sorted(
       'created',
       true,
     );

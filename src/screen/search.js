@@ -67,14 +67,14 @@ export function SearchScreen(props) {
             console.log('search');
             const speedMargin = 0.0;
             Database.open(realm => {
-              const logs = Database.getCarLogList(realm);
+              const locations = Database.getLocationList(realm);
               const detector = new TripDetector(
                 period,
                 accuracyMargin,
                 radiusOfArea,
                 speedMargin,
               );
-              detector.detectList(logs);
+              detector.detectList(locations);
               const result = detector.getResult();
               // console.log(result);
               props.navigation.setParams({result: result});
