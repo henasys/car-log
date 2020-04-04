@@ -1,5 +1,4 @@
 import {distanceCarLog, timeToDateHourMin, msToTime} from '../module/util';
-import {CarLog} from '../module/schemas';
 
 export class EdgeDetector {
   number = 0;
@@ -17,7 +16,7 @@ export class EdgeDetector {
   }
 
   initPrevCarLog() {
-    this.prev = new CarLog();
+    this.prev = {};
     this.prev.latitude = 0.0;
     this.prev.longitude = 0.0;
     this.prev.created = 0;
@@ -29,7 +28,8 @@ export class EdgeDetector {
 
   detectList(list) {
     for (let index = 0; index < list.length; index++) {
-      this.prev = this.detect(list[index].clone(), this.prev.clone());
+      const current = this.makeClone(list[index]);
+      this.prev = this.detect(current, this.makeClone(this.prev));
     }
     this.makeArrrive(this.lastPrevious);
   }
@@ -63,6 +63,10 @@ export class EdgeDetector {
       this.makeDepart(current);
     }
     return current;
+  }
+
+  makeClone(item) {
+    return Object.assign({}, {...item});
   }
 
   makeArrrive(item) {

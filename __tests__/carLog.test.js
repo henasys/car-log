@@ -98,5 +98,5 @@ it('detectEdgePointsClass', () => {
   detector.detectList(list);
   const result = detector.getResult();
   console.log(result);
-  expect(result.length).toEqual(6);
+  expect(result.length).toEqual(8);
 });
