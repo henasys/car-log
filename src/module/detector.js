@@ -10,7 +10,7 @@ export class TripDetector {
   isNotFirstArrival = false;
   totalDistance = 0;
   departTime = 0;
-  calculated = [];
+  result = [];
 
   constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
     this.period = parseInt(period, 10) * 60 * 1000;
@@ -40,7 +40,11 @@ export class TripDetector {
   }
 
   getResult() {
-    return this.calculated;
+    return this.result;
+  }
+
+  getTotalDistance() {
+    return this.totalDistance;
   }
 
   detectList(list) {
@@ -95,7 +99,7 @@ export class TripDetector {
     item.totalDistance = this.totalDistance;
     item.totalTime = item.created - this.departTime;
     item.number = this.number - 1;
-    this.calculated.push(item);
+    this.result.push(item);
   }
 
   makeDepart(item) {
@@ -103,6 +107,6 @@ export class TripDetector {
     item.totalDistance = 0;
     item.totalTime = 0;
     item.number = this.number;
-    this.calculated.push(item);
+    this.result.push(item);
   }
 }
