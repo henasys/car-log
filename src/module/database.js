@@ -146,13 +146,19 @@ const getSetting = realm => {
  * save Trip info
  * @param {*} realm Ream object
  * @param {*} start {latitude, longitude, created}
- * @param {*} end {latitude, longitude, created}
- * @param {*} totalDistance start ~ end
+ * @param {*} end {latitude, longitude, created} optional
+ * @param {*} totalDistance start ~ end, optional
  */
-const saveTrip = (realm, start, end, totalDistance) => {
+const saveTrip = (
+  realm,
+  start,
+  end = {latitude: null, longitude: null, created: null},
+  totalDistance = null,
+) => {
   return new Promise((resolve, reject) => {
     try {
       realm.write(() => {
+        const totalTime = end.created ? end.created - start.created : null;
         const trip = realm.create('Trip', {
           id: uuidv1(),
           startLatitude: start.latitude,
@@ -162,7 +168,7 @@ const saveTrip = (realm, start, end, totalDistance) => {
           endLongitude: end.longitude,
           endCreated: end.created,
           totalDistance: totalDistance,
-          totalTime: end.created - start.created,
+          totalTime: totalTime,
           created: new Date().getTime(),
         });
         resolve(trip);
@@ -178,20 +184,48 @@ const getTripList = realm => {
   return realm.objects('Trip');
 };
 
-const updatePositionAddress = (realm, pk, address) => {
+/**
+ * update Trip with end location info
+ * @param {*} realm Ream object
+ * @param {*} id Primary key
+ * @param {*} end {latitude, longitude, created}
+ * @param {*} totalDistance start ~ end
+ */
+const updateTripEnd = (realm, id, end, totalDistance) => {
   return new Promise((resolve, reject) => {
     try {
       realm.write(() => {
-        const rs = realm.objects('Position');
-        if (!rs.isEmpty()) {
-          const position = rs[0];
-          position.address = address;
-          resolve(position);
-          return;
-        }
-        const msg = 'No Position ';
-        console.warn(msg);
-        reject(new Error(msg));
+        const trip = realm.objectForPrimaryKey('Trip', id);
+        const totalTime = end.created ? end.created - trip.startCreated : null;
+        trip.endLatitude = end.latitude;
+        trip.endLongitude = end.longitude;
+        trip.endCreated = end.created;
+        trip.totalDistance = totalDistance;
+        trip.totalTime = totalTime;
+        resolve(trip);
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
+};
+
+/**
+ * update Trip with address
+ * @param {*} realm Realm Object
+ * @param {*} id Primary key
+ * @param {*} startAddress start address
+ * @param {*} endAddress end address
+ */
+const updateTripAddress = (realm, id, startAddress, endAddress) => {
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        const trip = realm.objectForPrimaryKey('Trip', id);
+        trip.startAddress = startAddress;
+        trip.endAddress = endAddress;
+        resolve(trip);
       });
     } catch (e) {
       console.warn('realm.write', e);
@@ -234,6 +268,7 @@ export default {
   getSetting,
   saveTrip,
   getTripList,
-  updatePositionAddress,
+  updateTripEnd,
+  updateTripAddress,
   clearAllDatabase,
 };
