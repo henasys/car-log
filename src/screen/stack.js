@@ -97,7 +97,7 @@ export default function MyStack() {
             //       iconStyle={styles.menuItem}
             //       onPress={() => {
             //         console.log('route', route);
-            //         doSaveCarLogs(navigation, route);
+            //         doSaveLocations(navigation, route);
             //       }}
             //       name="save"
             //       type="material"
@@ -152,13 +152,13 @@ function doSaveTrips(route) {
   });
 }
 
-function doSaveCarLogs(navigation, route) {
+function doSaveLocations(navigation, route) {
   // const carLogs = require('./car_log_data_room');
   const carLogs = [];
   console.log('carLogs.length', carLogs.length);
   Database.open(realm => {
     carLogs.forEach(log => {
-      Database.saveCarLog(
+      Database.saveLocation(
         realm,
         log.latitude,
         log.longitude,
@@ -168,10 +168,10 @@ function doSaveCarLogs(navigation, route) {
         log.created,
       )
         .then(carLog => {
-          console.log('saveCarLog done', carLog.created);
+          console.log('saveLocation done', carLog.created);
         })
         .catch(e => {
-          console.log('saveCarLog', e);
+          console.log('saveLocation', e);
         });
     });
   });
