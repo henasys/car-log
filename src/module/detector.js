@@ -27,6 +27,18 @@ export class TripDetector {
     this.prev.created = 0;
   }
 
+  setIsNotFirstArrival(isNotFirstArrival) {
+    this.isNotFirstArrival = isNotFirstArrival;
+  }
+
+  setTotalDistance(totalDistance) {
+    this.totalDistance = totalDistance;
+  }
+
+  setDepartTime(departTime) {
+    this.departTime = departTime;
+  }
+
   getResult() {
     return this.calculated;
   }
@@ -37,12 +49,13 @@ export class TripDetector {
     }
     for (let index = 0; index < list.length; index++) {
       const current = this.cloneLocation(list[index]);
-      this.prev = this.detect(current, this.cloneLocation(this.prev));
+      this.prev = this.detect(current, this.prev);
     }
     this.makeArrrive(this.lastPrevious);
   }
 
-  detect(current, previous) {
+  detect(current, prev) {
+    const previous = this.cloneLocation(prev);
     if (current.accuracy >= this.accuracyMargin) {
       return previous;
     }
