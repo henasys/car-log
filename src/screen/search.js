@@ -16,7 +16,7 @@ const renderItem = item => {
         도착: {timeToDate(item.start.created)} {timeToHourMin(item.end.created)}
       </Text>
       <Text>
-        좌표: {toFixed(item.end.latitude, 4)}, {toFixed(item.end.longitude, 4)}
+        {'  '} 좌표: {toFixed(item.end.latitude, 4)}, {toFixed(item.end.longitude, 4)}
       </Text>
       <Text>시간간격: {msToTime(item.end.totalTime)}</Text>
       <Text>거리합산: {toFixed(item.end.totalDistance / 1000)} km</Text>
@@ -30,9 +30,9 @@ const renderItem = item => {
       </View>
       <View style={styles.itemColumnContainer}>
         <Text>{item.number}</Text>
-        <Text>츨발: {timeToHourMin(item.start.created)}</Text>
+        <Text>출발: {timeToHourMin(item.start.created)}</Text>
         <Text>
-          좌표: {toFixed(item.start.latitude, 4)},{' '}
+          {'  '} 좌표: {toFixed(item.start.latitude, 4)},{' '}
           {toFixed(item.start.longitude, 4)}
         </Text>
         {endBlock}

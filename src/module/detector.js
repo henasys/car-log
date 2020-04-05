@@ -55,7 +55,7 @@ export class TripDetector {
       const current = this.cloneLocation(list[index]);
       this.prev = this.detect(current, this.prev);
     }
-    // this.makeTripEnd(this.cloneLocation(this.lastPrevious), true);
+    this.makeTripEnd(this.cloneLocation(this.lastPrevious), true);
   }
 
   detect(current, prev) {
