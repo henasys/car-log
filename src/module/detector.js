@@ -97,13 +97,11 @@ export class TripDetector {
   makeTripEnd(item, isLast = false) {
     if (isLast) {
       console.log('LastPrevious', item);
-      item.number = this.number;
-    } else {
-      item.number = this.number - 1;
     }
     item.type = TripType.END;
     item.totalDistance = this.totalDistance;
     item.totalTime = item.created - this.startTime;
+    item.number = this.number - 1;
     this.makeTripResult(item);
   }
 
