@@ -10,22 +10,32 @@ import inputBox from '../view/inputBox';
 import {TripDetector} from '../module/detector';
 
 const renderItem = item => {
+  const endBlock = item.end && (
+    <View>
+      <Text>
+        도착: {timeToDate(item.start.created)} {timeToHourMin(item.end.created)}
+      </Text>
+      <Text>
+        좌표: {toFixed(item.end.latitude, 4)}, {toFixed(item.end.longitude, 4)}
+      </Text>
+      <Text>시간간격: {msToTime(item.end.totalTime)}</Text>
+      <Text>거리합산: {toFixed(item.end.totalDistance / 1000)} km</Text>
+    </View>
+  );
   return (
     <View style={styles.itemContainer}>
       <View style={[styles.itemColumnContainer, {alignItems: 'center'}]}>
-        <Text>{timeToDate(item.created)}</Text>
-        <Text>{timeToWeek(item.created)}</Text>
-        <Text>{timeToHourMin(item.created)}</Text>
+        <Text>{timeToDate(item.start.created)}</Text>
+        <Text>{timeToWeek(item.start.created)}</Text>
       </View>
       <View style={styles.itemColumnContainer}>
+        <Text>{item.number}</Text>
+        <Text>츨발: {timeToHourMin(item.start.created)}</Text>
         <Text>
-          {item.type} {item.number}
+          좌표: {toFixed(item.start.latitude, 4)},{' '}
+          {toFixed(item.start.longitude, 4)}
         </Text>
-        <Text>시간간격: {msToTime(item.totalTime)}</Text>
-        <Text>거리합산: {toFixed(item.totalDistance / 1000)} km</Text>
-        <Text>
-          좌표: {toFixed(item.latitude, 4)}, {toFixed(item.longitude, 4)}
-        </Text>
+        {endBlock}
       </View>
     </View>
   );

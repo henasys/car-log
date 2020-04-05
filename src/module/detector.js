@@ -55,7 +55,7 @@ export class TripDetector {
       const current = this.cloneLocation(list[index]);
       this.prev = this.detect(current, this.prev);
     }
-    this.makeTripEnd(this.lastPrevious);
+    // this.makeTripEnd(this.cloneLocation(this.lastPrevious), true);
   }
 
   detect(current, prev) {
@@ -94,12 +94,15 @@ export class TripDetector {
     return Object.assign({}, {...item});
   }
 
-  makeTripEnd(item) {
+  makeTripEnd(item, isLast = false) {
     item.type = TripType.END;
     item.totalDistance = this.totalDistance;
     item.totalTime = item.created - this.startTime;
     item.number = this.number - 1;
     this.makeTripResult(item);
+    if (isLast) {
+      console.log('LastPrevious', item);
+    }
   }
 
   makeTripStart(item) {
@@ -111,24 +114,24 @@ export class TripDetector {
   }
 
   makeTripResult(item) {
-    let trip = this.findTripBy(item.number);
-    if (trip) {
-      trip.end = item;
-    } else {
-      trip = {};
-      trip.number = item.number;
+    let trip = this.findOrNewTrip(item.number);
+    trip.number = item.number;
+    if (item.type === TripType.START) {
       trip.start = item;
       this.result.push(trip);
+    } else {
+      trip.end = item;
     }
   }
 
-  findTripBy(number) {
+  findOrNewTrip(number) {
     for (let index = 0; index < this.result.length; index++) {
       const trip = this.result[index];
       if (trip.number === number) {
+        console.log('number found', number, trip);
         return trip;
       }
     }
-    return null;
+    return {};
   }
 }
