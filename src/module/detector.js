@@ -17,10 +17,10 @@ export class TripDetector {
     this.accuracyMargin = parseFloat(accuracyMargin);
     this.radiusOfArea = parseFloat(radiusOfArea);
     this.speedMargin = parseFloat(speedMargin);
-    this.initPrevCarLog();
+    this.initPrevLocation();
   }
 
-  initPrevCarLog() {
+  initPrevLocation() {
     this.prev = {};
     this.prev.latitude = 0.0;
     this.prev.longitude = 0.0;
@@ -36,8 +36,8 @@ export class TripDetector {
       return;
     }
     for (let index = 0; index < list.length; index++) {
-      const current = this.cloneCarLog(list[index]);
-      this.prev = this.detect(current, this.cloneCarLog(this.prev));
+      const current = this.cloneLocation(list[index]);
+      this.prev = this.detect(current, this.cloneLocation(this.prev));
     }
     this.makeArrrive(this.lastPrevious);
   }
@@ -73,7 +73,7 @@ export class TripDetector {
     return current;
   }
 
-  cloneCarLog(item) {
+  cloneLocation(item) {
     return Object.assign({}, {...item});
   }
 
