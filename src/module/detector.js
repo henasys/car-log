@@ -9,7 +9,7 @@ export class TripDetector {
   number = 0;
   isNotFirstArrival = false;
   totalDistance = 0;
-  departTime = 0;
+  startTime = 0;
   result = [];
 
   constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
@@ -35,8 +35,8 @@ export class TripDetector {
     this.totalDistance = totalDistance;
   }
 
-  setDepartTime(departTime) {
-    this.departTime = departTime;
+  setStartTime(startTime) {
+    this.startTime = startTime;
   }
 
   getResult() {
@@ -55,7 +55,7 @@ export class TripDetector {
       const current = this.cloneLocation(list[index]);
       this.prev = this.detect(current, this.prev);
     }
-    this.makeArrrive(this.lastPrevious);
+    this.makeTripEnd(this.lastPrevious);
   }
 
   detect(current, prev) {
@@ -80,12 +80,12 @@ export class TripDetector {
     if (dt >= this.period) {
       this.number += 1;
       if (this.isNotFirstArrival) {
-        this.makeArrrive(previous);
+        this.makeTripEnd(previous);
       }
       this.isNotFirstArrival = true;
       this.totalDistance = 0.0;
-      this.departTime = current.created;
-      this.makeDepart(current);
+      this.startTime = current.created;
+      this.makeTripStart(current);
     }
     return current;
   }
@@ -94,19 +94,41 @@ export class TripDetector {
     return Object.assign({}, {...item});
   }
 
-  makeArrrive(item) {
+  makeTripEnd(item) {
     item.type = TripType.END;
     item.totalDistance = this.totalDistance;
-    item.totalTime = item.created - this.departTime;
+    item.totalTime = item.created - this.startTime;
     item.number = this.number - 1;
-    this.result.push(item);
+    this.makeTripResult(item);
   }
 
-  makeDepart(item) {
+  makeTripStart(item) {
     item.type = TripType.START;
     item.totalDistance = 0;
     item.totalTime = 0;
     item.number = this.number;
-    this.result.push(item);
+    this.makeTripResult(item);
+  }
+
+  makeTripResult(item) {
+    let trip = this.findTripBy(item.number);
+    if (trip) {
+      trip.end = item;
+    } else {
+      trip = {};
+      trip.number = item.number;
+      trip.start = item;
+      this.result.push(trip);
+    }
+  }
+
+  findTripBy(number) {
+    for (let index = 0; index < this.result.length; index++) {
+      const trip = this.result[index];
+      if (trip.number === number) {
+        return trip;
+      }
+    }
+    return null;
   }
 }

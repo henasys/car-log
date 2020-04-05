@@ -36,6 +36,23 @@ export function SearchScreen(props) {
   const [period, setPeriod] = useState('30');
   const [radiusOfArea, setRadiusOfArea] = useState('300');
   const [list, setList] = useState([]);
+  const doSearch = () => {
+    const speedMargin = 0.0;
+    Database.open(realm => {
+      const locations = Database.getLocationList(realm);
+      const detector = new TripDetector(
+        period,
+        accuracyMargin,
+        radiusOfArea,
+        speedMargin,
+      );
+      detector.detectList(locations);
+      const result = detector.getResult();
+      console.log(result);
+      props.navigation.setParams({result: result});
+      setList(result);
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -65,21 +82,7 @@ export function SearchScreen(props) {
           iconStyle={styles.menuItem}
           onPress={() => {
             console.log('search');
-            const speedMargin = 0.0;
-            Database.open(realm => {
-              const locations = Database.getLocationList(realm);
-              const detector = new TripDetector(
-                period,
-                accuracyMargin,
-                radiusOfArea,
-                speedMargin,
-              );
-              detector.detectList(locations);
-              const result = detector.getResult();
-              // console.log(result);
-              props.navigation.setParams({result: result});
-              setList(result);
-            });
+            doSearch();
           }}
           name="search"
           type="material"
