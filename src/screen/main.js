@@ -131,9 +131,9 @@ export default class MainScreen extends React.Component {
       const location = locations[index];
       previous = this.tripDetector.detect(location, previous);
     }
-    setTimeout(() => {
-      this.getList();
-    }, 500);
+    // setTimeout(() => {
+    //   this.getList();
+    // }, 500);
   }
 
   initTripDetector() {
