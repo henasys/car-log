@@ -85,6 +85,13 @@ export default class MainScreen extends React.Component {
     const sliced = locations.slice(0, 1);
     this.previousLocation =
       sliced.length === 1 ? sliced[0] : initEmptyLocation();
+    const newTrip = {
+      startLatitude: this.previousLocation.latitude,
+      startLongitude: this.previousLocation.longitude,
+      startCreated: this.previousLocation.created,
+      totalDistance: 0,
+    };
+    this.newTrip(newTrip);
     console.log('previousLocation', this.previousLocation);
     console.log(
       'previousLocation',
@@ -172,11 +179,15 @@ export default class MainScreen extends React.Component {
       endCreated: this.previousLocation.created,
       totalDistance: totalDistance,
     };
-    this.updateTrip(newTrip);
+    if (this.state.trip.startCreated === this.previousLocation.created) {
+      console.log('not yet ready to start');
+    } else {
+      this.updateTrip(newTrip);
+    }
   }
 
   newTrip(newTrip) {
-    this.setState({trip: {...newTrip}});
+    this.setState({trip: newTrip});
   }
 
   updateTrip(newTrip) {
@@ -184,15 +195,16 @@ export default class MainScreen extends React.Component {
     this.setState({trip: {...trip, ...newTrip}});
   }
 
-  renderItem(item) {
-    if (!item.startCreated) {
+  renderItem(item, currentTrip = false) {
+    if (!item.endCreated) {
       return (
-        <View>
+        <View style={styles.tripMessage}>
           <Text>아직 출발 전입니다.</Text>
         </View>
       );
     }
     const totalDistance = toFixed(item.totalDistance / 1000) + ' km';
+    const tripLabel = currentTrip ? '운행중' : '도착';
     return (
       <View style={styles.itemContainer}>
         <View style={styles.itemColumnContainer}>
@@ -210,7 +222,7 @@ export default class MainScreen extends React.Component {
             {toFixed(item.startLongitude)}
           </Text>
           <Text style={styles.titleText}>
-            {'도착'} {timeToHourMin(item.endCreated)}
+            {tripLabel} {timeToHourMin(item.endCreated)}
           </Text>
           <Text style={styles.addressText}>
             {'    '} 좌표: {toFixed(item.endLatitude)},{' '}
@@ -228,7 +240,7 @@ export default class MainScreen extends React.Component {
     const {trip} = this.state;
     return (
       <View style={styles.container}>
-        <View style={styles.currentTrip}>{this.renderItem(trip)}</View>
+        <View style={styles.currentTrip}>{this.renderItem(trip, true)}</View>
         <FlatList
           data={this.state.list}
           renderItem={({item}) => this.renderItem(item)}
@@ -245,6 +257,8 @@ const styles = StyleSheet.create({
   },
   currentTrip: {
     margin: 10,
+  },
+  tripMessage: {
     alignItems: 'center',
   },
   itemContainer: {
