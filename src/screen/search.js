@@ -13,7 +13,7 @@ const renderItem = item => {
   const endBlock = item.end && (
     <View>
       <Text>
-        도착: {timeToDate(item.start.created)} {timeToHourMin(item.end.created)}
+        도착: {timeToDate(item.end.created)} {timeToHourMin(item.end.created)}
       </Text>
       <Text>
         {'  '} 좌표: {toFixed(item.end.latitude, 4)},{' '}
@@ -69,8 +69,8 @@ export function SearchScreen(props) {
       detector.detectList(locations);
       const result = detector.getResult();
       console.log('result', result);
-      const calculated = detector.getCalculated();
-      console.log('calculated', calculated);
+      // const simpleResult = detector.getSimpleResult();
+      // console.log('simpleResult', simpleResult);
       props.navigation.setParams({result: result});
       setList(result);
     });

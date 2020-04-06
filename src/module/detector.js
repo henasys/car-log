@@ -11,6 +11,7 @@ export class TripDetector {
   totalDistance = 0;
   startTime = 0;
   result = [];
+  simpleResult = [];
 
   constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
     this.period = parseInt(period, 10) * 60 * 1000;
@@ -43,6 +44,10 @@ export class TripDetector {
     return this.result;
   }
 
+  getSimpleResult() {
+    return this.simpleResult;
+  }
+
   getTotalDistance() {
     return this.totalDistance;
   }
@@ -55,7 +60,11 @@ export class TripDetector {
       const current = this.cloneLocation(list[index]);
       this.prev = this.detect(current, this.prev);
     }
-    this.makeTripEnd(this.lastPrevious, true);
+    if (this.lastTripEnd.created !== this.lastPrevious.created) {
+      this.makeTripEnd(this.cloneLocation(this.lastPrevious), true);
+    } else {
+      console.log('lastPrevious is already added into TripEnd');
+    }
   }
 
   detect(current, prev) {
@@ -81,6 +90,7 @@ export class TripDetector {
       this.number += 1;
       if (this.isNotFirstArrival) {
         this.makeTripEnd(previous);
+        this.lastTripEnd = previous;
       }
       this.isNotFirstArrival = true;
       this.totalDistance = 0.0;
@@ -95,14 +105,18 @@ export class TripDetector {
   }
 
   makeTripEnd(item, isLast = false) {
-    if (isLast) {
-      console.log('LastPrevious', item);
-    }
     item.type = TripType.END;
     item.totalDistance = this.totalDistance;
     item.totalTime = item.created - this.startTime;
-    item.number = this.number - 1;
+    if (isLast) {
+      item.number = this.number;
+      item.isLast = true;
+      console.log('makeTripEnd with LastPrevious', item);
+    } else {
+      item.number = this.number - 1;
+    }
     this.makeTripResult(item);
+    this.simpleResult.push(item);
   }
 
   makeTripStart(item) {
@@ -111,6 +125,7 @@ export class TripDetector {
     item.totalTime = 0;
     item.number = this.number;
     this.makeTripResult(item);
+    this.simpleResult.push(item);
   }
 
   makeTripResult(item) {
