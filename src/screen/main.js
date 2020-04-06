@@ -11,6 +11,7 @@ import {
   toFixed,
   initEmptyLocation,
   positionToLocation,
+  tripCallbackItemToTripRecord,
 } from '../module/util';
 import {toast} from '../module/toast';
 import {TripDetector} from '../module/detector';
@@ -18,6 +19,7 @@ import {TripDetector} from '../module/detector';
 export default class MainScreen extends React.Component {
   state = {
     realm: null,
+    trip: {},
     list: [],
   };
 
@@ -72,6 +74,7 @@ export default class MainScreen extends React.Component {
   getSetting() {
     const setting = Database.getSetting(this.state.realm);
     this.setting = setting;
+    // console.log('setting', setting);
   }
 
   getLatestLocation() {
@@ -97,12 +100,26 @@ export default class MainScreen extends React.Component {
   }
 
   initTripDetector() {
-    this.tripDetector = new TripDetector(
+    const tripStartCallback = item => {
+      console.log('tripStartCallback', item.created);
+      const startTrip = tripCallbackItemToTripRecord(item);
+      this.newTrip(startTrip);
+    };
+    const tripEndCallback = item => {
+      console.log('tripEndCallback', item.created);
+      const endTrip = tripCallbackItemToTripRecord(item);
+      this.updateTrip(endTrip);
+    };
+    const detector = new TripDetector(
       this.setting.period,
       this.setting.accuracyMargin,
       this.setting.radiusOfArea,
       this.setting.speedMargin,
     );
+    detector.setTripStartCallback(tripStartCallback);
+    detector.setTripEndCallback(tripEndCallback);
+    this.tripDetector = detector;
+    console.log('tripDetector', detector);
   }
 
   handleOnLocation(position) {
@@ -139,20 +156,42 @@ export default class MainScreen extends React.Component {
 
   handleWithDetector(current) {
     // this.tripDetector.clearResult();
-    console.log('handleWithDetector', current.created, this.previousLocation);
+    console.log('handleWithDetector', current.created);
+    console.log('previousLocation', this.previousLocation);
     this.previousLocation = this.tripDetector.detect(
       current,
       this.previousLocation,
     );
-    const result = this.tripDetector.getResult();
     const totalDistance = this.tripDetector.getTotalDistance();
     const lastPrevious = this.tripDetector.getLastPrevious();
-    console.log('result', result);
     console.log('totalDistance', totalDistance);
     console.log('lastPrevious', lastPrevious);
+    const newTrip = {
+      endLatitude: this.previousLocation.latitude,
+      endLongitude: this.previousLocation.longitude,
+      endCreated: this.previousLocation.created,
+      totalDistance: totalDistance,
+    };
+    this.updateTrip(newTrip);
+  }
+
+  newTrip(newTrip) {
+    this.setState({trip: {...newTrip}});
+  }
+
+  updateTrip(newTrip) {
+    const {trip} = this.state;
+    this.setState({trip: {...trip, ...newTrip}});
   }
 
   renderItem(item) {
+    if (!item.startCreated) {
+      return (
+        <View>
+          <Text>아직 출발 전입니다.</Text>
+        </View>
+      );
+    }
     const totalDistance = toFixed(item.totalDistance / 1000) + ' km';
     return (
       <View style={styles.itemContainer}>
@@ -186,17 +225,28 @@ export default class MainScreen extends React.Component {
   }
 
   render() {
+    const {trip} = this.state;
     return (
-      <FlatList
-        data={this.state.list}
-        renderItem={({item}) => this.renderItem(item)}
-        keyExtractor={(item, index) => String(index)}
-      />
+      <View style={styles.container}>
+        <View style={styles.currentTrip}>{this.renderItem(trip)}</View>
+        <FlatList
+          data={this.state.list}
+          renderItem={({item}) => this.renderItem(item)}
+          keyExtractor={(item, index) => String(index)}
+        />
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  currentTrip: {
+    margin: 10,
+    alignItems: 'center',
+  },
   itemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
