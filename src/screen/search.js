@@ -48,6 +48,7 @@ export function SearchScreen(props) {
   const [radiusOfArea, setRadiusOfArea] = useState('0');
   const [list, setList] = useState([]);
   const initStates = () => {
+    console.log('initStates');
     Database.open(realm => {
       const setting = Database.getSetting(realm);
       setPeriod(String(setting.period));
@@ -75,8 +76,9 @@ export function SearchScreen(props) {
     });
   };
   useEffect(() => {
+    console.log('useEffect');
     initStates();
-  });
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
