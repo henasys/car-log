@@ -76,7 +76,6 @@ export function SearchScreen(props) {
     });
   };
   useEffect(() => {
-    console.log('useEffect');
     initStates();
   }, []);
   return (
