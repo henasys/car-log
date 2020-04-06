@@ -107,27 +107,72 @@ export default class MainScreen extends React.Component {
       return;
     }
     this.getRemainedLocationList(list[0]);
+    this.setState({list});
   }
 
   getRemainedLocationList(lastTrip) {
     const lastTimestamp = lastTrip.endCreated || lastTrip.startCreated;
+    console.log('lastTrip', lastTrip);
     const locations = Database.getLocationListByTimestamp(
       this.state.realm,
       lastTimestamp,
     );
-    console.log('to be processing locations', locations.map(x => x.created));
+    // console.log('to be processing locations', locations.map(x => x.created));
+    this.doDetectOnRemainedLocationList(locations);
+  }
+
+  doDetectOnRemainedLocationList(locations) {
+    if (locations.length === 0) {
+      return;
+    }
+    this.initTripDetector();
+    let previous = locations[0];
+    for (let index = 1; index < locations.length; index++) {
+      const location = locations[index];
+      previous = this.tripDetector.detect(location, previous);
+    }
+    setTimeout(() => {
+      this.getList();
+    }, 500);
   }
 
   initTripDetector() {
+    if (this.tripDetector) {
+      return;
+    }
     const tripStartCallback = item => {
-      console.log('tripStartCallback', item.created);
-      const startTrip = tripCallbackItemToTripRecord(item);
-      this.newTrip(startTrip);
+      console.log(
+        'tripStartCallback',
+        item.created,
+        timeToDateHourMin(item.created),
+      );
+      Database.saveTrip(this.state.realm, item)
+        .then(trip => {
+          console.log('saveTrip done', trip);
+          this.latestTripId = trip.id;
+        })
+        .catch(e => {
+          console.log('saveTrip error', e);
+        });
     };
     const tripEndCallback = item => {
-      console.log('tripEndCallback', item.created);
-      const endTrip = tripCallbackItemToTripRecord(item);
-      this.updateTrip(endTrip);
+      console.log(
+        'tripEndCallback',
+        item.created,
+        timeToDateHourMin(item.created),
+      );
+      Database.updateTripEnd(
+        this.state.realm,
+        this.latestTripId,
+        item,
+        item.totalDistance,
+      )
+        .then(trip => {
+          console.log('updateTripEnd done', trip);
+        })
+        .catch(e => {
+          console.log('updateTripEnd error', e);
+        });
     };
     const detector = new TripDetector(
       this.setting.period,

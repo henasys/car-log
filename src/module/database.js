@@ -96,7 +96,10 @@ const getLocationList = realm => {
 };
 
 const getLocationListByTimestamp = (realm, timestamp) => {
-  const list = realm.objects('Location').filtered('created > $0', timestamp);
+  const list = realm
+    .objects('Location')
+    .filtered('created >= $0', timestamp)
+    .sorted('created', false);
   return list;
 };
 
