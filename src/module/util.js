@@ -272,3 +272,7 @@ export function positionToLocation(position) {
   locaiton.created = position.timestamp;
   return locaiton;
 }
+
+export function clone(item) {
+  return Object.assign({}, {...item});
+}
