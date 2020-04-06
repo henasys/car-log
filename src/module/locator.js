@@ -58,7 +58,7 @@ export class Locator {
   watchPosition(callback = null, errorCallback = null) {
     this.watchID = Geolocation.watchPosition(
       position => {
-        console.log('lastPosition', position);
+        console.log('newPosition', position);
         callback && callback(position);
       },
       error => {
