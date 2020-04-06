@@ -44,8 +44,16 @@ export class TripDetector {
     return this.result;
   }
 
+  clearResult() {
+    this.result = [];
+  }
+
   getSimpleResult() {
     return this.simpleResult;
+  }
+
+  clearSimpleResult() {
+    this.simpleResult = [];
   }
 
   getTotalDistance() {
