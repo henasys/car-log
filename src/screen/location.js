@@ -83,6 +83,13 @@ export default class LocationScreen extends React.Component {
       'created',
       true,
     );
+    // const reversed = Database.getLocationList(this.state.realm).sorted(
+    //   'created',
+    //   false,
+    // );
+    // reversed.forEach(location => {
+    //   console.log(location);
+    // });
     const sliced = list.slice(startIndex, startIndex + NUMBERS_PER_PAGE);
     // console.log('getList', sliced);
     return calculateLocationList(sliced);
