@@ -2,6 +2,7 @@ import moment from 'moment';
 import 'moment/locale/ko';
 
 import {Queue} from './queue';
+import {TripType} from '../module/type';
 
 export function msToTime(s) {
   // Pad to 2 or 3 digits, default is 2
@@ -275,4 +276,19 @@ export function positionToLocation(position) {
 
 export function clone(item) {
   return Object.assign({}, {...item});
+}
+
+export function tripCallbackItemToTripRecord(item) {
+  const record = {};
+  if (item.type === TripType.START) {
+    record.startLatitude = item.latitude;
+    record.startLongitude = item.longitude;
+    record.startCreated = item.created;
+  } else {
+    record.endLatitude = item.latitude;
+    record.endLongitude = item.longitude;
+    record.endCreated = item.created;
+    record.totalDistance = item.totalDistance;
+  }
+  return record;
 }
