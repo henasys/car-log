@@ -69,8 +69,6 @@ export function SearchScreen(props) {
       detector.detectList(locations);
       const result = detector.getResult();
       console.log('result', result);
-      // const simpleResult = detector.getSimpleResult();
-      // console.log('simpleResult', simpleResult);
       props.navigation.setParams({result: result});
       setList(result);
     });
