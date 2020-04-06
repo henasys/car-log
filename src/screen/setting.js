@@ -9,9 +9,9 @@ import inputBox from '../view/inputBox';
 
 export default class SettingScreen extends React.Component {
   state = {
-    period: '15',
-    accuracyMargin: '40',
-    radiusOfArea: '100',
+    period: '0',
+    accuracyMargin: '0',
+    radiusOfArea: '0',
     speedMargin: '0',
   };
 

@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, StyleSheet, FlatList} from 'react-native';
 import {Icon} from 'react-native-elements';
 
@@ -42,10 +42,18 @@ const renderItem = item => {
 };
 
 export function SearchScreen(props) {
-  const [accuracyMargin, setAccuracyMargin] = useState('40');
-  const [period, setPeriod] = useState('30');
-  const [radiusOfArea, setRadiusOfArea] = useState('300');
+  const [accuracyMargin, setAccuracyMargin] = useState('0');
+  const [period, setPeriod] = useState('0');
+  const [radiusOfArea, setRadiusOfArea] = useState('0');
   const [list, setList] = useState([]);
+  const initStates = () => {
+    Database.open(realm => {
+      const setting = Database.getSetting(realm);
+      setPeriod(String(setting.period));
+      setAccuracyMargin(String(setting.accuracyMargin));
+      setRadiusOfArea(String(setting.radiusOfArea));
+    });
+  };
   const doSearch = () => {
     const speedMargin = 0.0;
     Database.open(realm => {
@@ -58,11 +66,16 @@ export function SearchScreen(props) {
       );
       detector.detectList(locations);
       const result = detector.getResult();
-      console.log(result);
+      console.log('result', result);
+      const calculated = detector.getCalculated();
+      console.log('calculated', calculated);
       props.navigation.setParams({result: result});
       setList(result);
     });
   };
+  useEffect(() => {
+    initStates();
+  });
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
