@@ -33,8 +33,8 @@ export class Locator {
     return this.updater;
   }
 
-  initLocator(callback = null) {
-    this.watchPosition(callback);
+  initLocator(callback = null, errorCallback = null) {
+    this.watchPosition(callback, errorCallback);
   }
 
   removeLocator() {
@@ -55,13 +55,16 @@ export class Locator {
     );
   }
 
-  watchPosition(callback = null) {
+  watchPosition(callback = null, errorCallback = null) {
     this.watchID = Geolocation.watchPosition(
       position => {
         console.log('lastPosition', position);
         callback && callback(position);
       },
-      error => console.log('watchPosition Error', error),
+      error => {
+        console.log('watchPosition Error', error);
+        errorCallback && errorCallback(error);
+      },
       this.options,
     );
   }
