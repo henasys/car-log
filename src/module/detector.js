@@ -6,10 +6,7 @@ import {
   clone,
 } from '../module/util';
 
-export const TripType = {
-  START: 'START',
-  END: 'END',
-};
+import {TripType} from '../module/type';
 
 export class TripDetector {
   tripStartCallback = null;
