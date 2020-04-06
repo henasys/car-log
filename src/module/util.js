@@ -254,3 +254,21 @@ export const showSimpleLocation = list => {
   });
   return result;
 };
+
+export function initEmptyLocation() {
+  const location = {};
+  location.latitude = 0.0;
+  location.longitude = 0.0;
+  location.created = 0;
+  return location;
+}
+
+export function positionToLocation(position) {
+  const coords = position && position.coords;
+  if (!coords) {
+    return initEmptyLocation();
+  }
+  const locaiton = Object.assign({}, coords);
+  locaiton.created = position.timestamp;
+  return locaiton;
+}

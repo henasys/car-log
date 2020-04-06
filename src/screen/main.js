@@ -9,6 +9,8 @@ import {
   timeToMonthDay,
   timeToDateHourMin,
   toFixed,
+  initEmptyLocation,
+  positionToLocation,
 } from '../module/util';
 import {toast} from '../module/toast';
 import {TripDetector} from '../module/detector';
@@ -79,7 +81,7 @@ export default class MainScreen extends React.Component {
     );
     const sliced = locations.slice(0, 1);
     this.previousLocation =
-      sliced.length === 1 ? sliced[0] : TripDetector.getInitLocation();
+      sliced.length === 1 ? sliced[0] : initEmptyLocation();
     console.log('previousLocation', this.previousLocation);
     console.log(
       'previousLocation',
@@ -108,7 +110,7 @@ export default class MainScreen extends React.Component {
     if (!coords) {
       return;
     }
-    this.handleWithDetector(coords);
+    this.handleWithDetector(positionToLocation(position));
     Database.saveLocation(
       this.state.realm,
       coords.latitude,
@@ -136,13 +138,18 @@ export default class MainScreen extends React.Component {
   }
 
   handleWithDetector(current) {
-    this.tripDetector.clearResult();
+    // this.tripDetector.clearResult();
+    console.log('handleWithDetector', current.created, this.previousLocation);
     this.previousLocation = this.tripDetector.detect(
       current,
       this.previousLocation,
     );
     const result = this.tripDetector.getResult();
+    const totalDistance = this.tripDetector.getTotalDistance();
+    const lastPrevious = this.tripDetector.getLastPrevious();
     console.log('result', result);
+    console.log('totalDistance', totalDistance);
+    console.log('lastPrevious', lastPrevious);
   }
 
   renderItem(item) {

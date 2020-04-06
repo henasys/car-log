@@ -1,4 +1,9 @@
-import {distanceCarLog, timeToDateHourMin, msToTime} from '../module/util';
+import {
+  distanceCarLog,
+  timeToDateHourMin,
+  msToTime,
+  initEmptyLocation,
+} from '../module/util';
 
 export const TripType = {
   START: 'START',
@@ -22,7 +27,7 @@ export class TripDetector {
   }
 
   initPrevLocation() {
-    this.prev = TripDetector.getInitLocation();
+    this.prev = initEmptyLocation();
   }
 
   setIsNotFirstArrival(isNotFirstArrival) {
@@ -35,14 +40,6 @@ export class TripDetector {
 
   setStartTime(startTime) {
     this.startTime = startTime;
-  }
-
-  static getInitLocation() {
-    const location = {};
-    location.latitude = 0.0;
-    location.longitude = 0.0;
-    location.created = 0;
-    return location;
   }
 
   getResult() {
@@ -63,6 +60,10 @@ export class TripDetector {
 
   getTotalDistance() {
     return this.totalDistance;
+  }
+
+  getLastPrevious() {
+    return this.lastPrevious;
   }
 
   detectList(list) {
