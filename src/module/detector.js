@@ -22,10 +22,7 @@ export class TripDetector {
   }
 
   initPrevLocation() {
-    this.prev = {};
-    this.prev.latitude = 0.0;
-    this.prev.longitude = 0.0;
-    this.prev.created = 0;
+    this.prev = TripDetector.getInitLocation();
   }
 
   setIsNotFirstArrival(isNotFirstArrival) {
@@ -38,6 +35,14 @@ export class TripDetector {
 
   setStartTime(startTime) {
     this.startTime = startTime;
+  }
+
+  static getInitLocation() {
+    const location = {};
+    location.latitude = 0.0;
+    location.longitude = 0.0;
+    location.created = 0;
+    return location;
   }
 
   getResult() {
@@ -68,7 +73,10 @@ export class TripDetector {
       const current = this.cloneLocation(list[index]);
       this.prev = this.detect(current, this.prev);
     }
-    if (this.lastTripEnd.created !== this.lastPrevious.created) {
+    if (
+      this.lastTripEnd &&
+      this.lastTripEnd.created !== this.lastPrevious.created
+    ) {
       this.makeTripEnd(this.cloneLocation(this.lastPrevious), true);
     } else {
       console.log('lastPrevious is already added into TripEnd');

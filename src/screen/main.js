@@ -7,6 +7,7 @@ import {
   timeToWeek,
   timeToHourMin,
   timeToMonthDay,
+  timeToDateHourMin,
   toFixed,
 } from '../module/util';
 import {toast} from '../module/toast';
@@ -23,7 +24,10 @@ export default class MainScreen extends React.Component {
   componentDidMount() {
     console.log('main componentDidMount');
     this.openDatabase();
-    this.locator.initLocator(this.handleOnLocation.bind(this));
+    this.locator.initLocator(
+      this.handleOnLocation.bind(this),
+      this.handleOnLocationError.bind(this),
+    );
     this.getCurrentPosition();
   }
 
@@ -73,7 +77,15 @@ export default class MainScreen extends React.Component {
       'created',
       true,
     );
-    this.previousLocation = locations.slice(0, 1);
+    const sliced = locations.slice(0, 1);
+    this.previousLocation =
+      sliced.length === 1 ? sliced[0] : TripDetector.getInitLocation();
+    console.log('previousLocation', this.previousLocation);
+    console.log(
+      'previousLocation',
+      timeToDateHourMin(this.previousLocation.created),
+      this.previousLocation.created,
+    );
   }
 
   getList() {
@@ -96,6 +108,7 @@ export default class MainScreen extends React.Component {
     if (!coords) {
       return;
     }
+    this.handleWithDetector(coords);
     Database.saveLocation(
       this.state.realm,
       coords.latitude,
@@ -117,11 +130,19 @@ export default class MainScreen extends React.Component {
       });
   }
 
+  handleOnLocationError(error) {
+    const msg = `${error.code}: ${error.message}`;
+    toast(msg);
+  }
+
   handleWithDetector(current) {
+    this.tripDetector.clearResult();
     this.previousLocation = this.tripDetector.detect(
       current,
       this.previousLocation,
     );
+    const result = this.tripDetector.getResult();
+    console.log('result', result);
   }
 
   renderItem(item) {
