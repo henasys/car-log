@@ -3,6 +3,7 @@ import {
   timeToDateHourMin,
   msToTime,
   initEmptyLocation,
+  clone,
 } from '../module/util';
 
 export const TripType = {
@@ -11,12 +12,13 @@ export const TripType = {
 };
 
 export class TripDetector {
+  tripStartCallback = null;
+  tripEndCallback = null;
   number = 0;
   isNotFirstArrival = false;
   totalDistance = 0;
   startTime = 0;
   result = [];
-  simpleResult = [];
 
   constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
     this.period = parseInt(period, 10) * 60 * 1000;
@@ -26,20 +28,12 @@ export class TripDetector {
     this.initPrevLocation();
   }
 
-  initPrevLocation() {
-    this.prev = initEmptyLocation();
+  setTripStartCallback(callback) {
+    this.tripStartCallback = callback;
   }
 
-  setIsNotFirstArrival(isNotFirstArrival) {
-    this.isNotFirstArrival = isNotFirstArrival;
-  }
-
-  setTotalDistance(totalDistance) {
-    this.totalDistance = totalDistance;
-  }
-
-  setStartTime(startTime) {
-    this.startTime = startTime;
+  setTripEndCallback(callback) {
+    this.tripEndCallback = callback;
   }
 
   getResult() {
@@ -48,14 +42,6 @@ export class TripDetector {
 
   clearResult() {
     this.result = [];
-  }
-
-  getSimpleResult() {
-    return this.simpleResult;
-  }
-
-  clearSimpleResult() {
-    this.simpleResult = [];
   }
 
   getTotalDistance() {
@@ -71,21 +57,22 @@ export class TripDetector {
       return;
     }
     for (let index = 0; index < list.length; index++) {
-      const current = this.cloneLocation(list[index]);
+      const current = list[index];
       this.prev = this.detect(current, this.prev);
     }
     if (
       this.lastTripEnd &&
       this.lastTripEnd.created !== this.lastPrevious.created
     ) {
-      this.makeTripEnd(this.cloneLocation(this.lastPrevious), true);
+      this.makeTripEnd(clone(this.lastPrevious), true);
     } else {
       console.log('lastPrevious is already added into TripEnd');
     }
   }
 
-  detect(current, prev) {
-    const previous = this.cloneLocation(prev);
+  detect(curr, prev) {
+    const current = clone(curr);
+    const previous = clone(prev);
     if (current.accuracy >= this.accuracyMargin) {
       return previous;
     }
@@ -117,8 +104,8 @@ export class TripDetector {
     return current;
   }
 
-  cloneLocation(item) {
-    return Object.assign({}, {...item});
+  initPrevLocation() {
+    this.prev = initEmptyLocation();
   }
 
   makeTripEnd(item, isLast = false) {
@@ -132,8 +119,8 @@ export class TripDetector {
     } else {
       item.number = this.number - 1;
     }
+    this.tripEndCallback && this.tripEndCallback(item);
     this.makeTripResult(item);
-    this.simpleResult.push(item);
   }
 
   makeTripStart(item) {
@@ -141,8 +128,8 @@ export class TripDetector {
     item.totalDistance = 0;
     item.totalTime = 0;
     item.number = this.number;
+    this.tripStartCallback && this.tripStartCallback(item);
     this.makeTripResult(item);
-    this.simpleResult.push(item);
   }
 
   makeTripResult(item) {
@@ -168,7 +155,7 @@ export class TripDetector {
     for (let index = 0; index < this.result.length; index++) {
       const trip = this.result[index];
       if (trip.number === number) {
-        console.log('trip found', number, trip);
+        // console.log('trip found', number, trip);
         return trip;
       }
     }
