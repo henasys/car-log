@@ -103,7 +103,19 @@ export default class MainScreen extends React.Component {
   getList() {
     const list = Database.getTripList(this.state.realm).sorted('created', true);
     // console.log('list', list);
-    this.setState({list});
+    if (list.length === 0) {
+      return;
+    }
+    this.getRemainedLocationList(list[0]);
+  }
+
+  getRemainedLocationList(lastTrip) {
+    const lastTimestamp = lastTrip.endCreated || lastTrip.startCreated;
+    const locations = Database.getLocationListByTimestamp(
+      this.state.realm,
+      lastTimestamp,
+    );
+    console.log('to be processing locations', locations.map(x => x.created));
   }
 
   initTripDetector() {
@@ -126,7 +138,7 @@ export default class MainScreen extends React.Component {
     detector.setTripStartCallback(tripStartCallback);
     detector.setTripEndCallback(tripEndCallback);
     this.tripDetector = detector;
-    console.log('tripDetector', detector);
+    // console.log('tripDetector', detector);
   }
 
   handleOnLocation(position) {
@@ -179,11 +191,7 @@ export default class MainScreen extends React.Component {
       endCreated: this.previousLocation.created,
       totalDistance: totalDistance,
     };
-    if (this.state.trip.startCreated === this.previousLocation.created) {
-      console.log('not yet ready to start');
-    } else {
-      this.updateTrip(newTrip);
-    }
+    this.updateTrip(newTrip);
   }
 
   newTrip(newTrip) {
@@ -204,7 +212,7 @@ export default class MainScreen extends React.Component {
       );
     }
     const totalDistance = toFixed(item.totalDistance / 1000) + ' km';
-    const tripLabel = currentTrip ? '운행중' : '도착';
+    const tripLabel = currentTrip ? '운행' : '도착';
     return (
       <View style={styles.itemContainer}>
         <View style={styles.itemColumnContainer}>
@@ -256,7 +264,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   currentTrip: {
-    margin: 10,
+    // margin: 10,
   },
   tripMessage: {
     alignItems: 'center',

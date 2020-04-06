@@ -95,6 +95,11 @@ const getLocationList = realm => {
   return realm.objects('Location');
 };
 
+const getLocationListByTimestamp = (realm, timestamp) => {
+  const list = realm.objects('Location').filtered('created > $0', timestamp);
+  return list;
+};
+
 const saveSetting = (
   realm,
   period,
@@ -264,6 +269,7 @@ export default {
   close,
   saveLocation,
   getLocationList,
+  getLocationListByTimestamp,
   saveSetting,
   getSetting,
   saveTrip,
