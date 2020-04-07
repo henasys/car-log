@@ -280,15 +280,15 @@ export function clone(item) {
 
 export function tripCallbackItemToTripRecord(item) {
   const record = {};
-  if (item.type === TripType.START) {
-    record.startLatitude = item.latitude;
-    record.startLongitude = item.longitude;
-    record.startCreated = item.created;
-  } else {
+  if (item.type === TripType.END) {
     record.endLatitude = item.latitude;
     record.endLongitude = item.longitude;
     record.endCreated = item.created;
     record.totalDistance = item.totalDistance;
+  } else {
+    record.startLatitude = item.latitude;
+    record.startLongitude = item.longitude;
+    record.startCreated = item.created;
   }
   return record;
 }

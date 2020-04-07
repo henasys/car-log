@@ -16,12 +16,14 @@ export class TripDetector {
   totalDistance = 0;
   startTime = 0;
   result = [];
+  tripIdFinder = new TripIdFinder();
 
   constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
     this.period = parseInt(period, 10) * 60 * 1000;
     this.accuracyMargin = parseFloat(accuracyMargin);
     this.radiusOfArea = parseFloat(radiusOfArea);
     this.speedMargin = parseFloat(speedMargin);
+    this.previousLocation = initEmptyLocation();
   }
 
   setTripStartCallback(callback) {
@@ -30,6 +32,18 @@ export class TripDetector {
 
   setTripEndCallback(callback) {
     this.tripEndCallback = callback;
+  }
+
+  setPreviousLocation(location) {
+    this.previousLocation = location ? location : initEmptyLocation();
+  }
+
+  getPreviousLocation() {
+    return this.previousLocation;
+  }
+
+  getTripIdFinder() {
+    return this.tripIdFinder;
   }
 
   getResult() {
@@ -65,6 +79,15 @@ export class TripDetector {
     } else {
       console.log('lastPrevious is already added into TripEnd');
     }
+  }
+
+  /**
+   * detect Trip at once, providing current location
+   * this must be called after setPreviousLocation()
+   * @param {} current location info from GPS
+   */
+  detectAtOnce(current) {
+    this.previousLocation = this.detect(current, this.previousLocation);
   }
 
   detect(curr, prev) {
@@ -153,5 +176,35 @@ export class TripDetector {
       }
     }
     return {};
+  }
+}
+
+export class TripIdFinder {
+  list = [];
+
+  add(number, id) {
+    const item = this.find(number);
+    if (item) {
+      item.id = id;
+    } else {
+      const newOne = {};
+      newOne.number = number;
+      newOne.id = id;
+      this.list.push(newOne);
+    }
+  }
+
+  find(number) {
+    for (let index = 0; index < this.list.length; index++) {
+      const item = this.list[index];
+      if (item.number === number) {
+        return item;
+      }
+    }
+    return null;
+  }
+
+  getList() {
+    return this.list;
   }
 }
