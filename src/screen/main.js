@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, FlatList} from 'react-native';
+import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
@@ -80,7 +80,7 @@ export default class MainScreen extends React.Component {
   getList() {
     console.log('main getList');
     const list = Database.getTripList(this.state.realm)
-      // .filtered('endCreated != null')
+      .filtered('endCreated != null')
       .sorted('created', true);
     console.log(
       'list',
@@ -360,14 +360,14 @@ export default class MainScreen extends React.Component {
     console.log('list', list.length);
     console.log('trip', trip);
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.currentTrip}>{this.renderItem(trip, true)}</View>
         <FlatList
           data={list}
           renderItem={({item}) => this.renderItem(item)}
           keyExtractor={(item, index) => String(index)}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -377,7 +377,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   currentTrip: {
-    marginVertical: 10,
+    paddingVertical: 10,
+    backgroundColor: '#DCDCDC',
   },
   tripMessage: {
     alignItems: 'center',
