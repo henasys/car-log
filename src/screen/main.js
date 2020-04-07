@@ -87,7 +87,7 @@ export default class MainScreen extends React.Component {
       .sorted('created', true);
     // this.deleteTrips(list);
     this.setState({list});
-    this.testNewLocation();
+    // this.testNewLocation();
   }
 
   // test purpose only
