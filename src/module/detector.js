@@ -12,7 +12,7 @@ export class TripDetector {
   tripStartCallback = null;
   tripEndCallback = null;
   number = 0;
-  isNotFirstArrival = false;
+  allowTripEndAtFirst = false;
   totalDistance = 0;
   startTime = 0;
   result = [];
@@ -38,8 +38,24 @@ export class TripDetector {
     this.previousLocation = location ? location : initEmptyLocation();
   }
 
+  /**
+   * set first Trip End allowed or not
+   * @param {*} flag true or false
+   */
+  setAllowTripEndAtFirst(flag) {
+    this.allowTripEndAtFirst = flag;
+  }
+
   getPreviousLocation() {
     return this.previousLocation;
+  }
+
+  setNumber(number) {
+    this.number = number;
+  }
+
+  getNumber() {
+    return this.number;
   }
 
   getTripIdFinder() {
@@ -112,11 +128,11 @@ export class TripDetector {
     this.totalDistance = this.totalDistance + dd;
     if (dt >= this.period) {
       this.number += 1;
-      if (this.isNotFirstArrival) {
+      if (this.allowTripEndAtFirst) {
         this.makeTripEnd(previous);
         this.lastTripEnd = previous;
       }
-      this.isNotFirstArrival = true;
+      this.allowTripEndAtFirst = true;
       this.totalDistance = 0.0;
       this.startTime = current.created;
       this.makeTripStart(current);

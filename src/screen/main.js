@@ -115,7 +115,8 @@ export default class MainScreen extends React.Component {
     console.log('lastTrip', lastTrip);
     if (lastTrip.startCreated && !lastTrip.endCreated) {
       const tripIdFinder = this.tripDetector.getTripIdFinder();
-      tripIdFinder.add(0, lastTrip.id);
+      const initNumber = this.tripDetector.getNumber();
+      tripIdFinder.add(initNumber, lastTrip.id);
     }
     const locations = Database.getLocationListByTimestamp(
       this.state.realm,
@@ -135,6 +136,7 @@ export default class MainScreen extends React.Component {
       const location = locations[index];
       this.tripDetector.detectAtOnce(location);
     }
+    this.tripDetector.setAllowTripEndAtFirst(true);
     const result = this.tripDetector.getResult();
     console.log('result', result.length);
     const previousLocation = this.tripDetector.getPreviousLocation();
@@ -186,6 +188,15 @@ export default class MainScreen extends React.Component {
       timeToDateHourMin(item.created),
     );
     console.log(item);
+    const tripIdFinder = this.tripDetector.getTripIdFinder();
+    Database.saveTrip(this.state.realm, item)
+      .then(trip => {
+        console.log('saveTrip done', trip);
+        tripIdFinder.add(item.number, trip.id);
+      })
+      .catch(e => {
+        console.log('saveTrip error', e);
+      });
   };
 
   tripEndCallback = item => {
@@ -195,6 +206,25 @@ export default class MainScreen extends React.Component {
       timeToDateHourMin(item.created),
     );
     console.log(item);
+    const tripIdFinder = this.tripDetector.getTripIdFinder();
+    const tripId = tripIdFinder.find(item.number);
+    console.log('tripId', tripId);
+    if (!tripId) {
+      console.log('not found matching trip id', item.number);
+      return;
+    }
+    Database.updateTripEnd(
+      this.state.realm,
+      tripId.id,
+      item,
+      item.totalDistance,
+    )
+      .then(trip => {
+        console.log('updateTripEnd done', trip);
+      })
+      .catch(e => {
+        console.log('updateTripEnd error', e);
+      });
   };
 
   newTripDetector() {
