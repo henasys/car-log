@@ -85,13 +85,6 @@ export default class MainScreen extends React.Component {
     const sliced = locations.slice(0, 1);
     this.previousLocation =
       sliced.length === 1 ? sliced[0] : initEmptyLocation();
-    const newTrip = {
-      startLatitude: this.previousLocation.latitude,
-      startLongitude: this.previousLocation.longitude,
-      startCreated: this.previousLocation.created,
-      totalDistance: 0,
-    };
-    this.newTrip(newTrip);
     console.log('previousLocation', this.previousLocation);
     console.log(
       'previousLocation',
@@ -282,7 +275,7 @@ export default class MainScreen extends React.Component {
     if (!item.startCreated) {
       return (
         <View style={styles.tripMessage}>
-          <Text>아직 출발 전입니다.</Text>
+          <Text style={styles.tripMessageText}>아직 출발 전입니다.</Text>
         </View>
       );
     }
@@ -345,10 +338,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   currentTrip: {
-    // margin: 10,
+    marginVertical: 10,
   },
   tripMessage: {
     alignItems: 'center',
+  },
+  tripMessageText: {
+    fontSize: 18,
   },
   itemContainer: {
     flexDirection: 'row',
