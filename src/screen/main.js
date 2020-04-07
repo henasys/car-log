@@ -80,14 +80,14 @@ export default class MainScreen extends React.Component {
   getList() {
     console.log('main getList');
     const list = Database.getTripList(this.state.realm)
-      .filtered('endCreated != null')
+      // .filtered('endCreated != null')
       .sorted('created', true);
-    console.log(
-      'list',
-      list.map(x => {
-        return {created: x.created, date: timeToDateHourMin(x.created)};
-      }),
-    );
+    // console.log(
+    //   'list',
+    //   list.map(x => {
+    //     return {created: x.created, date: timeToDateHourMin(x.created)};
+    //   }),
+    // );
     // this.deleteTrips(list);
     this.getRemainedLocationList();
     this.setState({list});
@@ -188,6 +188,7 @@ export default class MainScreen extends React.Component {
       timeToDateHourMin(item.created),
     );
     console.log(item);
+    this.removeTripNotEnded();
     const tripIdFinder = this.tripDetector.getTripIdFinder();
     Database.saveTrip(this.state.realm, item)
       .then(trip => {
@@ -307,6 +308,12 @@ export default class MainScreen extends React.Component {
   updateTrip(newTrip) {
     const {trip} = this.state;
     this.setState({trip: {...trip, ...newTrip}});
+  }
+
+  removeTripNotEnded() {
+    const {list} = this.state;
+    const newList = list.filtered('endCreated != null');
+    this.setState({list: newList});
   }
 
   renderItem(item, currentTrip = false) {
