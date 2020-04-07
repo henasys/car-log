@@ -22,7 +22,6 @@ export class TripDetector {
     this.accuracyMargin = parseFloat(accuracyMargin);
     this.radiusOfArea = parseFloat(radiusOfArea);
     this.speedMargin = parseFloat(speedMargin);
-    this.initPrevLocation();
   }
 
   setTripStartCallback(callback) {
@@ -53,9 +52,10 @@ export class TripDetector {
     if (list.length === 0) {
       return;
     }
+    let prev = initEmptyLocation();
     for (let index = 0; index < list.length; index++) {
       const current = list[index];
-      this.prev = this.detect(current, this.prev);
+      prev = this.detect(current, prev);
     }
     if (
       this.lastTripEnd &&
@@ -99,10 +99,6 @@ export class TripDetector {
       this.makeTripStart(current);
     }
     return current;
-  }
-
-  initPrevLocation() {
-    this.prev = initEmptyLocation();
   }
 
   makeTripEnd(item, isLast = false) {
