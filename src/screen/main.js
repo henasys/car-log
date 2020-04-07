@@ -44,7 +44,6 @@ export default class MainScreen extends React.Component {
   openDatabase() {
     Database.open(realm => {
       this.setState({realm});
-      this.getLatestLocation();
       this.getSetting();
       this.getList();
       this.initTripDetector();
@@ -77,22 +76,6 @@ export default class MainScreen extends React.Component {
     // console.log('setting', setting);
   }
 
-  getLatestLocation() {
-    const locations = Database.getLocationList(this.state.realm).sorted(
-      'created',
-      true,
-    );
-    const sliced = locations.slice(0, 1);
-    this.previousLocation =
-      sliced.length === 1 ? sliced[0] : initEmptyLocation();
-    console.log('previousLocation', this.previousLocation);
-    console.log(
-      'previousLocation',
-      timeToDateHourMin(this.previousLocation.created),
-      this.previousLocation.created,
-    );
-  }
-
   getList() {
     console.log('main getList');
     const list = Database.getTripList(this.state.realm)
@@ -104,9 +87,6 @@ export default class MainScreen extends React.Component {
         return {created: x.created, date: timeToDateHourMin(x.created)};
       }),
     );
-    if (list.length === 0) {
-      return;
-    }
     // this.deleteTrips(list);
     this.getRemainedLocationList();
     this.setState({list});
@@ -130,14 +110,26 @@ export default class MainScreen extends React.Component {
       .sorted('created', true)
       .slice(0, 1);
     const lastTrip = list.length === 1 ? list[0] : {};
-    const lastTimestamp = lastTrip.endCreated || lastTrip.startCreated;
+    const lastTimestamp = lastTrip.endCreated || lastTrip.startCreated || 0;
     console.log('lastTrip', lastTrip);
     const locations = Database.getLocationListByTimestamp(
       this.state.realm,
       lastTimestamp,
     );
     // console.log('to be processing locations', locations.map(x => x.created));
+    const prevLocation = locations.length > 0 ? locations[0] : null;
+    this.setPreviousLocation(prevLocation);
     this.doDetectOnRemainedLocationList(locations);
+  }
+
+  setPreviousLocation(location) {
+    this.previousLocation = location ? location : initEmptyLocation();
+    console.log('previousLocation', this.previousLocation);
+    console.log(
+      'previousLocation',
+      timeToDateHourMin(this.previousLocation.created),
+      this.previousLocation.created,
+    );
   }
 
   doDetectOnRemainedLocationList(locations) {
