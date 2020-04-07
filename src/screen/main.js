@@ -11,6 +11,7 @@ import {
   toFixed,
   positionToLocation,
   tripCallbackItemToTripRecord,
+  clone,
 } from '../module/util';
 import {toast} from '../module/toast';
 import {TripDetector} from '../module/detector';
@@ -25,6 +26,7 @@ export default class MainScreen extends React.Component {
   locator = Locator.getInstance();
   setting = null;
   tripDetector = null;
+  listFirstTotalDistance = 0;
 
   componentDidMount() {
     console.log('main componentDidMount');
@@ -46,6 +48,7 @@ export default class MainScreen extends React.Component {
     Database.open(realm => {
       this.setState({realm});
       this.getSetting();
+      this.getRemainedLocationList();
       this.getList();
     });
   }
@@ -82,14 +85,7 @@ export default class MainScreen extends React.Component {
     const list = Database.getTripList(this.state.realm)
       // .filtered('endCreated != null')
       .sorted('created', true);
-    // console.log(
-    //   'list',
-    //   list.map(x => {
-    //     return {created: x.created, date: timeToDateHourMin(x.created)};
-    //   }),
-    // );
     // this.deleteTrips(list);
-    this.getRemainedLocationList();
     this.setState({list});
   }
 
@@ -142,6 +138,7 @@ export default class MainScreen extends React.Component {
     const previousLocation = this.tripDetector.getPreviousLocation();
     const lastPrevious = this.tripDetector.getLastPrevious();
     const totalDistance = this.tripDetector.getTotalDistance();
+    this.listFirstTotalDistance = totalDistance;
     console.log('previousLocation', previousLocation);
     console.log('lastPrevious', lastPrevious);
     console.log('totalDistance', totalDistance);
@@ -188,7 +185,6 @@ export default class MainScreen extends React.Component {
       timeToDateHourMin(item.created),
     );
     console.log(item);
-    this.removeTripNotEnded();
     const tripIdFinder = this.tripDetector.getTripIdFinder();
     Database.saveTrip(this.state.realm, item)
       .then(trip => {
@@ -316,6 +312,17 @@ export default class MainScreen extends React.Component {
     this.setState({list: newList});
   }
 
+  listClone(list) {
+    const listClone = list.map(x => clone(x));
+    if (listClone.length > 0) {
+      const listFirst = listClone[0];
+      if (!listFirst.endCreated) {
+        listFirst.totalDistance = this.listFirstTotalDistance;
+      }
+    }
+    return listClone;
+  }
+
   renderItem(item, currentTrip = false) {
     if (currentTrip && !item.endCreated) {
       return (
@@ -366,11 +373,12 @@ export default class MainScreen extends React.Component {
     const {trip, list} = this.state;
     console.log('list', list.length);
     console.log('trip', trip);
+    const listClone = this.listClone(list);
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.currentTrip}>{this.renderItem(trip, true)}</View>
         <FlatList
-          data={list}
+          data={listClone}
           renderItem={({item}) => this.renderItem(item)}
           keyExtractor={(item, index) => String(index)}
         />
