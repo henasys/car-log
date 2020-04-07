@@ -87,6 +87,7 @@ export default class MainScreen extends React.Component {
       .sorted('created', true);
     // this.deleteTrips(list);
     this.setState({list});
+    this.testNewLocation();
   }
 
   // test purpose only
@@ -271,7 +272,23 @@ export default class MainScreen extends React.Component {
     toast(msg);
   }
 
-  handleWithDetector(current) {
+  testNewLocation() {
+    const location = {
+      accuracy: 48,
+      altitude: 68.0428826137193,
+      heading: 0,
+      latitude: 37.53006144198941,
+      longitude: 126.99286469807542,
+      speed: 0,
+      created: 1586254156999,
+    };
+    setTimeout(() => {
+      console.log('testNewLocation');
+      this.handleWithDetector(location, true);
+    }, 3000);
+  }
+
+  handleWithDetector(current, isTest = false) {
     console.log('handleWithDetector', current.created);
     if (!this.tripDetector) {
       return;
@@ -292,7 +309,7 @@ export default class MainScreen extends React.Component {
       endCreated: previousLocation.created,
       totalDistance: totalDistance,
     };
-    if (isLocationChanged) {
+    if (isTest || isLocationChanged) {
       this.updateTrip(newTrip);
     }
   }
@@ -312,8 +329,11 @@ export default class MainScreen extends React.Component {
     this.setState({list: newList});
   }
 
-  listClone(list) {
-    const listClone = list.map(x => clone(x));
+  listClone(list, trip) {
+    const listFilter = trip.endCreated
+      ? list.filtered('endCreated != null')
+      : list;
+    const listClone = listFilter.map(x => clone(x));
     if (listClone.length > 0) {
       const listFirst = listClone[0];
       if (!listFirst.endCreated) {
@@ -373,7 +393,7 @@ export default class MainScreen extends React.Component {
     const {trip, list} = this.state;
     console.log('list', list.length);
     console.log('trip', trip);
-    const listClone = this.listClone(list);
+    const listClone = this.listClone(list, trip);
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.currentTrip}>{this.renderItem(trip, true)}</View>
