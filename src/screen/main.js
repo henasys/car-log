@@ -101,16 +101,42 @@ export default class MainScreen extends React.Component {
   }
 
   getList() {
-    const list = Database.getTripList(this.state.realm).sorted('created', true);
-    // console.log('list', list);
+    console.log('main getList');
+    const list = Database.getTripList(this.state.realm)
+      // .filtered('endCreated != null')
+      .sorted('created', true);
+    console.log(
+      'list',
+      list.map(x => {
+        return {created: x.created, date: timeToDateHourMin(x.created)};
+      }),
+    );
     if (list.length === 0) {
       return;
     }
-    this.getRemainedLocationList(list[0]);
+    // this.deleteTrips(list);
+    this.getRemainedLocationList();
     this.setState({list});
   }
 
-  getRemainedLocationList(lastTrip) {
+  // test purpose only
+  deleteTrips(list) {
+    const deleteList = list.filtered('created >= $0', 1586221200000);
+    console.log('deleteList', deleteList);
+    try {
+      this.state.realm.write(() => {
+        this.state.realm.delete(deleteList);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  getRemainedLocationList() {
+    const list = Database.getTripList(this.state.realm)
+      .sorted('created', true)
+      .slice(0, 1);
+    const lastTrip = list.length === 1 ? list[0] : {};
     const lastTimestamp = lastTrip.endCreated || lastTrip.startCreated;
     console.log('lastTrip', lastTrip);
     const locations = Database.getLocationListByTimestamp(
@@ -125,15 +151,32 @@ export default class MainScreen extends React.Component {
     if (locations.length === 0) {
       return;
     }
-    this.initTripDetector();
+    const detector = this.newTripDetector();
     let previous = locations[0];
     for (let index = 1; index < locations.length; index++) {
       const location = locations[index];
-      previous = this.tripDetector.detect(location, previous);
+      previous = detector.detect(location, previous);
     }
-    // setTimeout(() => {
-    //   this.getList();
-    // }, 500);
+    const result = detector.getResult();
+    console.log('result', result.length);
+    this.saveTripResult(result);
+  }
+
+  saveTripResult(result) {
+    result.forEach(trip => {
+      Database.saveTrip(
+        this.state.realm,
+        trip.start,
+        trip.end,
+        trip.end && trip.end.totalDistance,
+      )
+        .then(newTrip => {
+          console.log('saveTrip done', newTrip);
+        })
+        .catch(e => {
+          console.log('saveTrip error', e);
+        });
+    });
   }
 
   initTripDetector() {
@@ -146,14 +189,7 @@ export default class MainScreen extends React.Component {
         item.created,
         timeToDateHourMin(item.created),
       );
-      Database.saveTrip(this.state.realm, item)
-        .then(trip => {
-          console.log('saveTrip done', trip);
-          this.latestTripId = trip.id;
-        })
-        .catch(e => {
-          console.log('saveTrip error', e);
-        });
+      console.log(item);
     };
     const tripEndCallback = item => {
       console.log(
@@ -161,29 +197,23 @@ export default class MainScreen extends React.Component {
         item.created,
         timeToDateHourMin(item.created),
       );
-      Database.updateTripEnd(
-        this.state.realm,
-        this.latestTripId,
-        item,
-        item.totalDistance,
-      )
-        .then(trip => {
-          console.log('updateTripEnd done', trip);
-        })
-        .catch(e => {
-          console.log('updateTripEnd error', e);
-        });
+      console.log(item);
     };
+    const detector = this.newTripDetector();
+    detector.setTripStartCallback(tripStartCallback);
+    detector.setTripEndCallback(tripEndCallback);
+    this.tripDetector = detector;
+    // console.log('tripDetector', detector);
+  }
+
+  newTripDetector() {
     const detector = new TripDetector(
       this.setting.period,
       this.setting.accuracyMargin,
       this.setting.radiusOfArea,
       this.setting.speedMargin,
     );
-    detector.setTripStartCallback(tripStartCallback);
-    detector.setTripEndCallback(tripEndCallback);
-    this.tripDetector = detector;
-    // console.log('tripDetector', detector);
+    return detector;
   }
 
   handleOnLocation(position) {
@@ -248,16 +278,20 @@ export default class MainScreen extends React.Component {
     this.setState({trip: {...trip, ...newTrip}});
   }
 
-  renderItem(item, currentTrip = false) {
-    if (!item.endCreated) {
+  renderItem(item) {
+    if (!item.startCreated) {
       return (
         <View style={styles.tripMessage}>
           <Text>아직 출발 전입니다.</Text>
         </View>
       );
     }
+    const endCreated = item.endCreated
+      ? timeToHourMin(item.endCreated)
+      : '미확정';
+    const endLatitude = item.endLatitude ? toFixed(item.endLatitude) : 0;
+    const endLongitude = item.endLongitude ? toFixed(item.endLongitude) : 0;
     const totalDistance = toFixed(item.totalDistance / 1000) + ' km';
-    const tripLabel = currentTrip ? '운행' : '도착';
     return (
       <View style={styles.itemContainer}>
         <View style={styles.itemColumnContainer}>
@@ -275,11 +309,10 @@ export default class MainScreen extends React.Component {
             {toFixed(item.startLongitude)}
           </Text>
           <Text style={styles.titleText}>
-            {tripLabel} {timeToHourMin(item.endCreated)}
+            {'도착'} {endCreated}
           </Text>
           <Text style={styles.addressText}>
-            {'    '} 좌표: {toFixed(item.endLatitude)},{' '}
-            {toFixed(item.endLongitude)}
+            {'    '} 좌표: {endLatitude}, {endLongitude}
           </Text>
         </View>
         <View style={styles.itemColumnContainer}>
@@ -290,12 +323,15 @@ export default class MainScreen extends React.Component {
   }
 
   render() {
-    const {trip} = this.state;
+    console.log('main render');
+    const {trip, list} = this.state;
+    console.log('list', list.length);
+    console.log('trip', trip);
     return (
       <View style={styles.container}>
-        <View style={styles.currentTrip}>{this.renderItem(trip, true)}</View>
+        <View style={styles.currentTrip}>{this.renderItem(trip)}</View>
         <FlatList
-          data={this.state.list}
+          data={list}
           renderItem={({item}) => this.renderItem(item)}
           keyExtractor={(item, index) => String(index)}
         />
