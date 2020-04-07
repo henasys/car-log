@@ -17,13 +17,14 @@ export class TripDetector {
   startTime = 0;
   result = [];
   tripIdFinder = new TripIdFinder();
+  previousLocation = initEmptyLocation();
+  isLocationChanged = false;
 
   constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
     this.period = parseInt(period, 10) * 60 * 1000;
     this.accuracyMargin = parseFloat(accuracyMargin);
     this.radiusOfArea = parseFloat(radiusOfArea);
     this.speedMargin = parseFloat(speedMargin);
-    this.previousLocation = initEmptyLocation();
   }
 
   setTripStartCallback(callback) {
@@ -48,6 +49,10 @@ export class TripDetector {
 
   getPreviousLocation() {
     return this.previousLocation;
+  }
+
+  getIsLocationChanged() {
+    return this.isLocationChanged;
   }
 
   setNumber(number) {
@@ -103,7 +108,9 @@ export class TripDetector {
    * @param {} current location info from GPS
    */
   detectAtOnce(current) {
-    this.previousLocation = this.detect(current, this.previousLocation);
+    const next = this.detect(current, this.previousLocation);
+    this.isLocationChanged = next.created !== this.previousLocation.created;
+    this.previousLocation = next;
   }
 
   detect(curr, prev) {

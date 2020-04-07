@@ -285,6 +285,7 @@ export default class MainScreen extends React.Component {
     const previousLocation = this.tripDetector.getPreviousLocation();
     const lastPrevious = this.tripDetector.getLastPrevious();
     const totalDistance = this.tripDetector.getTotalDistance();
+    const isLocationChanged = this.tripDetector.getIsLocationChanged();
     console.log('previousLocation', previousLocation);
     console.log('lastPrevious', lastPrevious);
     console.log('totalDistance', totalDistance);
@@ -294,7 +295,9 @@ export default class MainScreen extends React.Component {
       endCreated: previousLocation.created,
       totalDistance: totalDistance,
     };
-    this.updateTrip(newTrip);
+    if (isLocationChanged) {
+      this.updateTrip(newTrip);
+    }
   }
 
   newTrip(newTrip) {
@@ -307,13 +310,13 @@ export default class MainScreen extends React.Component {
   }
 
   renderItem(item, currentTrip = false) {
-    // if (!item.startCreated || !item.endCreated) {
-    //   return (
-    //     <View style={styles.tripMessage}>
-    //       <Text style={styles.tripMessageText}>아직 출발 전입니다.</Text>
-    //     </View>
-    //   );
-    // }
+    if (currentTrip && !item.endCreated) {
+      return (
+        <View style={styles.tripMessage}>
+          <Text style={styles.tripMessageText}>아직 출발 전입니다.</Text>
+        </View>
+      );
+    }
     const tripLabel = currentTrip ? '운행' : '도착';
     const endCreated = item.endCreated
       ? timeToHourMin(item.endCreated)
