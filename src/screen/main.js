@@ -323,12 +323,6 @@ export default class MainScreen extends React.Component {
     this.setState({trip: {...trip, ...newTrip}});
   }
 
-  removeTripNotEnded() {
-    const {list} = this.state;
-    const newList = list.filtered('endCreated != null');
-    this.setState({list: newList});
-  }
-
   listClone(list, trip) {
     const listFilter = trip.endCreated
       ? list.filtered('endCreated != null')
