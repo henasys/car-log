@@ -9,7 +9,6 @@ import {
   timeToMonthDay,
   timeToDateHourMin,
   toFixed,
-  initEmptyLocation,
   positionToLocation,
   tripCallbackItemToTripRecord,
 } from '../module/util';
@@ -75,6 +74,7 @@ export default class MainScreen extends React.Component {
     const setting = Database.getSetting(this.state.realm);
     this.setting = setting;
     // console.log('setting', setting);
+    this.tripDetector = this.newTripDetector();
   }
 
   getList() {
@@ -113,6 +113,10 @@ export default class MainScreen extends React.Component {
     const lastTrip = list.length === 1 ? list[0] : {};
     const lastTimestamp = lastTrip.endCreated || lastTrip.startCreated || 0;
     console.log('lastTrip', lastTrip);
+    if (lastTrip.startCreated && !lastTrip.endCreated) {
+      const tripIdFinder = this.tripDetector.getTripIdFinder();
+      tripIdFinder.add(0, lastTrip.id);
+    }
     const locations = Database.getLocationListByTimestamp(
       this.state.realm,
       lastTimestamp,
@@ -126,24 +130,22 @@ export default class MainScreen extends React.Component {
     if (locations.length === 0) {
       return;
     }
-    const detector = this.newTripDetector();
-    detector.setPreviousLocation(locations[0]);
+    this.tripDetector.setPreviousLocation(locations[0]);
     for (let index = 1; index < locations.length; index++) {
       const location = locations[index];
-      detector.detectAtOnce(location);
+      this.tripDetector.detectAtOnce(location);
     }
-    const result = detector.getResult();
+    const result = this.tripDetector.getResult();
     console.log('result', result.length);
-    const previousLocation = detector.getPreviousLocation();
-    const lastPrevious = detector.getLastPrevious();
-    const totalDistance = detector.getTotalDistance();
+    const previousLocation = this.tripDetector.getPreviousLocation();
+    const lastPrevious = this.tripDetector.getLastPrevious();
+    const totalDistance = this.tripDetector.getTotalDistance();
     console.log('previousLocation', previousLocation);
     console.log('lastPrevious', lastPrevious);
     console.log('totalDistance', totalDistance);
     const lastLocation = locations[locations.length - 1];
     const startTrip = tripCallbackItemToTripRecord(lastLocation);
     this.newTrip(startTrip);
-    this.tripDetector = detector;
     this.saveTripResult(result);
   }
 
@@ -247,6 +249,8 @@ export default class MainScreen extends React.Component {
     if (!this.tripDetector) {
       return;
     }
+    const tripIdFinder = this.tripDetector.getTripIdFinder();
+    console.log('tripIdFinder', tripIdFinder.getList());
     this.tripDetector.detectAtOnce(current);
     const previousLocation = this.tripDetector.getPreviousLocation();
     const lastPrevious = this.tripDetector.getLastPrevious();
