@@ -11,7 +11,6 @@ import SettingScreen from '../screen/setting';
 import {SearchScreen} from './search';
 
 import Database from '../module/database';
-import database from '../module/database';
 
 const Stack = createStackNavigator();
 

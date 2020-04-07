@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, SafeAreaView} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Icon} from 'react-native-elements';
 
@@ -145,7 +145,7 @@ export default class SettingScreen extends React.Component {
   render() {
     const {period, accuracyMargin, radiusOfArea, speedMargin} = this.state;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.sectionLabel}>{'출발점 검출 기준'}</Text>
         <View style={styles.inputContainer}>
           {inputBox({
@@ -204,7 +204,7 @@ export default class SettingScreen extends React.Component {
               });
           }}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }

@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, FlatList} from 'react-native';
+import {Text, View, StyleSheet, FlatList, SafeAreaView} from 'react-native';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
@@ -77,7 +77,7 @@ export function SearchScreen(props) {
     initStates();
   }, []);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.inputContainer}>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <View style={{flexDirection: 'row'}}>
@@ -117,7 +117,7 @@ export function SearchScreen(props) {
         renderItem={({item}) => renderItem(item)}
         keyExtractor={(item, index) => String(index)}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

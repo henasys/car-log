@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, FlatList} from 'react-native';
+import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
@@ -119,22 +119,27 @@ export default class LocationScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.ListContainer}>
-        <FlatList
-          ref={ref => (this.flatList = ref)}
-          data={this.state.list}
-          renderItem={({item}) => this.renderItem(item)}
-          keyExtractor={(item, index) => `${item.created}_${index}`}
-          onEndReached={this.onLoadPreviousList.bind(this)}
-          onRefresh={this.onRefreshList.bind(this)}
-          refreshing={false}
-        />
-      </View>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.ListContainer}>
+          <FlatList
+            ref={ref => (this.flatList = ref)}
+            data={this.state.list}
+            renderItem={({item}) => this.renderItem(item)}
+            keyExtractor={(item, index) => `${item.created}_${index}`}
+            onEndReached={this.onLoadPreviousList.bind(this)}
+            onRefresh={this.onRefreshList.bind(this)}
+            refreshing={false}
+          />
+        </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   itemContainer: {
     flexDirection: 'row',
     margin: 10,
