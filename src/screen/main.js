@@ -143,9 +143,6 @@ export default class MainScreen extends React.Component {
     console.log('previousLocation', previousLocation);
     console.log('lastPrevious', lastPrevious);
     console.log('totalDistance', totalDistance);
-    const lastLocation = locations[locations.length - 1];
-    const startTrip = tripCallbackItemToTripRecord(lastLocation);
-    this.newTrip(startTrip);
     this.saveTripResult(result);
   }
 
@@ -186,6 +183,8 @@ export default class MainScreen extends React.Component {
       timeToDateHourMin(item.created),
     );
     console.log(item);
+    const startTrip = tripCallbackItemToTripRecord(item);
+    this.newTrip(startTrip);
     const tripIdFinder = this.tripDetector.getTripIdFinder();
     Database.saveTrip(this.state.realm, item)
       .then(trip => {
@@ -303,24 +302,21 @@ export default class MainScreen extends React.Component {
     console.log('previousLocation', previousLocation);
     console.log('lastPrevious', lastPrevious);
     console.log('totalDistance', totalDistance);
-    const newTrip = {
-      endLatitude: previousLocation.latitude,
-      endLongitude: previousLocation.longitude,
-      endCreated: previousLocation.created,
-      totalDistance: totalDistance,
-    };
     if (isTest || isLocationChanged) {
-      this.updateTrip(newTrip);
+      previousLocation.totalDistance = totalDistance;
+      const updateTrip = tripCallbackItemToTripRecord(previousLocation, true);
+      this.updateTrip(updateTrip);
     }
   }
 
   newTrip(newTrip) {
+    console.log('newTrip', newTrip);
     this.setState({trip: newTrip});
   }
 
-  updateTrip(newTrip) {
+  updateTrip(updateTrip) {
     const {trip} = this.state;
-    this.setState({trip: {...trip, ...newTrip}});
+    this.setState({trip: {...trip, ...updateTrip}});
   }
 
   listClone(list, trip) {

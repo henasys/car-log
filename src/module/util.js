@@ -278,9 +278,9 @@ export function clone(item) {
   return Object.assign({}, {...item});
 }
 
-export function tripCallbackItemToTripRecord(item) {
+export function tripCallbackItemToTripRecord(item, isEndType = false) {
   const record = {};
-  if (item.type === TripType.END) {
+  if (isEndType || item.type === TripType.END) {
     record.endLatitude = item.latitude;
     record.endLongitude = item.longitude;
     record.endCreated = item.created;
