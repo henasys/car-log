@@ -109,6 +109,7 @@ const saveSetting = (
   accuracyMargin,
   radiusOfArea,
   speedMargin,
+  email,
 ) => {
   return new Promise((resolve, reject) => {
     try {
@@ -124,6 +125,7 @@ const saveSetting = (
           setting.period = iPeriod;
           setting.radiusOfArea = fRadiusOfArea;
           setting.speedMargin = fSpeedMargin;
+          setting.email = email;
           resolve(setting);
           return;
         }
@@ -132,6 +134,7 @@ const saveSetting = (
           period: iPeriod,
           radiusOfArea: fRadiusOfArea,
           speedMargin: fSpeedMargin,
+          email: email,
         });
         resolve(setting);
       });

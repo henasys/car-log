@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Text, View, StyleSheet, SafeAreaView} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  SafeAreaView,
+  TextInput,
+  ScrollView,
+} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Icon} from 'react-native-elements';
 
@@ -13,6 +20,7 @@ export default class SettingScreen extends React.Component {
     accuracyMargin: '0',
     radiusOfArea: '0',
     speedMargin: '0',
+    email: null,
   };
 
   componentDidMount() {
@@ -45,7 +53,7 @@ export default class SettingScreen extends React.Component {
     if (!setting) {
       return;
     }
-    const {period, accuracyMargin, radiusOfArea, speedMargin} = setting;
+    const {period, accuracyMargin, radiusOfArea, speedMargin, email} = setting;
     this.setState({
       period: period ? String(period) : this.state.period,
       accuracyMargin: accuracyMargin
@@ -55,6 +63,7 @@ export default class SettingScreen extends React.Component {
         ? String(radiusOfArea)
         : this.state.radiusOfArea,
       speedMargin: speedMargin ? String(speedMargin) : this.state.speedMargin,
+      email: email,
     });
   }
 
@@ -63,20 +72,14 @@ export default class SettingScreen extends React.Component {
       return;
     }
     this.setState({accuracyMargin});
-    const {realm, period, radiusOfArea, speedMargin} = this.state;
-    Database.saveSetting(
-      realm,
+    const {radiusOfArea, period, speedMargin, email} = this.state;
+    this.saveSetting({
       period,
       accuracyMargin,
       radiusOfArea,
       speedMargin,
-    )
-      .then(setting => {
-        console.log(setting);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+      email,
+    });
   }
 
   setPeriod(period) {
@@ -84,20 +87,14 @@ export default class SettingScreen extends React.Component {
       return;
     }
     this.setState({period});
-    const {realm, accuracyMargin, radiusOfArea, speedMargin} = this.state;
-    Database.saveSetting(
-      realm,
+    const {radiusOfArea, accuracyMargin, speedMargin, email} = this.state;
+    this.saveSetting({
       period,
       accuracyMargin,
       radiusOfArea,
       speedMargin,
-    )
-      .then(setting => {
-        console.log(setting);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+      email,
+    });
   }
 
   setRadiusOfArea(radiusOfArea) {
@@ -105,20 +102,14 @@ export default class SettingScreen extends React.Component {
       return;
     }
     this.setState({radiusOfArea});
-    const {realm, period, accuracyMargin, speedMargin} = this.state;
-    Database.saveSetting(
-      realm,
+    const {period, accuracyMargin, speedMargin, email} = this.state;
+    this.saveSetting({
       period,
       accuracyMargin,
       radiusOfArea,
       speedMargin,
-    )
-      .then(setting => {
-        console.log(setting);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+      email,
+    });
   }
 
   setSpeedMargin(speedMargin) {
@@ -126,16 +117,43 @@ export default class SettingScreen extends React.Component {
       return;
     }
     this.setState({speedMargin});
-    const {realm, period, accuracyMargin, radiusOfArea} = this.state;
-    Database.saveSetting(
-      realm,
+    const {period, accuracyMargin, radiusOfArea, email} = this.state;
+    this.saveSetting({
       period,
       accuracyMargin,
       radiusOfArea,
       speedMargin,
+      email,
+    });
+  }
+
+  setEmail(email) {
+    if (!email) {
+      return;
+    }
+    this.setState({email});
+    const {period, accuracyMargin, radiusOfArea, speedMargin} = this.state;
+    this.saveSetting({
+      period,
+      accuracyMargin,
+      radiusOfArea,
+      speedMargin,
+      email,
+    });
+  }
+
+  saveSetting(setting) {
+    const {realm} = this.state;
+    Database.saveSetting(
+      realm,
+      setting.period,
+      setting.accuracyMargin,
+      setting.radiusOfArea,
+      setting.speedMargin,
+      setting.email,
     )
-      .then(setting => {
-        console.log(setting);
+      .then(newSetting => {
+        console.log(newSetting);
       })
       .catch(e => {
         console.log(e);
@@ -143,67 +161,90 @@ export default class SettingScreen extends React.Component {
   }
 
   render() {
-    const {period, accuracyMargin, radiusOfArea, speedMargin} = this.state;
+    const {
+      period,
+      accuracyMargin,
+      radiusOfArea,
+      speedMargin,
+      email,
+    } = this.state;
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.sectionLabel}>{'출발점 검출 기준'}</Text>
-        <View style={styles.inputContainer}>
-          {inputBox({
-            label: '영역반경 ≤',
-            unitLabel: 'm',
-            defaultValue: radiusOfArea,
-            onChangeTextHandler: text => {
-              this.setRadiusOfArea(text);
-              console.log('radiusOfArea onChange');
-            },
-            textInputStyle: styles.textInput,
-          })}
-          {inputBox({
-            label: '정차시간 ≥',
-            unitLabel: '분',
-            defaultValue: period,
-            onChangeTextHandler: text => {
-              this.setPeriod(text);
-              console.log('period onChange');
-            },
-            textInputStyle: styles.textInput,
-          })}
-          {inputBox({
-            label: 'Accuracy ≤',
-            unitLabel: 'm',
-            defaultValue: accuracyMargin,
-            onChangeTextHandler: text => {
-              this.setAccuracyMargin(text);
-              console.log('accuracyMargin onChange');
-            },
-            textInputStyle: styles.textInput,
-          })}
-          {inputBox({
-            label: 'GPS Speed ≤',
-            unitLabel: 'm/s',
-            defaultValue: speedMargin,
-            onChangeTextHandler: text => {
-              this.setSpeedMargin(text);
-              console.log('speedMargin onChange');
-            },
-            textInputStyle: styles.textInput,
-          })}
-        </View>
-        <Text style={styles.sectionLabel}>{'데이터 삭제'}</Text>
-        <View style={{margin: 10}} />
-        <Button
-          icon={<Icon name="delete" type="material" size={24} color="white" />}
-          title="Delete Car Logs"
-          onPress={() => {
-            Database.clearAllDatabase()
-              .then(() => {
-                console.log('');
-              })
-              .catch(e => {
-                console.log(e);
-              });
-          }}
-        />
+        <ScrollView>
+          <Text style={styles.sectionLabel}>{'데이터 전송 이메일'}</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={text => {
+                this.setEmail(text);
+              }}
+              defaultValue={email}
+              placeholder={'abc@example.org'}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          </View>
+          <Text style={styles.sectionLabel}>{'출발점 검출 기준'}</Text>
+          <View style={styles.inputContainer}>
+            {inputBox({
+              label: '영역반경 ≤',
+              unitLabel: 'm',
+              defaultValue: radiusOfArea,
+              onChangeTextHandler: text => {
+                this.setRadiusOfArea(text);
+                console.log('radiusOfArea onChange');
+              },
+              textInputStyle: styles.textInput,
+            })}
+            {inputBox({
+              label: '정차시간 ≥',
+              unitLabel: '분',
+              defaultValue: period,
+              onChangeTextHandler: text => {
+                this.setPeriod(text);
+                console.log('period onChange');
+              },
+              textInputStyle: styles.textInput,
+            })}
+            {inputBox({
+              label: 'Accuracy ≤',
+              unitLabel: 'm',
+              defaultValue: accuracyMargin,
+              onChangeTextHandler: text => {
+                this.setAccuracyMargin(text);
+                console.log('accuracyMargin onChange');
+              },
+              textInputStyle: styles.textInput,
+            })}
+            {inputBox({
+              label: 'GPS Speed ≤',
+              unitLabel: 'm/s',
+              defaultValue: speedMargin,
+              onChangeTextHandler: text => {
+                this.setSpeedMargin(text);
+                console.log('speedMargin onChange');
+              },
+              textInputStyle: styles.textInput,
+            })}
+          </View>
+          <Text style={styles.sectionLabel}>{'데이터 삭제'}</Text>
+          <View style={{margin: 10}} />
+          <Button
+            icon={
+              <Icon name="delete" type="material" size={24} color="white" />
+            }
+            title="Delete Car Logs"
+            onPress={() => {
+              Database.clearAllDatabase()
+                .then(() => {
+                  console.log('');
+                })
+                .catch(e => {
+                  console.log(e);
+                });
+            }}
+          />
+        </ScrollView>
       </SafeAreaView>
     );
   }

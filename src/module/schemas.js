@@ -23,6 +23,16 @@ Setting.schema6 = {
   },
 };
 
+Setting.schema10 = {
+  name: 'Setting',
+  properties: {
+    period: {type: 'int'},
+    accuracyMargin: {type: 'double'},
+    radiusOfArea: {type: 'double'},
+    speedMargin: {type: 'double'},
+  },
+};
+
 Setting.schema = {
   name: 'Setting',
   properties: {
@@ -30,6 +40,7 @@ Setting.schema = {
     accuracyMargin: {type: 'double'},
     radiusOfArea: {type: 'double'},
     speedMargin: {type: 'double'},
+    email: {type: 'string', optional: true},
   },
 };
 
@@ -75,7 +86,8 @@ Trip.schema = {
 
 const schema8 = [Location, Setting, Trip];
 const schema9 = [Location, Setting, Trip.schema9];
-const schema10 = [Location, Setting, Trip];
+const schema10 = [Location, Setting.schema10, Trip];
+const schema11 = [Location, Setting, Trip];
 
 function migrationFunctionNothing(oldRealm, newRealm) {
   console.log('migrationFunctionNothing', oldRealm, newRealm);
@@ -119,6 +131,11 @@ export const schemas = [
   {
     schema: schema10,
     schemaVersion: 10,
+    migration: migrationFunctionNothing,
+  },
+  {
+    schema: schema11,
+    schemaVersion: 11,
     migration: migrationFunctionNothing,
   },
 ];
