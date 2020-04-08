@@ -5,6 +5,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
+import {sendEmail} from '../module/mail';
 
 const yearItems = () => {
   const thisYear = new Date().getFullYear();
@@ -79,6 +80,11 @@ export function ShareScreen(props) {
           onPress={() => {
             console.log('send a mail');
             console.log(email, year);
+            const subject = 'Greeting!';
+            const body = 'Hello, world.';
+            sendEmail(email, subject, body).then(() => {
+              console.log('sendEmail done');
+            });
           }}
           name="mail-outline"
           type="material"
