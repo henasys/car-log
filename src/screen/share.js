@@ -6,6 +6,19 @@ import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
 
+const yearItems = () => {
+  const thisYear = new Date().getFullYear();
+  const list = [];
+  for (let index = 0; index < 5; index++) {
+    const year = thisYear - index;
+    const yearItem = {};
+    yearItem.label = `${year}년`;
+    yearItem.value = year;
+    list.push(yearItem);
+  }
+  return list;
+};
+
 export function ShareScreen(props) {
   const [email, setEmail] = useState('');
   const [year, setYear] = useState('');
@@ -47,11 +60,7 @@ export function ShareScreen(props) {
             placeholder={{}}
             onValueChange={value => setYear(value)}
             useNativeAndroidPickerStyle={false}
-            items={[
-              {label: '2020년', value: '2020'},
-              {label: '2019년', value: '2019'},
-              {label: '2018년', value: '2018'},
-            ]}
+            items={yearItems()}
             Icon={() => {
               return (
                 <Icon
