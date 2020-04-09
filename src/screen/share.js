@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, StyleSheet, View, TextInput} from 'react-native';
+import {SafeAreaView, StyleSheet, View, TextInput, Alert} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {Icon} from 'react-native-elements';
 
@@ -18,6 +18,19 @@ const yearItems = () => {
     list.push(yearItem);
   }
   return list;
+};
+
+const showAlert = (title, message) => {
+  Alert.alert(
+    title,
+    message,
+    [
+      {
+        text: 'Ok',
+      },
+    ],
+    {cancelable: true},
+  );
 };
 
 export function ShareScreen(props) {
@@ -83,7 +96,13 @@ export function ShareScreen(props) {
             console.log(email, year);
             const subject = 'Greeting!';
             const body = 'Hello, world.';
-            sendEmailWithMailer(email, subject, body);
+            const callback = (error, event) => {
+              if (error) {
+                showAlert('Send Mail Error', error);
+                return;
+              }
+            };
+            sendEmailWithMailer(email, subject, body, false, {}, callback);
           }}
           name="mail-outline"
           type="material"

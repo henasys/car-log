@@ -66,6 +66,7 @@ export const sendEmailWithMailer = (
   body,
   isHTML = false,
   attachment = {},
+  callback = null,
 ) => {
   Mailer.mail(
     {
@@ -76,6 +77,7 @@ export const sendEmailWithMailer = (
       attachment: attachment,
     },
     (error, event) => {
+      callback && callback(error, event);
       console.log('Mailer.mail error', error);
       console.log('Mailer.mail event', event);
     },
