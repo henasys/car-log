@@ -8,9 +8,11 @@ import XLSX from 'xlsx';
 import Database from '../module/database';
 import Mailer from '../module/mail';
 import FileManager from '../module/file';
+import {timeToMonthDayWeek} from '../module/util';
+
+const thisYear = new Date().getFullYear();
 
 const yearItems = () => {
-  const thisYear = new Date().getFullYear();
   const list = [];
   for (let index = 0; index < 5; index++) {
     const year = thisYear - index;
@@ -35,30 +37,47 @@ const showAlert = (title, message) => {
   );
 };
 
-const makeExcel = filename => {
-  var ws_name = 'TestSheet';
-  var ws = XLSX.utils.aoa_to_sheet([
-    'SheetJS'.split(''),
-    [1, 2, 3, 4, 5, 6, 7],
-    [2, 3, 4, 5, 6, 7, 8],
-  ]);
+const excelHeader = () => {
+  return [
+    '사용일자(요일)',
+    '부서',
+    '성명',
+    '주행전 계기판의 거리(km)',
+    '주행후 계기판의 거리(km)',
+    '주행거리(km)',
+    '출.퇴근용(km)',
+    '일반업무용(km)',
+    '비고',
+  ];
+};
+
+const excelDataRow = (date, distance) => {
+  return [date, '', '', '', '', distance, '', '', ''];
+};
+
+const excelData = (realm, year) => {
+  const list = Database.getTripListByYear(realm, year);
+  const data = [];
+  data.push(excelHeader());
+  list.forEach(trip => {
+    console.log('trip', trip);
+    const date = timeToMonthDayWeek(trip.created);
+    const distance = (trip.totalDistance / 1000).toFixed(2);
+    data.push(excelDataRow(date, parseFloat(distance)));
+  });
+  return data;
+};
+
+const makeExcel = data => {
+  var ws_name = 'Sheet';
+  var ws = XLSX.utils.aoa_to_sheet(data);
   var wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, ws_name);
-  // XLSX.writeFile(wb, filename);
-  const wbout = XLSX.write(wb, {type: 'binary', bookType: 'xlsx'});
-  return wbout;
+  return XLSX.write(wb, {type: 'binary', bookType: 'xlsx'});
 };
 
-const makeAttachExcelFile = (filename, type, contents, callback = null) => {
-  const path = FileManager.getPathOnMailTemp(filename);
-  makeExcel(path);
-  const attchment = Mailer.attchment(path, type, filename);
-  console.log('attchment', attchment);
-  callback && callback(attchment);
-};
-
-const makeAttachFile = (filename, type, contents, callback = null) => {
-  const blob = makeExcel(filename);
+const makeAttachFile = (filename, type, data, callback = null) => {
+  const blob = makeExcel(data);
   FileManager.writeToMailTemp(filename, blob, 'ascii')
     .then(() => {
       const path = FileManager.getPathOnMailTemp(filename);
@@ -71,21 +90,26 @@ const makeAttachFile = (filename, type, contents, callback = null) => {
     });
 };
 
-const sendMail = (email, year) => {
+const sendMail = (realm, email, year) => {
   console.log('send a mail');
   console.log(email, year);
-  const subject = 'Greeting!';
-  const body = 'Hello, world.';
+  if (!year) {
+    console.log('not defined year', year);
+    return;
+  }
+  const subject = `업무용 승용차 운행기록부 ${String(year)}년`;
+  const body = '첨부파일 참조바랍니다.';
   const callback = (error, event) => {
     if (error) {
       showAlert('Send Mail Error', error);
       return;
     }
   };
-  const filename = 'test.xlsx';
+  const filename = 'car-log.xlsx';
   const type = 'xlsx';
-  const contents = 'this is a text in test.txt file';
-  makeAttachFile(filename, type, contents, attchment => {
+  const data = excelData(realm, year);
+  // console.log('data', data);
+  makeAttachFile(filename, type, data, attchment => {
     Mailer.sendEmailWithMailer(
       email,
       subject,
@@ -98,16 +122,19 @@ const sendMail = (email, year) => {
 };
 
 export function ShareScreen(props) {
+  const [realm, setRealm] = useState(null);
   const [email, setEmail] = useState('');
   const [year, setYear] = useState('');
   const initStates = () => {
     console.log('initStates');
-    Database.open(realm => {
-      const setting = Database.getSetting(realm);
+    Database.open(newRealm => {
+      setRealm(newRealm);
+      const setting = Database.getSetting(newRealm);
       if (setting.email) {
         setEmail(setting.email);
       }
     });
+    setYear(thisYear);
   };
   const initTempDir = () => {
     FileManager.unlinkMailTempDir()
@@ -155,6 +182,7 @@ export function ShareScreen(props) {
               },
             }}
             placeholder={{}}
+            value={year}
             onValueChange={value => setYear(value)}
             useNativeAndroidPickerStyle={false}
             items={items}
@@ -174,7 +202,7 @@ export function ShareScreen(props) {
         <View paddingVertical={5} />
         <Icon
           onPress={() => {
-            sendMail(email, year);
+            sendMail(realm, email, year);
           }}
           name="mail-outline"
           type="material"
