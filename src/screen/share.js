@@ -125,15 +125,24 @@ export function ShareScreen(props) {
   const [realm, setRealm] = useState(null);
   const [email, setEmail] = useState('');
   const [year, setYear] = useState('');
-  const initStates = () => {
-    console.log('initStates');
+  const openDatabase = () => {
     Database.open(newRealm => {
       setRealm(newRealm);
-      const setting = Database.getSetting(newRealm);
-      if (setting.email) {
-        setEmail(setting.email);
-      }
     });
+  };
+  const closeDatabase = () => {
+    Database.close(realm);
+    setRealm(null);
+  };
+  const initStates = () => {
+    console.log('initStates');
+    if (realm === null) {
+      return;
+    }
+    const setting = Database.getSetting(realm);
+    if (setting.email) {
+      setEmail(setting.email);
+    }
     setYear(thisYear);
   };
   const initTempDir = () => {
@@ -154,8 +163,18 @@ export function ShareScreen(props) {
       });
   };
   useEffect(() => {
+    console.log('share useEffect start');
+    openDatabase();
+    return () => {
+      console.log('share useEffect cleanup');
+      closeDatabase();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
     initStates();
     initTempDir();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const items = yearItems();
   return (
