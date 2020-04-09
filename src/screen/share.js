@@ -5,7 +5,8 @@ import RNPickerSelect from 'react-native-picker-select';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
-import {sendEmailWithMailer} from '../module/mail';
+import Mailer from '../module/mail';
+import FileManager from '../module/file';
 
 const yearItems = () => {
   const thisYear = new Date().getFullYear();
@@ -33,6 +34,45 @@ const showAlert = (title, message) => {
   );
 };
 
+const makeAttachFile = (filename, type, contents, callback = null) => {
+  FileManager.writeToMailTemp(filename, contents, 'utf8')
+    .then(() => {
+      const path = FileManager.getPathOnMailTemp(filename);
+      const attchment = Mailer.attchment(path, type, filename);
+      console.log('attchment', attchment);
+      callback && callback(attchment);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
+const sendMail = (email, year) => {
+  console.log('send a mail');
+  console.log(email, year);
+  const subject = 'Greeting!';
+  const body = 'Hello, world.';
+  const callback = (error, event) => {
+    if (error) {
+      showAlert('Send Mail Error', error);
+      return;
+    }
+  };
+  const filename = 'test.txt';
+  const type = 'text';
+  const contents = 'this is a text in test.txt file';
+  makeAttachFile(filename, type, contents, attchment => {
+    Mailer.sendEmailWithMailer(
+      email,
+      subject,
+      body,
+      false,
+      attchment,
+      callback,
+    );
+  });
+};
+
 export function ShareScreen(props) {
   const [email, setEmail] = useState('');
   const [year, setYear] = useState('');
@@ -45,8 +85,26 @@ export function ShareScreen(props) {
       }
     });
   };
+  const initTempDir = () => {
+    FileManager.unlinkMailTempDir()
+      .then()
+      .catch()
+      .finally(() => {
+        return FileManager.makeMailTempDir();
+      })
+      .then(() => {
+        return FileManager.readMailTempDir();
+      })
+      .then(result => {
+        console.log('readMailTempDir result', result);
+      })
+      .catch(e => {
+        console.log('FileManager.makeMailTempDir', e);
+      });
+  };
   useEffect(() => {
     initStates();
+    initTempDir();
   }, []);
   const items = yearItems();
   return (
@@ -92,17 +150,7 @@ export function ShareScreen(props) {
         <View paddingVertical={5} />
         <Icon
           onPress={() => {
-            console.log('send a mail');
-            console.log(email, year);
-            const subject = 'Greeting!';
-            const body = 'Hello, world.';
-            const callback = (error, event) => {
-              if (error) {
-                showAlert('Send Mail Error', error);
-                return;
-              }
-            };
-            sendEmailWithMailer(email, subject, body, false, {}, callback);
+            sendMail(email, year);
           }}
           name="mail-outline"
           type="material"
