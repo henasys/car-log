@@ -50,6 +50,9 @@ export default class MainScreen extends React.Component {
       this.getSetting();
       this.getRemainedLocationList();
       this.getList();
+      setTimeout(() => {
+        this.props.navigation.setParams({classInstance: this});
+      }, 3000);
     });
   }
 
