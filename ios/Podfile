@@ -38,6 +38,8 @@ target 'CarLog' do
 
   pod 'react-native-mail', :path => '../node_modules/react-native-mail'
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'CarLogTests' do
     inherit! :search_paths
     # Pods for testing
