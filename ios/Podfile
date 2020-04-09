@@ -36,6 +36,8 @@ target 'CarLog' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'react-native-mail', :path => '../node_modules/react-native-mail'
+
   target 'CarLogTests' do
     inherit! :search_paths
     # Pods for testing
