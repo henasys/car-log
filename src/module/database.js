@@ -4,6 +4,7 @@ import {v1 as uuidv1} from 'uuid';
 
 import {schemas} from '../module/schemas';
 import {Location, Setting, Trip} from '../module/schemas';
+import {yearToTimestamp} from '../module/util';
 
 const open = handler => {
   migrate();
@@ -195,6 +196,14 @@ const getTripList = realm => {
   return realm.objects('Trip');
 };
 
+const getTripListByYear = (realm, year) => {
+  const thisYear = yearToTimestamp(year);
+  const nextYear = yearToTimestamp(year + 1);
+  return realm
+    .objects('Trip')
+    .filtered('created >= $0 AND created < $1', thisYear, nextYear);
+};
+
 /**
  * update Trip with end location info
  * @param {*} realm Ream object
@@ -280,6 +289,7 @@ export default {
   getSetting,
   saveTrip,
   getTripList,
+  getTripListByYear,
   updateTripEnd,
   updateTripAddress,
   clearAllDatabase,
