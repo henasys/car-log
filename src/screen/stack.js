@@ -27,12 +27,7 @@ export default function MyStack() {
               <View style={styles.menuContainer}>
                 <Icon
                   iconStyle={styles.menuItem}
-                  onPress={() => {
-                    console.log('main route', route);
-                    navigation.navigate('Location', {
-                      realm: route.params.realm,
-                    });
-                  }}
+                  onPress={() => navigation.navigate('Location')}
                   name="location-pin"
                   type="entypo"
                 />

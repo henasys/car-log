@@ -19,7 +19,6 @@ export default class LocationScreen extends React.Component {
 
   componentDidMount() {
     console.log('location componentDidMount');
-    console.log('props.route', this.props.route);
     this.addLocatorUpdater();
     this.openDatabase();
   }
