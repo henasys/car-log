@@ -44,7 +44,9 @@ const makeExcel = filename => {
   ]);
   var wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, ws_name);
-  XLSX.writeFile(wb, filename);
+  // XLSX.writeFile(wb, filename);
+  const wbout = XLSX.write(wb, {type: 'binary', bookType: 'xlsx'});
+  return wbout;
 };
 
 const makeAttachExcelFile = (filename, type, contents, callback = null) => {
@@ -56,7 +58,8 @@ const makeAttachExcelFile = (filename, type, contents, callback = null) => {
 };
 
 const makeAttachFile = (filename, type, contents, callback = null) => {
-  FileManager.writeToMailTemp(filename, contents, 'utf8')
+  const blob = makeExcel(filename);
+  FileManager.writeToMailTemp(filename, blob, 'ascii')
     .then(() => {
       const path = FileManager.getPathOnMailTemp(filename);
       const attchment = Mailer.attchment(path, type, filename);
@@ -82,7 +85,7 @@ const sendMail = (email, year) => {
   const filename = 'test.xlsx';
   const type = 'xlsx';
   const contents = 'this is a text in test.txt file';
-  makeAttachExcelFile(filename, type, contents, attchment => {
+  makeAttachFile(filename, type, contents, attchment => {
     Mailer.sendEmailWithMailer(
       email,
       subject,
