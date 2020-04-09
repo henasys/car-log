@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet, View, TextInput, Alert} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {Icon} from 'react-native-elements';
+import XLSX from 'xlsx';
 
 import Database from '../module/database';
 import Mailer from '../module/mail';
@@ -34,6 +35,26 @@ const showAlert = (title, message) => {
   );
 };
 
+const makeExcel = filename => {
+  var ws_name = 'TestSheet';
+  var ws = XLSX.utils.aoa_to_sheet([
+    'SheetJS'.split(''),
+    [1, 2, 3, 4, 5, 6, 7],
+    [2, 3, 4, 5, 6, 7, 8],
+  ]);
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, ws_name);
+  XLSX.writeFile(wb, filename);
+};
+
+const makeAttachExcelFile = (filename, type, contents, callback = null) => {
+  const path = FileManager.getPathOnMailTemp(filename);
+  makeExcel(path);
+  const attchment = Mailer.attchment(path, type, filename);
+  console.log('attchment', attchment);
+  callback && callback(attchment);
+};
+
 const makeAttachFile = (filename, type, contents, callback = null) => {
   FileManager.writeToMailTemp(filename, contents, 'utf8')
     .then(() => {
@@ -58,10 +79,10 @@ const sendMail = (email, year) => {
       return;
     }
   };
-  const filename = 'test.txt';
-  const type = 'text';
+  const filename = 'test.xlsx';
+  const type = 'xlsx';
   const contents = 'this is a text in test.txt file';
-  makeAttachFile(filename, type, contents, attchment => {
+  makeAttachExcelFile(filename, type, contents, attchment => {
     Mailer.sendEmailWithMailer(
       email,
       subject,
