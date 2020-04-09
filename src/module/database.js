@@ -201,7 +201,8 @@ const getTripListByYear = (realm, year) => {
   const nextYear = yearToTimestamp(year + 1);
   return realm
     .objects('Trip')
-    .filtered('created >= $0 AND created < $1', thisYear, nextYear);
+    .filtered('created >= $0 AND created < $1', thisYear, nextYear)
+    .sorted('created');
 };
 
 /**
