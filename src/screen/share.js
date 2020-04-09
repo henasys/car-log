@@ -5,7 +5,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
-import {sendEmail} from '../module/mail';
+import {sendEmailWithMailer} from '../module/mail';
 
 const yearItems = () => {
   const thisYear = new Date().getFullYear();
@@ -35,6 +35,7 @@ export function ShareScreen(props) {
   useEffect(() => {
     initStates();
   }, []);
+  const items = yearItems();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputBoxContainer}>
@@ -61,7 +62,7 @@ export function ShareScreen(props) {
             placeholder={{}}
             onValueChange={value => setYear(value)}
             useNativeAndroidPickerStyle={false}
-            items={yearItems()}
+            items={items}
             Icon={() => {
               return (
                 <Icon
@@ -82,9 +83,7 @@ export function ShareScreen(props) {
             console.log(email, year);
             const subject = 'Greeting!';
             const body = 'Hello, world.';
-            sendEmail(email, subject, body).then(() => {
-              console.log('sendEmail done');
-            });
+            sendEmailWithMailer(email, subject, body);
           }}
           name="mail-outline"
           type="material"
