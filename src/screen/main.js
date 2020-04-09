@@ -78,6 +78,7 @@ export default class MainScreen extends React.Component {
     this.setting = setting;
     // console.log('setting', setting);
     this.tripDetector = this.newTripDetector();
+    Database.setRealm(this.state.realm);
   }
 
   getList() {

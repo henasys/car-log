@@ -19,14 +19,21 @@ export default class LocationScreen extends React.Component {
 
   componentDidMount() {
     console.log('location componentDidMount');
-    this.addLocatorUpdater();
-    this.openDatabase();
+    // this.addLocatorUpdater();
+    this.setDatabase();
+    // this.openDatabase();
   }
 
   componentWillUnmount() {
     console.log('location componentWillUnmount');
-    this.removeLocatorUpdater();
-    this.closeDatabase();
+    // this.removeLocatorUpdater();
+    // this.closeDatabase();
+  }
+
+  setDatabase() {
+    const realm = Database.getRealm();
+    console.log('realm', realm.schemaVersion);
+    this.setState({realm});
   }
 
   openDatabase() {
@@ -79,6 +86,10 @@ export default class LocationScreen extends React.Component {
   }
 
   getList(startIndex) {
+    console.log('getList', startIndex);
+    if (this.state.realm === null) {
+      return [];
+    }
     const list = Database.getLocationList(this.state.realm).sorted(
       'created',
       true,
@@ -118,12 +129,14 @@ export default class LocationScreen extends React.Component {
   }
 
   render() {
+    const {list} = this.state;
+    console.log('location render', list.length);
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.ListContainer}>
           <FlatList
             ref={ref => (this.flatList = ref)}
-            data={this.state.list}
+            data={list}
             renderItem={({item}) => this.renderItem(item)}
             keyExtractor={(item, index) => `${item.created}_${index}`}
             onEndReached={this.onLoadPreviousList.bind(this)}

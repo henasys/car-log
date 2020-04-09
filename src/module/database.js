@@ -6,6 +6,17 @@ import {schemas} from '../module/schemas';
 import {Location, Setting, Trip} from '../module/schemas';
 import {yearToTimestamp} from '../module/util';
 
+let _realm = null;
+
+const setRealm = realm => {
+  _realm = realm;
+  console.log('setRealm', realm.schemaVersion);
+};
+
+const getRealm = () => {
+  return _realm;
+};
+
 const open = handler => {
   migrate();
   Realm.open(schemas.getLatestConfig())
@@ -281,6 +292,8 @@ export default {
   Location,
   Setting,
   Trip,
+  setRealm,
+  getRealm,
   open,
   close,
   saveLocation,
