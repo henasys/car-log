@@ -33,7 +33,12 @@ export default class LocationScreen extends React.Component {
   setDatabase() {
     const realm = Database.getRealm();
     console.log('realm', realm.schemaVersion);
-    this.setState({realm});
+    if (realm === null) {
+      console.log('realm is null');
+    }
+    this.setState({realm}, () => {
+      this.initList();
+    });
   }
 
   openDatabase() {
