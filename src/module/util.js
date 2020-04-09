@@ -42,6 +42,11 @@ export function timeToMonthDay(timestamp) {
   return moment(timestamp).format('MM/DD');
 }
 
+export function yearToTimestamp(year) {
+  const timestamp = moment(String(year), 'YYYY').format('x');
+  return parseInt(timestamp, 10);
+}
+
 // ref: https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 export function measure(lat1, lon1, lat2, lon2) {
   // generally used geo measurement function
