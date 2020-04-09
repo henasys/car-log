@@ -42,6 +42,10 @@ export function timeToMonthDay(timestamp) {
   return moment(timestamp).format('MM/DD');
 }
 
+export function timeToMonthDayWeek(timestamp) {
+  return moment(timestamp).format('MM/DD (ddd)'); // 04/07 (화)
+}
+
 export function yearToTimestamp(year) {
   const timestamp = moment(String(year), 'YYYY').format('x');
   return parseInt(timestamp, 10);
