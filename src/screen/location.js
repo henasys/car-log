@@ -119,6 +119,8 @@ export default class LocationScreen extends React.Component {
     FileManager.readFromTemp(this.filename)
       .then(json => {
         console.log('readJsonFromFile done', json.slice(0, 300));
+        const locations = JSON.parse(json);
+        this.props.navigation.setParams({locations: locations});
       })
       .catch(e => {
         console.log(e);

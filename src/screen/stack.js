@@ -105,19 +105,19 @@ export default function MyStack() {
           component={LocationScreen}
           options={({navigation, route}) => ({
             title: '운행 기록',
-            // headerRight: () => (
-            //   <View style={styles.menuContainer}>
-            //     <Icon
-            //       iconStyle={styles.menuItem}
-            //       onPress={() => {
-            //         console.log('route', route);
-            //         doSaveLocations(navigation, route);
-            //       }}
-            //       name="save"
-            //       type="material"
-            //     />
-            //   </View>
-            // ),
+            headerRight: () => (
+              <View style={styles.menuContainer}>
+                <Icon
+                  iconStyle={styles.menuItem}
+                  onPress={() => {
+                    // console.log('route', route);
+                    doSaveLocations(navigation, route);
+                  }}
+                  name="restore"
+                  type="material"
+                />
+              </View>
+            ),
           })}
         />
       </Stack.Navigator>
@@ -167,11 +167,12 @@ function doSaveTrips(route) {
 }
 
 function doSaveLocations(navigation, route) {
-  // const carLogs = require('./car_log_data_room');
-  const carLogs = [];
-  console.log('carLogs.length', carLogs.length);
+  // console.log('route.params', route.params);
+  const locations = route.params && route.params.locations;
+  const locationList = Object.values(locations);
+  console.log('locationList.length', locationList.length);
   Database.open(realm => {
-    carLogs.forEach(log => {
+    locationList.forEach(log => {
       Database.saveLocation(
         realm,
         log.latitude,
