@@ -158,7 +158,7 @@ function calculateLocation(log, prev) {
     log.latitude,
     log.longitude,
   );
-  const vc = (1000 * dd) / log.dt;
+  const vc = log.dt ? (1000 * dd) / log.dt : 0;
   log.vc = vc.toFixed(3);
   log.dd = dd.toFixed(0);
   return log;
