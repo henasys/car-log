@@ -132,15 +132,16 @@ export function ShareScreen(props) {
   const openDatabase = () => {
     Database.open(newRealm => {
       setRealm(newRealm);
+      console.log('setRealm() done');
     });
   };
   const closeDatabase = () => {
     Database.close(realm);
-    setRealm(null);
   };
   const initStates = () => {
     console.log('initStates');
     if (realm === null) {
+      console.log('realm is null');
       return;
     }
     const setting = Database.getSetting(realm);
@@ -168,6 +169,7 @@ export function ShareScreen(props) {
   };
   useEffect(() => {
     console.log('share useEffect start');
+    initTempDir();
     openDatabase();
     return () => {
       console.log('share useEffect cleanup');
@@ -177,9 +179,8 @@ export function ShareScreen(props) {
   }, []);
   useEffect(() => {
     initStates();
-    initTempDir();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [realm]);
   const items = yearItems();
   return (
     <SafeAreaView style={styles.container}>
