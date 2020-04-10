@@ -19,15 +19,13 @@ export default class LocationScreen extends React.Component {
 
   componentDidMount() {
     console.log('location componentDidMount');
-    // this.addLocatorUpdater();
+    this.addLocatorUpdater();
     this.setDatabase();
-    // this.openDatabase();
   }
 
   componentWillUnmount() {
     console.log('location componentWillUnmount');
-    // this.removeLocatorUpdater();
-    // this.closeDatabase();
+    this.removeLocatorUpdater();
   }
 
   setDatabase() {
@@ -39,17 +37,6 @@ export default class LocationScreen extends React.Component {
     this.setState({realm}, () => {
       this.initList();
     });
-  }
-
-  openDatabase() {
-    Database.open(realm => {
-      this.setState({realm});
-      this.initList();
-    });
-  }
-
-  closeDatabase() {
-    Database.close(this.state.realm);
   }
 
   addLocatorUpdater() {
@@ -68,6 +55,7 @@ export default class LocationScreen extends React.Component {
   }
 
   initList() {
+    console.log('initList');
     this.pagingStartIndex = 0;
     const list = this.getList(this.pagingStartIndex);
     // console.log('list', list);
@@ -91,7 +79,7 @@ export default class LocationScreen extends React.Component {
   }
 
   getList(startIndex) {
-    console.log('getList', startIndex);
+    console.log('getList startIndex', startIndex);
     if (this.state.realm === null) {
       return [];
     }
