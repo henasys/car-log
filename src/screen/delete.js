@@ -36,17 +36,21 @@ export function DeleteScreen({route, navigation}) {
         // console.log('count', monthList.length);
         item.count = monthList.length;
         // console.log('item', item);
+        year.count += item.count;
       });
     });
     setList(yearList);
   };
   const doDelete = (year, month = null) => {
     console.log('doDelete', year, month);
-    if (month === null) {
-      // delete whole year data
-    } else {
-      // delete the year / month
-    }
+    Database.deleteTrip(realm, year, month)
+      .then(() => {
+        console.log('Database.deleteTrip done');
+        initStates();
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
   useEffect(() => {
     console.log('delete useEffect start');
@@ -81,26 +85,36 @@ export function DeleteScreen({route, navigation}) {
     }
     return <Item year={item.year} month={item.month} count={item.count} />;
   };
-  // console.log('list', list);
+  const renderSectionHeader = ({year, count}) => {
+    if (count === 0) {
+      return (
+        <View style={styles.alertMessage}>
+          <Text style={styles.alertMessageText}>삭제할 기록이 없습니다.</Text>
+        </View>
+      );
+    }
+    return (
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>{year}년</Text>
+        <Icon
+          iconStyle={styles.menuItem}
+          onPress={() => {
+            doDelete(year);
+          }}
+          name="remove-circle-outline"
+          type="material"
+        />
+      </View>
+    );
+  };
+  console.log('list', list);
   return (
     <SafeAreaView style={styles.container}>
       <SectionList
         sections={list}
         keyExtractor={(item, index) => item + index}
         renderItem={({item}) => renderItem(item)}
-        renderSectionHeader={({section: {year}}) => (
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>{year}년</Text>
-            <Icon
-              iconStyle={styles.menuItem}
-              onPress={() => {
-                doDelete(year);
-              }}
-              name="remove-circle-outline"
-              type="material"
-            />
-          </View>
-        )}
+        renderSectionHeader={({section}) => renderSectionHeader(section)}
       />
     </SafeAreaView>
   );
@@ -109,9 +123,9 @@ export function DeleteScreen({route, navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 10,
+    // marginTop: 10,
     marginBottom: 10,
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
   },
   itemContainer: {
     flexDirection: 'row',
@@ -131,6 +145,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   itemTitle: {
+    fontSize: 16,
+  },
+  alertMessage: {
+    paddingVertical: 10,
+    // backgroundColor: '#DCDCDC',
+    alignItems: 'center',
+  },
+  alertMessageText: {
     fontSize: 16,
   },
 });

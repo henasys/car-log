@@ -333,7 +333,7 @@ export const configureYearList = (minTimestamp, maxTimeStamp) => {
   // console.log('t max', max);
   const result = [];
   for (let year = min.year; year <= max.year; year++) {
-    const yearData = {year: year, data: []};
+    const yearData = {year: year, data: [], count: 0};
     for (let month = 1; month <= 12; month++) {
       // console.log('year', year, 'month', month);
       if (year === min.year && month < min.month) {
@@ -345,8 +345,8 @@ export const configureYearList = (minTimestamp, maxTimeStamp) => {
       const monthData = {
         year: year,
         month: month,
-        start: yearMonthToTimestamp(year, month),
-        end: yearMonthToTimestamp(year, month + 1),
+        start: TimeUtil.yearMonthToTimestamp(year, month),
+        end: TimeUtil.yearMonthToTimestamp(year, month + 1),
         count: 0,
       };
       yearData.data.push(monthData);

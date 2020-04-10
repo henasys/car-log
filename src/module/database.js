@@ -4,7 +4,7 @@ import {v1 as uuidv1} from 'uuid';
 
 import {schemas} from '../module/schemas';
 import {Location, Setting, Trip} from '../module/schemas';
-import {yearToTimestamp, timeToDateHourMin} from '../module/util';
+import {TimeUtil} from '../module/util';
 
 let _realm = null;
 
@@ -221,9 +221,15 @@ const getTripListByTimestamp = (realm, start, end) => {
 };
 
 const getTripListByYear = (realm, year) => {
-  const thisYear = yearToTimestamp(year);
-  const nextYear = yearToTimestamp(year + 1);
+  const thisYear = TimeUtil.yearToTimestamp(year);
+  const nextYear = TimeUtil.yearToTimestamp(year + 1);
   return getTripListByTimestamp(realm, thisYear, nextYear);
+};
+
+const getTripListByYearMonth = (realm, year, month) => {
+  const thisMonth = TimeUtil.yearMonthToTimestamp(year);
+  const nextMonth = TimeUtil.yearMonthToTimestamp(year, month + 1);
+  return getTripListByTimestamp(realm, thisMonth, nextMonth);
 };
 
 const getTripMinMax = realm => {
@@ -285,9 +291,14 @@ const updateTripAddress = (realm, id, startAddress, endAddress) => {
 };
 
 const deleteTrip = (realm, year, month) => {
+  const list =
+    month === null
+      ? getTripListByYear(realm, year)
+      : getTripListByYearMonth(realm, year, month);
   return new Promise((resolve, reject) => {
     try {
       realm.write(() => {
+        realm.delete(list);
         resolve();
       });
     } catch (e) {
@@ -336,8 +347,10 @@ export default {
   getTripList,
   getTripListByTimestamp,
   getTripListByYear,
+  getTripListByYearMonth,
   getTripMinMax,
   updateTripEnd,
   updateTripAddress,
+  deleteTrip,
   clearAllDatabase,
 };
