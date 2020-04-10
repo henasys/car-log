@@ -11,8 +11,6 @@ import SettingScreen from '../screen/setting';
 import {SearchScreen} from '../screen/search';
 import {DeleteScreen} from '../screen/delete';
 
-import Database from '../module/database';
-
 const Stack = createStackNavigator();
 
 export default function MyStack() {
@@ -86,18 +84,6 @@ export default function MyStack() {
           component={SearchScreen}
           options={({navigation, route}) => ({
             title: '출발/도착지 검출',
-            // headerRight: () => (
-            //   <View style={styles.menuContainer}>
-            //     <Icon
-            //       iconStyle={styles.menuItem}
-            //       onPress={() => {
-            //         doSaveTrips(route);
-            //       }}
-            //       name="save"
-            //       type="material"
-            //     />
-            //   </View>
-            // ),
           })}
         />
         <Stack.Screen
@@ -105,19 +91,6 @@ export default function MyStack() {
           component={LocationScreen}
           options={({navigation, route}) => ({
             title: '운행 기록',
-            // headerRight: () => (
-            //   <View style={styles.menuContainer}>
-            //     <Icon
-            //       iconStyle={styles.menuItem}
-            //       onPress={() => {
-            //         // console.log('route', route);
-            //         doSaveLocations(navigation, route);
-            //       }}
-            //       name="restore"
-            //       type="material"
-            //     />
-            //   </View>
-            // ),
           })}
         />
       </Stack.Navigator>
@@ -133,61 +106,3 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
 });
-
-function doSaveTrips(route) {
-  // console.log('route', route);
-  const result = route.params && route.params.result;
-  console.log('doSaveTrips', result);
-  const startList = [];
-  const endList = [];
-  for (let index = 0; index < result.length; index++) {
-    const log = result[index];
-    if (index % 2 === 0) {
-      startList.push(log);
-    } else {
-      endList.push(log);
-    }
-  }
-  console.log(
-    'length startList == endList',
-    startList.length === endList.length,
-  );
-  Database.open(realm => {
-    startList.forEach((start, index) => {
-      const end = endList[index];
-      Database.saveTrip(realm, start, end, end.totalDistance)
-        .then(trip => {
-          console.log('saveTrip done', trip);
-        })
-        .catch(e => {
-          console.log('saveTrip error', e);
-        });
-    });
-  });
-}
-
-function doSaveLocations(navigation, route) {
-  // console.log('route.params', route.params);
-  const locations = route.params && route.params.locations;
-  const locationList = Object.values(locations);
-  console.log('locationList.length', locationList.length);
-  Database.open(realm => {
-    locationList.forEach(log => {
-      Database.saveLocation(
-        realm,
-        log.latitude,
-        log.longitude,
-        log.speed,
-        log.heading,
-        log.accuracy,
-        log.created,
-      )
-        .then(carLog => {
-          console.log('saveLocation done', carLog.created);
-        })
-        .catch(e => {
-          console.log('saveLocation', e);
-        });
-    });
-  });
-}
