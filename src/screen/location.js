@@ -150,6 +150,13 @@ export default class LocationScreen extends React.Component {
   render() {
     const {list} = this.state;
     console.log('location render', list.length);
+    if (list.length === 0) {
+      return (
+        <View style={styles.alertMessage}>
+          <Text style={styles.alertMessageText}>운행 기록이 없습니다.</Text>
+        </View>
+      );
+    }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.ListContainer}>
@@ -186,5 +193,13 @@ const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
     transform: [{scaleY: -1}],
+  },
+  alertMessage: {
+    paddingVertical: 10,
+    // backgroundColor: '#DCDCDC',
+    alignItems: 'center',
+  },
+  alertMessageText: {
+    fontSize: 16,
   },
 });
