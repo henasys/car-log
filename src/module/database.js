@@ -226,11 +226,12 @@ const getTripListByYear = (realm, year) => {
   return getTripListByTimestamp(realm, thisYear, nextYear);
 };
 
-const getTripInfo = realm => {
+const getTripMinMax = realm => {
   const min = getTripList(realm).min('startCreated');
-  console.log('min', min, timeToDateHourMin(min));
+  // console.log('min', min, timeToDateHourMin(min));
   const max = getTripList(realm).max('startCreated');
-  console.log('max', max, timeToDateHourMin(max));
+  // console.log('max', max, timeToDateHourMin(max));
+  return {min: min, max: max};
 };
 
 /**
@@ -283,6 +284,19 @@ const updateTripAddress = (realm, id, startAddress, endAddress) => {
   });
 };
 
+const deleteTrip = (realm, year, month) => {
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        resolve();
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
+};
+
 const clearAllDatabase = () => {
   return new Promise((resolve, reject) => {
     Realm.open(schemas.getLatestConfig())
@@ -322,7 +336,7 @@ export default {
   getTripList,
   getTripListByTimestamp,
   getTripListByYear,
-  getTripInfo,
+  getTripMinMax,
   updateTripEnd,
   updateTripAddress,
   clearAllDatabase,

@@ -23,11 +23,7 @@ export function DeleteScreen({route, navigation}) {
       console.log('realm is null');
       return;
     }
-    // const list = Database.getTripListByTimestamp(realm, start, end);
-    const min = Database.getTripList(realm).min('startCreated');
-    // console.log('min', min, timeToDateHourMin(min));
-    const max = Database.getTripList(realm).max('startCreated');
-    // console.log('max', max, timeToDateHourMin(max));
+    const {min, max} = Database.getTripMinMax(realm);
     const yearList = configureYearList(min, max);
     // console.log('yearLoop', yearList);
     yearList.forEach(year => {
@@ -46,6 +42,11 @@ export function DeleteScreen({route, navigation}) {
   };
   const doDelete = (year, month = null) => {
     console.log('doDelete', year, month);
+    if (month === null) {
+      // delete whole year data
+    } else {
+      // delete the year / month
+    }
   };
   useEffect(() => {
     console.log('delete useEffect start');
