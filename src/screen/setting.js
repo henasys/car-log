@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   Text,
@@ -8,8 +7,6 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import {Button} from 'react-native-elements';
-import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
 import inputBox from '../view/inputBox';
@@ -228,23 +225,6 @@ export default class SettingScreen extends React.Component {
               textInputStyle: styles.textInput,
             })}
           </View>
-          <Text style={styles.sectionLabel}>{'데이터 삭제'}</Text>
-          <View style={{margin: 10}} />
-          <Button
-            icon={
-              <Icon name="delete" type="material" size={24} color="white" />
-            }
-            title="Delete Car Logs"
-            onPress={() => {
-              Database.clearAllDatabase()
-                .then(() => {
-                  console.log('');
-                })
-                .catch(e => {
-                  console.log(e);
-                });
-            }}
-          />
         </ScrollView>
       </SafeAreaView>
     );
@@ -280,5 +260,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginHorizontal: 10,
     marginVertical: 10,
+    padding: 10,
   },
 });

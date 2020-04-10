@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     // width: 40,
     borderWidth: 1,
     marginHorizontal: 10,
+    padding: 10,
   },
 });
 
