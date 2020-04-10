@@ -88,6 +88,8 @@ export default class LocationScreen extends React.Component {
       'created',
       true,
     );
+    // this.writeJsonToFile(list);
+    this.readJsonFromFile();
     // const reversed = Database.getLocationList(this.state.realm).sorted(
     //   'created',
     //   false,
@@ -116,7 +118,7 @@ export default class LocationScreen extends React.Component {
   readJsonFromFile() {
     FileManager.readFromTemp(this.filename)
       .then(json => {
-        console.log('readJsonFromFile done', json);
+        console.log('readJsonFromFile done', json.slice(0, 300));
       })
       .catch(e => {
         console.log(e);

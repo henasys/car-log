@@ -124,7 +124,7 @@ export default class MainScreen extends React.Component {
   readJsonFromFile() {
     FileManager.readFromTemp(this.filename)
       .then(json => {
-        console.log('readJsonFromFile done', json);
+        console.log('readJsonFromFile done', json.slice(0, 300));
       })
       .catch(e => {
         console.log(e);
@@ -146,7 +146,7 @@ export default class MainScreen extends React.Component {
     const locations = Database.getLocationListByTimestamp(
       this.state.realm,
       lastTimestamp,
-    );
+    ).sorted('created', false);
     // console.log('to be processing locations', locations.map(x => x.created));
     console.log('to be processing locations', locations.length);
     this.doDetectOnRemainedLocationList(locations);
