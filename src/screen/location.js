@@ -46,6 +46,7 @@ export default class LocationScreen extends React.Component {
       ),
     });
   }
+
   componentDidMount() {
     console.log('location componentDidMount');
     this.addLocatorUpdater();
