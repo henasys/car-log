@@ -51,6 +51,30 @@ export function yearToTimestamp(year) {
   return parseInt(timestamp, 10);
 }
 
+export function yearMonthToTimestamp(year, month) {
+  const params = month > 12 ? {y: year + 1, m: 1} : {y: year, m: month};
+  const m = moment(`${params.y}/${params.m}`, 'YYYY/MM');
+  const timestamp = m.format('x');
+  return parseInt(timestamp, 10);
+}
+
+export function timeToYearAndMonthValue(timestamp) {
+  const t = moment(timestamp);
+  return {year: t.year(), month: t.month() + 1};
+}
+
+export const TimeUtil = {
+  msToTime,
+  timeToWeek,
+  timeToHourMin,
+  timeToDateHourMin,
+  timeToMonthDay,
+  timeToMonthDayWeek,
+  yearToTimestamp,
+  yearMonthToTimestamp,
+  timeToYearAndMonthValue,
+};
+
 // ref: https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
 export function measure(lat1, lon1, lat2, lon2) {
   // generally used geo measurement function
@@ -301,3 +325,31 @@ export function tripCallbackItemToTripRecord(item, isEndType = false) {
   }
   return record;
 }
+
+export const configureYearLoop = (minTimestamp, maxTimeStamp) => {
+  const min = TimeUtil.timeToYearAndMonthValue(minTimestamp);
+  const max = TimeUtil.timeToYearAndMonthValue(maxTimeStamp);
+  // console.log('t min', min);
+  // console.log('t max', max);
+  const result = [];
+  for (let year = min.year; year <= max.year; year++) {
+    const yearData = {year: year, data: [], count: 0};
+    for (let month = 1; month <= 12; month++) {
+      // console.log('year', year, 'month', month);
+      if (year === min.year && month < min.month) {
+        continue;
+      }
+      if (year === max.year && month > max.month) {
+        continue;
+      }
+      const monthData = {
+        month: month,
+        start: yearMonthToTimestamp(year, month),
+        end: yearMonthToTimestamp(year, month + 1),
+      };
+      yearData.data.push(monthData);
+    }
+    result.push(yearData);
+  }
+  return result;
+};

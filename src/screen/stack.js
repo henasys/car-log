@@ -8,7 +8,8 @@ import MainScreen from '../screen/main';
 import LocationScreen from '../screen/location';
 import {ShareScreen} from '../screen/share';
 import SettingScreen from '../screen/setting';
-import {SearchScreen} from './search';
+import {SearchScreen} from '../screen/search';
+import {DeleteScreen} from '../screen/delete';
 
 import Database from '../module/database';
 
@@ -63,8 +64,22 @@ export default function MyStack() {
           component={SettingScreen}
           options={({navigation, route}) => ({
             title: '설정',
-            headerRight: () => <View style={styles.menuContainer} />,
+            headerRight: () => (
+              <View style={styles.menuContainer}>
+                <Icon
+                  iconStyle={styles.menuItem}
+                  onPress={() => navigation.navigate('Delete')}
+                  name="delete-forever"
+                  type="material"
+                />
+              </View>
+            ),
           })}
+        />
+        <Stack.Screen
+          name="Delete"
+          component={DeleteScreen}
+          options={{title: '기록 삭제'}}
         />
         <Stack.Screen
           name="Search"
