@@ -95,10 +95,12 @@ const sendMail = (realm, email, year) => {
   console.log(email, year);
   if (!email) {
     console.log('not defined email');
+    showAlert('Email 미지정', '전송받을 이메일 주소를 입력해주세요.');
     return;
   }
   if (!year) {
     console.log('not defined year');
+    showAlert('연도 미지정', '전송받을 운행기록의 연도를 입력해주세요.');
     return;
   }
   const subject = `업무용 승용차 운행기록부 ${String(year)}년`;
