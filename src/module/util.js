@@ -326,14 +326,14 @@ export function tripCallbackItemToTripRecord(item, isEndType = false) {
   return record;
 }
 
-export const configureYearLoop = (minTimestamp, maxTimeStamp) => {
+export const configureYearList = (minTimestamp, maxTimeStamp) => {
   const min = TimeUtil.timeToYearAndMonthValue(minTimestamp);
   const max = TimeUtil.timeToYearAndMonthValue(maxTimeStamp);
   // console.log('t min', min);
   // console.log('t max', max);
   const result = [];
   for (let year = min.year; year <= max.year; year++) {
-    const yearData = {year: year, data: [], count: 0};
+    const yearData = {year: year, data: []};
     for (let month = 1; month <= 12; month++) {
       // console.log('year', year, 'month', month);
       if (year === min.year && month < min.month) {
@@ -343,9 +343,11 @@ export const configureYearLoop = (minTimestamp, maxTimeStamp) => {
         continue;
       }
       const monthData = {
+        year: year,
         month: month,
         start: yearMonthToTimestamp(year, month),
         end: yearMonthToTimestamp(year, month + 1),
+        count: 0,
       };
       yearData.data.push(monthData);
     }

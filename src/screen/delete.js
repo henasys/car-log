@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, StyleSheet, View, FlatList, Text} from 'react-native';
+import {SafeAreaView, StyleSheet, View, SectionList, Text} from 'react-native';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
-import {timeToDateHourMin, configureYearLoop} from '../module/util';
+import {configureYearList} from '../module/util';
 
 export function DeleteScreen({route, navigation}) {
   const [realm, setRealm] = useState(null);
@@ -25,23 +25,27 @@ export function DeleteScreen({route, navigation}) {
     }
     // const list = Database.getTripListByTimestamp(realm, start, end);
     const min = Database.getTripList(realm).min('startCreated');
-    console.log('min', min, timeToDateHourMin(min));
+    // console.log('min', min, timeToDateHourMin(min));
     const max = Database.getTripList(realm).max('startCreated');
-    console.log('max', max, timeToDateHourMin(max));
-    const yearLoop = configureYearLoop(min, max);
-    console.log('yearLoop', yearLoop);
-    yearLoop.forEach(year => {
+    // console.log('max', max, timeToDateHourMin(max));
+    const yearList = configureYearList(min, max);
+    // console.log('yearLoop', yearList);
+    yearList.forEach(year => {
       year.data.forEach(item => {
-        console.log('item', item);
         const monthList = Database.getTripListByTimestamp(
           realm,
           item.start,
           item.end,
         );
-        console.log('count', monthList.length);
+        // console.log('count', monthList.length);
         item.count = monthList.length;
+        // console.log('item', item);
       });
     });
+    setList(yearList);
+  };
+  const doDelete = (year, month = null) => {
+    console.log('doDelete', year, month);
   };
   useEffect(() => {
     console.log('delete useEffect start');
@@ -56,13 +60,46 @@ export function DeleteScreen({route, navigation}) {
     initStates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [realm]);
-  const renderItem = item => {};
+  const Item = ({year, month, count}) => (
+    <View style={styles.itemContainer}>
+      <Text style={styles.itemTitle}>{month}월</Text>
+      <Text style={styles.itemTitle}>{count}개</Text>
+      <Icon
+        iconStyle={styles.menuItem}
+        onPress={() => {
+          doDelete(year, month);
+        }}
+        name="remove-circle-outline"
+        type="material"
+      />
+    </View>
+  );
+  const renderItem = item => {
+    if (item.count === 0) {
+      return <View />;
+    }
+    return <Item year={item.year} month={item.month} count={item.count} />;
+  };
+  // console.log('list', list);
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={[]}
+      <SectionList
+        sections={list}
+        keyExtractor={(item, index) => item + index}
         renderItem={({item}) => renderItem(item)}
-        keyExtractor={(item, index) => String(index)}
+        renderSectionHeader={({section: {year}}) => (
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>{year}년</Text>
+            <Icon
+              iconStyle={styles.menuItem}
+              onPress={() => {
+                doDelete(year);
+              }}
+              name="remove-circle-outline"
+              type="material"
+            />
+          </View>
+        )}
       />
     </SafeAreaView>
   );
@@ -71,20 +108,28 @@ export function DeleteScreen({route, navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 10,
+    marginBottom: 10,
+    marginHorizontal: 10,
   },
-  inputBoxContainer: {
-    flex: 1,
-    flexDirection: 'column',
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 10,
-    marginHorizontal: 10,
-  },
-  textInput: {
-    // height: 40,
-    width: '100%',
-    borderWidth: 0.5,
-    borderColor: 'grey',
-    marginHorizontal: 10,
     padding: 10,
+    marginLeft: 40,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 10,
+    marginTop: 10,
+  },
+  headerText: {
+    fontSize: 20,
+  },
+  itemTitle: {
+    fontSize: 16,
   },
 });
