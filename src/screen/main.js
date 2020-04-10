@@ -46,10 +46,12 @@ export default class MainScreen extends React.Component {
 
   openDatabase() {
     Database.open(realm => {
-      this.setState({realm});
-      this.getSetting();
-      this.getRemainedLocationList();
-      this.getList();
+      this.setState({realm}, () => {
+        Database.setRealm(realm);
+        this.getSetting();
+        this.getRemainedLocationList();
+        this.getList();
+      });
     });
   }
 
@@ -78,7 +80,6 @@ export default class MainScreen extends React.Component {
     this.setting = setting;
     // console.log('setting', setting);
     this.tripDetector = this.newTripDetector();
-    Database.setRealm(this.state.realm);
   }
 
   getList() {
