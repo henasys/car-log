@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
+import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
@@ -18,6 +19,33 @@ export default class LocationScreen extends React.Component {
   pagingStartIndex = 0;
   locator = Locator.getInstance();
 
+  constructor(props) {
+    super(props);
+    this.props.navigation.setOptions({
+      headerRight: () => (
+        <View style={styles.menuContainer}>
+          <Icon
+            iconStyle={styles.menuItem}
+            onPress={() => {
+              console.log('save');
+              this.writeJsonToFile();
+            }}
+            name="save"
+            type="material"
+          />
+          <Icon
+            iconStyle={styles.menuItem}
+            onPress={() => {
+              console.log('restore');
+              this.readJsonFromFile();
+            }}
+            name="restore"
+            type="material"
+          />
+        </View>
+      ),
+    });
+  }
   componentDidMount() {
     console.log('location componentDidMount');
     this.addLocatorUpdater();
@@ -88,15 +116,6 @@ export default class LocationScreen extends React.Component {
       'created',
       true,
     );
-    // this.writeJsonToFile(list);
-    this.readJsonFromFile();
-    // const reversed = Database.getLocationList(this.state.realm).sorted(
-    //   'created',
-    //   false,
-    // );
-    // reversed.forEach(location => {
-    //   console.log(location);
-    // });
     const sliced = list.slice(startIndex, startIndex + NUMBERS_PER_PAGE);
     // console.log('getList', sliced);
     return calculateLocationList(sliced);
@@ -104,7 +123,11 @@ export default class LocationScreen extends React.Component {
 
   filename = 'location_data_backup.json';
 
-  writeJsonToFile(list) {
+  writeJsonToFile() {
+    const list = Database.getLocationList(this.state.realm).sorted(
+      'created',
+      true,
+    );
     const json = JSON.stringify(list);
     FileManager.writeToTemp(this.filename, json)
       .then(() => {
@@ -120,11 +143,37 @@ export default class LocationScreen extends React.Component {
       .then(json => {
         console.log('readJsonFromFile done', json.slice(0, 300));
         const locations = JSON.parse(json);
-        this.props.navigation.setParams({locations: locations});
+        const locationList = Object.values(locations);
+        console.log('locationList.length', locationList.length);
+        this.restoreToDatabase(locationList);
       })
       .catch(e => {
         console.log(e);
       });
+  }
+
+  restoreToDatabase(locationList) {
+    const lastIndex = locationList.length - 1;
+    locationList.forEach((location, index) => {
+      Database.saveLocation(
+        this.state.realm,
+        location.latitude,
+        location.longitude,
+        location.speed,
+        location.heading,
+        location.accuracy,
+        location.created,
+      )
+        .then(newLocation => {
+          console.log('saveLocation done', newLocation.created);
+          if (index === lastIndex) {
+            this.initList();
+          }
+        })
+        .catch(e => {
+          console.log('saveLocation', e);
+        });
+    });
   }
 
   renderItem(item) {
@@ -203,5 +252,11 @@ const styles = StyleSheet.create({
   },
   alertMessageText: {
     fontSize: 16,
+  },
+  menuContainer: {
+    flexDirection: 'row',
+  },
+  menuItem: {
+    marginRight: 10,
   },
 });

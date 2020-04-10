@@ -105,19 +105,19 @@ export default function MyStack() {
           component={LocationScreen}
           options={({navigation, route}) => ({
             title: '운행 기록',
-            headerRight: () => (
-              <View style={styles.menuContainer}>
-                <Icon
-                  iconStyle={styles.menuItem}
-                  onPress={() => {
-                    // console.log('route', route);
-                    doSaveLocations(navigation, route);
-                  }}
-                  name="restore"
-                  type="material"
-                />
-              </View>
-            ),
+            // headerRight: () => (
+            //   <View style={styles.menuContainer}>
+            //     <Icon
+            //       iconStyle={styles.menuItem}
+            //       onPress={() => {
+            //         // console.log('route', route);
+            //         doSaveLocations(navigation, route);
+            //       }}
+            //       name="restore"
+            //       type="material"
+            //     />
+            //   </View>
+            // ),
           })}
         />
       </Stack.Navigator>
