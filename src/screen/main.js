@@ -15,6 +15,7 @@ import {
 } from '../module/util';
 import {toast} from '../module/toast';
 import {TripDetector} from '../module/detector';
+import FileManager from '../module/file';
 
 export default class MainScreen extends React.Component {
   state = {
@@ -88,6 +89,8 @@ export default class MainScreen extends React.Component {
       // .filtered('endCreated != null')
       .sorted('created', true);
     // this.deleteTrips(list);
+    // this.writeJsonToFile(list);
+    // this.readJsonFromFile();
     this.setState({list});
     // this.testNewLocation();
   }
@@ -103,6 +106,29 @@ export default class MainScreen extends React.Component {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  writeJsonToFile(list) {
+    const json = JSON.stringify(list);
+    const filename = 'trip_data_backup.json';
+    FileManager.writeToTemp(filename, json)
+      .then(() => {
+        console.log('writeJsonToFile done');
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  readJsonFromFile() {
+    const filename = 'trip_data_backup.json';
+    FileManager.readFromTemp(filename)
+      .then(json => {
+        console.log('readJsonFromFile done', json);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   getRemainedLocationList() {

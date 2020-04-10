@@ -10,9 +10,14 @@ const readTempDir = () => {
   return RNFS.readDir(dir);
 };
 
-const writeToTemp = (filename, contents, encoding) => {
+const writeToTemp = (filename, contents, encoding = 'utf8') => {
   const path = getTempDir() + '/' + filename;
   return RNFS.writeFile(path, contents, encoding);
+};
+
+const readFromTemp = (filename, encoding = 'utf8') => {
+  const path = getTempDir() + '/' + filename;
+  return RNFS.readFile(path, encoding);
 };
 
 const getMailTempDir = () => {
@@ -50,7 +55,7 @@ const getPathOnMailTemp = filename => {
   return getMailTempDir() + '/' + filename;
 };
 
-const writeToMailTemp = (filename, contents, encoding) => {
+const writeToMailTemp = (filename, contents, encoding = 'utf8') => {
   const path = getPathOnMailTemp(filename);
   return RNFS.writeFile(path, contents, encoding);
 };
@@ -59,6 +64,7 @@ export default {
   getTempDir,
   readTempDir,
   writeToTemp,
+  readFromTemp,
   getMailTempDir,
   existsMailTempDir,
   makeMailTempDir,
