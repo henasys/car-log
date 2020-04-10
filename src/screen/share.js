@@ -39,15 +39,15 @@ const showAlert = (title, message) => {
 
 const excelHeader = () => {
   return [
-    '사용일자(요일)',
+    '③사용 \n일자 \n(요일)',
     '부서',
     '성명',
-    '주행전 계기판의 거리(km)',
-    '주행후 계기판의 거리(km)',
-    '주행거리(km)',
-    '출.퇴근용(km)',
-    '일반업무용(km)',
-    '비고',
+    '⑤주행 전 \n계기판의 거리(㎞)',
+    '⑥주행 후 \n계기판의 거리(㎞)',
+    '⑦주행거리(㎞)',
+    '⑧출ㆍ퇴근용(㎞)',
+    '⑨일반 업무용(㎞)',
+    '⑩비 고',
   ];
 };
 
@@ -93,8 +93,12 @@ const makeAttachFile = (filename, type, data, callback = null) => {
 const sendMail = (realm, email, year) => {
   console.log('send a mail');
   console.log(email, year);
+  if (!email) {
+    console.log('not defined email');
+    return;
+  }
   if (!year) {
-    console.log('not defined year', year);
+    console.log('not defined year');
     return;
   }
   const subject = `업무용 승용차 운행기록부 ${String(year)}년`;
@@ -108,7 +112,7 @@ const sendMail = (realm, email, year) => {
   const filename = 'car-log.xlsx';
   const type = 'xlsx';
   const data = excelData(realm, year);
-  // console.log('data', data);
+  console.log('data', data);
   makeAttachFile(filename, type, data, attchment => {
     Mailer.sendEmailWithMailer(
       email,
