@@ -108,10 +108,11 @@ export default class MainScreen extends React.Component {
     }
   }
 
+  filename = 'trip_data_backup.json';
+
   writeJsonToFile(list) {
     const json = JSON.stringify(list);
-    const filename = 'trip_data_backup.json';
-    FileManager.writeToTemp(filename, json)
+    FileManager.writeToTemp(this.filename, json)
       .then(() => {
         console.log('writeJsonToFile done');
       })
@@ -121,8 +122,7 @@ export default class MainScreen extends React.Component {
   }
 
   readJsonFromFile() {
-    const filename = 'trip_data_backup.json';
-    FileManager.readFromTemp(filename)
+    FileManager.readFromTemp(this.filename)
       .then(json => {
         console.log('readJsonFromFile done', json);
       })

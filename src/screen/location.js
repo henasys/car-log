@@ -5,6 +5,7 @@ import Database from '../module/database';
 import {Locator} from '../module/locator';
 import {msToTime, timeToDate, timeToHourMin} from '../module/util';
 import {calculateLocationList, fixLastLocation} from '../module/util';
+import FileManager from '../module/file';
 
 const NUMBERS_PER_PAGE = 50;
 
@@ -97,6 +98,29 @@ export default class LocationScreen extends React.Component {
     const sliced = list.slice(startIndex, startIndex + NUMBERS_PER_PAGE);
     // console.log('getList', sliced);
     return calculateLocationList(sliced);
+  }
+
+  filename = 'location_data_backup.json';
+
+  writeJsonToFile(list) {
+    const json = JSON.stringify(list);
+    FileManager.writeToTemp(this.filename, json)
+      .then(() => {
+        console.log('writeJsonToFile done');
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  readJsonFromFile() {
+    FileManager.readFromTemp(this.filename)
+      .then(json => {
+        console.log('readJsonFromFile done', json);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   renderItem(item) {
