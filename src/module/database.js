@@ -107,12 +107,44 @@ const getLocationList = realm => {
   return realm.objects('Location');
 };
 
-const getLocationListByTimestamp = (realm, timestamp) => {
-  const list = realm
-    .objects('Location')
-    .filtered('created >= $0', timestamp)
-    .sorted('created', false);
+const getLocationListByTimestamp = (realm, start, end = null) => {
+  let list = realm.objects('Location');
+  if (end) {
+    list = list.filtered('created >= $0 AND created < $1', start, end);
+  } else {
+    list = list.filtered('created >= $0', start);
+  }
   return list;
+};
+
+const getLocationListByYear = (realm, year) => {
+  const thisYear = TimeUtil.yearToTimestamp(year);
+  const nextYear = TimeUtil.yearToTimestamp(year + 1);
+  return getLocationListByTimestamp(realm, thisYear, nextYear);
+};
+
+const getLocationByYearMonth = (realm, year, month) => {
+  const thisMonth = TimeUtil.yearMonthToTimestamp(year);
+  const nextMonth = TimeUtil.yearMonthToTimestamp(year, month + 1);
+  return getLocationListByTimestamp(realm, thisMonth, nextMonth);
+};
+
+const deleteLocation = (realm, year, month) => {
+  const list =
+    month === null
+      ? getLocationListByYear(realm, year)
+      : getLocationByYearMonth(realm, year, month);
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        realm.delete(list);
+        resolve();
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
 };
 
 const saveSetting = (
@@ -341,6 +373,9 @@ export default {
   saveLocation,
   getLocationList,
   getLocationListByTimestamp,
+  getLocationListByYear,
+  getLocationByYearMonth,
+  deleteLocation,
   saveSetting,
   getSetting,
   saveTrip,
