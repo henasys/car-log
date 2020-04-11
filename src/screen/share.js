@@ -137,7 +137,9 @@ export function ShareScreen(props) {
     if (setting.email) {
       setEmail(setting.email);
     }
-    setItems(Database.getYearListOfTripForPicker(realm));
+    const pickerItems = Database.getYearListOfTripForPicker(realm);
+    console.log('pickerItems', pickerItems);
+    setItems(pickerItems);
   };
   const initTempDir = () => {
     FileManager.unlinkMailTempDir()

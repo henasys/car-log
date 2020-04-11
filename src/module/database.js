@@ -266,11 +266,16 @@ const getTripListByYearMonth = (realm, year, month, reverse = false) => {
   return getTripListByTimestamp(realm, thisMonth, nextMonth, reverse);
 };
 
+/**
+ * get min and max value of startCreated
+ * @param {*} realm Realm object
+ * @returns {*} {min, max} undefined if the collection is empty
+ */
 const getTripMinMax = realm => {
   const min = getTripList(realm).min('startCreated');
-  // console.log('min', min, timeToDateHourMin(min));
+  // console.log('min', min, TimeUtil.timeToDateHourMin(min));
   const max = getTripList(realm).max('startCreated');
-  // console.log('max', max, timeToDateHourMin(max));
+  // console.log('max', max, TimeUtil.timeToDateHourMin(max));
   return {min: min, max: max};
 };
 

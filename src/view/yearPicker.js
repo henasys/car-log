@@ -6,7 +6,11 @@ const thisYear = new Date().getFullYear();
 
 export default function YearPicker(props) {
   useEffect(() => {
-    props.setYear && props.setYear(thisYear);
+    if (props.items && props.items.length > 0) {
+      props.setYear && props.setYear(props.items[0].value);
+    } else {
+      props.setYear && props.setYear(thisYear);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const yearItems = () => {

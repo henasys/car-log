@@ -63,8 +63,12 @@ export function yearMonthToTimestamp(year, month) {
   return parseInt(timestamp, 10);
 }
 
+/**
+ * timestamp to {year, month}
+ * @param {*} timestamp could be undefined, return now date
+ */
 export function timeToYearAndMonthValue(timestamp) {
-  const t = moment(timestamp);
+  const t = timestamp === undefined ? moment() : moment(timestamp);
   return {year: t.year(), month: t.month() + 1};
 }
 
