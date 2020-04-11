@@ -51,11 +51,15 @@ export default class MainScreen extends React.Component {
   }
 
   setYear(year) {
-    this.setState({year});
+    this.setState({year}, () => {
+      this.getList();
+    });
   }
 
   setMonth(month) {
-    this.setState({month});
+    this.setState({month}, () => {
+      this.getList();
+    });
   }
 
   openDatabase() {
@@ -98,12 +102,15 @@ export default class MainScreen extends React.Component {
 
   getList() {
     console.log('main getList');
-    const list = Database.getTripList(this.state.realm)
-      // .filtered('endCreated != null')
-      .sorted('created', true);
+    const {realm, year, month} = this.state;
+    const list =
+      year && month
+        ? Database.getTripListByYearMonth(realm, year, month + 1, true)
+        : Database.getTripList(this.state.realm).sorted('created', true);
     // this.deleteTrips(list);
     // this.writeJsonToFile(list);
     // this.readJsonFromFile();
+    console.log('getList list', list.length);
     this.setState({list});
     // this.testNewLocation();
   }
@@ -424,6 +431,7 @@ export default class MainScreen extends React.Component {
     const {trip, list, year, month} = this.state;
     console.log('list', list.length);
     console.log('trip', trip);
+    console.log('year', year, 'month', month);
     const listClone = this.listClone(list, trip);
     return (
       <SafeAreaView style={styles.container}>

@@ -51,6 +51,11 @@ export function yearToTimestamp(year) {
   return parseInt(timestamp, 10);
 }
 
+/**
+ * year month to timestamp
+ * @param {*} year 4 digit year
+ * @param {*} month 1 ~ 12, if exceed, then year + 1, m = 1
+ */
 export function yearMonthToTimestamp(year, month) {
   const params = month > 12 ? {y: year + 1, m: 1} : {y: year, m: month};
   const m = moment(`${params.y}/${params.m}`, 'YYYY/MM');

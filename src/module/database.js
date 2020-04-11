@@ -244,24 +244,25 @@ const getTripList = realm => {
  * @param {*} realm Realm object
  * @param {*} start timestamp start
  * @param {*} end timestamp not included
+ * @param {*} reverse default false = descending order in sorted(descriptor, reverse)
  */
-const getTripListByTimestamp = (realm, start, end) => {
+const getTripListByTimestamp = (realm, start, end, reverse = false) => {
   return realm
     .objects('Trip')
     .filtered('created >= $0 AND created < $1', start, end)
-    .sorted('created');
+    .sorted('created', reverse);
 };
 
-const getTripListByYear = (realm, year) => {
+const getTripListByYear = (realm, year, reverse = false) => {
   const thisYear = TimeUtil.yearToTimestamp(year);
   const nextYear = TimeUtil.yearToTimestamp(year + 1);
-  return getTripListByTimestamp(realm, thisYear, nextYear);
+  return getTripListByTimestamp(realm, thisYear, nextYear, reverse);
 };
 
-const getTripListByYearMonth = (realm, year, month) => {
-  const thisMonth = TimeUtil.yearMonthToTimestamp(year);
+const getTripListByYearMonth = (realm, year, month, reverse = false) => {
+  const thisMonth = TimeUtil.yearMonthToTimestamp(year, month);
   const nextMonth = TimeUtil.yearMonthToTimestamp(year, month + 1);
-  return getTripListByTimestamp(realm, thisMonth, nextMonth);
+  return getTripListByTimestamp(realm, thisMonth, nextMonth, reverse);
 };
 
 const getTripMinMax = realm => {
