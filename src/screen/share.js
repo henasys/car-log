@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet, View, TextInput, Alert} from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
 import {Icon} from 'react-native-elements';
 import XLSX from 'xlsx';
 
@@ -9,20 +8,7 @@ import Database from '../module/database';
 import Mailer from '../module/mail';
 import FileManager from '../module/file';
 import {timeToMonthDayWeek} from '../module/util';
-
-const thisYear = new Date().getFullYear();
-
-const yearItems = () => {
-  const list = [];
-  for (let index = 0; index < 5; index++) {
-    const year = thisYear - index;
-    const yearItem = {};
-    yearItem.label = `${year}년`;
-    yearItem.value = year;
-    list.push(yearItem);
-  }
-  return list;
-};
+import YearPicker from '../view/yearPicker';
 
 const showAlert = (title, message) => {
   Alert.alert(
@@ -150,7 +136,7 @@ export function ShareScreen(props) {
     if (setting.email) {
       setEmail(setting.email);
     }
-    setYear(thisYear);
+    // setYear(thisYear);
   };
   const initTempDir = () => {
     FileManager.unlinkMailTempDir()
@@ -183,7 +169,6 @@ export function ShareScreen(props) {
     initStates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [realm]);
-  const items = yearItems();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputBoxContainer}>
@@ -199,30 +184,7 @@ export function ShareScreen(props) {
         />
         <View paddingVertical={5} />
         <View style={{width: '100%'}}>
-          <RNPickerSelect
-            style={{
-              ...pickerSelectStyles,
-              iconContainer: {
-                top: 10,
-                right: 12,
-              },
-            }}
-            placeholder={{}}
-            value={year}
-            onValueChange={value => setYear(value)}
-            useNativeAndroidPickerStyle={false}
-            items={items}
-            Icon={() => {
-              return (
-                <Icon
-                  type="material"
-                  name="arrow-drop-down"
-                  size={24}
-                  color="gray"
-                />
-              );
-            }}
-          />
+          <YearPicker yearNum={5} setYear={value => setYear(value)} />
         </View>
 
         <View paddingVertical={5} />
@@ -257,26 +219,5 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     marginHorizontal: 10,
     padding: 10,
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 0.5,
-    borderColor: 'gray',
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'grey',
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
   },
 });
