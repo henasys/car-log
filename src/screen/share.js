@@ -186,7 +186,7 @@ export function ShareScreen(props) {
         <View style={{width: '100%'}}>
           <YearPicker
             year={year}
-            yearNum={5}
+            itemCount={5}
             setYear={value => setYear(value)}
           />
         </View>

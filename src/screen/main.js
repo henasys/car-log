@@ -16,10 +16,14 @@ import {
 import {toast} from '../module/toast';
 import {TripDetector} from '../module/detector';
 import FileManager from '../module/file';
+import YearPicker from '../view/yearPicker';
+import MonthPicker from '../view/monthPicker';
 
 export default class MainScreen extends React.Component {
   state = {
     realm: null,
+    year: null,
+    month: null,
     trip: {},
     list: [],
   };
@@ -43,6 +47,14 @@ export default class MainScreen extends React.Component {
     console.log('main componentWillUnmount');
     this.closeDatabase();
     this.locator.removeLocator();
+  }
+
+  setYear(year) {
+    this.setState({year});
+  }
+
+  setMonth(month) {
+    this.setState({month});
   }
 
   openDatabase() {
@@ -408,13 +420,22 @@ export default class MainScreen extends React.Component {
 
   render() {
     console.log('main render');
-    const {trip, list} = this.state;
+    const {trip, list, year, month} = this.state;
     console.log('list', list.length);
     console.log('trip', trip);
     const listClone = this.listClone(list, trip);
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.currentTrip}>{this.renderItem(trip, true)}</View>
+        <View style={styles.yearMonthPickerContainer}>
+          <YearPicker
+            year={year}
+            itemCount={3}
+            setYear={this.setYear.bind(this)}
+          />
+          <View style={{paddingHorizontal: 5}} />
+          <MonthPicker month={month} setMonth={this.setMonth.bind(this)} />
+        </View>
         <FlatList
           data={listClone}
           renderItem={({item}) => this.renderItem(item)}
@@ -465,5 +486,11 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: 14,
+  },
+  yearMonthPickerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginHorizontal: 10,
+    marginVertical: 10,
   },
 });
