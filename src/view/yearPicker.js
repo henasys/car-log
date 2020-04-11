@@ -7,7 +7,8 @@ const thisYear = new Date().getFullYear();
 export default function YearPicker(props) {
   useEffect(() => {
     if (props.items && props.items.length > 0) {
-      props.setYear && props.setYear(props.items[0].value);
+      const lastYear = props.items.slice(-1)[0];
+      lastYear && props.setYear && props.setYear(lastYear.value);
     } else {
       props.setYear && props.setYear(thisYear);
     }
