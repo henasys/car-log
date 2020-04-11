@@ -11,9 +11,14 @@ export default function YearPicker(props) {
     if (props.year) {
       setYear(props.year);
     } else {
-      setYear(thisYear);
+      setYearWithProps(thisYear);
     }
-  }, [props.year]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const setYearWithProps = value => {
+    setYear(value);
+    props.setYear && props.setYear(value);
+  };
   const yearItems = () => {
     const yearNum = props.yearNum ? props.yearNum : 5;
     const list = [];
@@ -38,10 +43,7 @@ export default function YearPicker(props) {
       }}
       placeholder={{}}
       value={year}
-      onValueChange={value => {
-        setYear(value);
-        props.setYear && props.setYear(value);
-      }}
+      onValueChange={setYearWithProps}
       useNativeAndroidPickerStyle={false}
       items={items}
       Icon={() => {
