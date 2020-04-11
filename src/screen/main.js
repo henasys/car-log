@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
 
@@ -428,13 +429,18 @@ export default class MainScreen extends React.Component {
       <SafeAreaView style={styles.container}>
         <View style={styles.currentTrip}>{this.renderItem(trip, true)}</View>
         <View style={styles.yearMonthPickerContainer}>
-          <YearPicker
-            year={year}
-            itemCount={3}
-            setYear={this.setYear.bind(this)}
-          />
+          <View style={{width: '45%'}}>
+            <YearPicker
+              year={year}
+              itemCount={3}
+              setYear={this.setYear.bind(this)}
+            />
+          </View>
+
           <View style={{paddingHorizontal: 5}} />
-          <MonthPicker month={month} setMonth={this.setMonth.bind(this)} />
+          <View style={{width: '45%'}}>
+            <MonthPicker month={month} setMonth={this.setMonth.bind(this)} />
+          </View>
         </View>
         <FlatList
           data={listClone}
@@ -490,7 +496,7 @@ const styles = StyleSheet.create({
   yearMonthPickerContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
     marginVertical: 10,
   },
 });
