@@ -103,6 +103,9 @@ export default class MainScreen extends React.Component {
   getList() {
     console.log('main getList');
     const {realm, year, month} = this.state;
+    if (!realm) {
+      return;
+    }
     const list =
       year && month
         ? Database.getTripListByYearMonth(realm, year, month + 1, true)
@@ -438,11 +441,7 @@ export default class MainScreen extends React.Component {
         <View style={styles.currentTrip}>{this.renderItem(trip, true)}</View>
         <View style={styles.yearMonthPickerContainer}>
           <View style={{width: '45%'}}>
-            <YearPicker
-              year={year}
-              itemCount={3}
-              setYear={this.setYear.bind(this)}
-            />
+            <YearPicker year={year} setYear={this.setYear.bind(this)} />
           </View>
 
           <View style={{paddingHorizontal: 5}} />
