@@ -21,7 +21,7 @@ export default function YearPicker(props) {
     }
     return list;
   };
-  const items = yearItems();
+  const items = props.items ? props.items : yearItems();
   return (
     <Picker value={props.year} onValueChange={props.setYear} items={items} />
   );

@@ -3,7 +3,6 @@ import {SafeAreaView, StyleSheet, View, SectionList, Text} from 'react-native';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
-import {configureYearList} from '../module/util';
 
 export function DeleteScreen({route, navigation}) {
   const [realm, setRealm] = useState(null);
@@ -23,22 +22,7 @@ export function DeleteScreen({route, navigation}) {
       console.log('realm is null');
       return;
     }
-    const {min, max} = Database.getTripMinMax(realm);
-    const yearList = configureYearList(min, max);
-    // console.log('yearLoop', yearList);
-    yearList.forEach(year => {
-      year.data.forEach(item => {
-        const monthList = Database.getTripListByTimestamp(
-          realm,
-          item.start,
-          item.end,
-        );
-        // console.log('count', monthList.length);
-        item.count = monthList.length;
-        // console.log('item', item);
-        year.count += item.count;
-      });
-    });
+    const yearList = Database.getYearMonthListOfTrip(realm);
     setList(yearList);
   };
   const doDelete = (year, month = null) => {

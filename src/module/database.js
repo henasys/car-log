@@ -5,6 +5,7 @@ import {v1 as uuidv1} from 'uuid';
 import {schemas} from '../module/schemas';
 import {Location, Setting, Trip} from '../module/schemas';
 import {TimeUtil} from '../module/util';
+import {configureYearMonthList, configureYearList} from '../module/util';
 
 let _realm = null;
 
@@ -273,6 +274,38 @@ const getTripMinMax = realm => {
   return {min: min, max: max};
 };
 
+const getYearMonthListOfTrip = realm => {
+  const {min, max} = getTripMinMax(realm);
+  const yearList = configureYearMonthList(min, max);
+  // console.log('yearLoop', yearList);
+  yearList.forEach(year => {
+    year.data.forEach(item => {
+      const monthList = getTripListByTimestamp(realm, item.start, item.end);
+      // console.log('count', monthList.length);
+      item.count = monthList.length;
+      // console.log('item', item);
+      year.count += item.count;
+    });
+  });
+  return yearList;
+};
+
+const getYearListOfTrip = realm => {
+  const {min, max} = getTripMinMax(realm);
+  const yearList = configureYearList(min, max);
+  return yearList;
+};
+
+const getYearListOfTripForPicker = realm => {
+  const yearList = getYearListOfTrip(realm);
+  return yearList.map(year => {
+    const item = {};
+    item.label = `${year}년`;
+    item.value = year;
+    return item;
+  });
+};
+
 /**
  * update Trip with end location info
  * @param {*} realm Ream object
@@ -385,6 +418,9 @@ export default {
   getTripListByYear,
   getTripListByYearMonth,
   getTripMinMax,
+  getYearMonthListOfTrip,
+  getYearListOfTrip,
+  getYearListOfTripForPicker,
   updateTripEnd,
   updateTripAddress,
   deleteTrip,
