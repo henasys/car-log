@@ -184,7 +184,11 @@ export function ShareScreen(props) {
         />
         <View paddingVertical={5} />
         <View style={{width: '100%'}}>
-          <YearPicker yearNum={5} setYear={value => setYear(value)} />
+          <YearPicker
+            year={year}
+            yearNum={5}
+            setYear={value => setYear(value)}
+          />
         </View>
 
         <View paddingVertical={5} />

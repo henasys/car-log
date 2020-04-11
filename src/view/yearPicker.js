@@ -1,23 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 
 import Picker from '../view/picker';
 
 const thisYear = new Date().getFullYear();
 
 export default function YearPicker(props) {
-  const [year, setYear] = useState('');
   useEffect(() => {
-    if (props.year) {
-      setYear(props.year);
-    } else {
-      setYearWithProps(thisYear);
-    }
+    props.setYear && props.setYear(thisYear - 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const setYearWithProps = value => {
-    setYear(value);
-    props.setYear && props.setYear(value);
-  };
   const yearItems = () => {
     const yearNum = props.yearNum ? props.yearNum : 5;
     const list = [];
@@ -31,5 +22,7 @@ export default function YearPicker(props) {
     return list;
   };
   const items = yearItems();
-  return <Picker value={year} onValueChange={setYearWithProps} items={items} />;
+  return (
+    <Picker value={props.year} onValueChange={props.setYear} items={items} />
+  );
 }
