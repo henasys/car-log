@@ -25,6 +25,7 @@ export default class MainScreen extends React.Component {
     realm: null,
     year: null,
     month: null,
+    pickerItems: [],
     trip: {},
     list: [],
   };
@@ -62,12 +63,17 @@ export default class MainScreen extends React.Component {
     });
   }
 
+  setPickerItems(pickerItems) {
+    this.setState({pickerItems});
+  }
+
   openDatabase() {
     Database.open(realm => {
       this.setState({realm}, () => {
         Database.setRealm(realm);
-        this.getSetting();
-        this.getRemainedLocationList();
+        this.initPicker(realm);
+        this.initTripDetector(realm);
+        this.getRemainedLocationList(realm);
         this.getList();
       });
     });
@@ -93,11 +99,17 @@ export default class MainScreen extends React.Component {
     this.locator.getCurrentPosition(callback, errorCallback);
   }
 
-  getSetting() {
-    const setting = Database.getSetting(this.state.realm);
+  initTripDetector(realm) {
+    const setting = Database.getSetting(realm);
     this.setting = setting;
     // console.log('setting', setting);
     this.tripDetector = this.newTripDetector();
+  }
+
+  initPicker(realm) {
+    const items = Database.getYearListOfTripForPicker(realm);
+    console.log('pickerItems', items);
+    this.setPickerItems(items);
   }
 
   getList() {
@@ -154,8 +166,8 @@ export default class MainScreen extends React.Component {
       });
   }
 
-  getRemainedLocationList() {
-    const list = Database.getTripList(this.state.realm)
+  getRemainedLocationList(realm) {
+    const list = Database.getTripList(realm)
       .sorted('created', true)
       .slice(0, 1);
     const lastTrip = list.length === 1 ? list[0] : {};
@@ -431,7 +443,7 @@ export default class MainScreen extends React.Component {
 
   render() {
     console.log('main render');
-    const {trip, list, year, month} = this.state;
+    const {trip, list, year, month, pickerItems} = this.state;
     console.log('list', list.length);
     console.log('trip', trip);
     console.log('year', year, 'month', month);
@@ -441,7 +453,11 @@ export default class MainScreen extends React.Component {
         <View style={styles.currentTrip}>{this.renderItem(trip, true)}</View>
         <View style={styles.yearMonthPickerContainer}>
           <View style={{width: '45%'}}>
-            <YearPicker year={year} setYear={this.setYear.bind(this)} />
+            <YearPicker
+              year={year}
+              items={pickerItems}
+              setYear={this.setYear.bind(this)}
+            />
           </View>
 
           <View style={{paddingHorizontal: 5}} />
