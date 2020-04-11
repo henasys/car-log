@@ -117,7 +117,7 @@ export function ShareScreen(props) {
   const [realm, setRealm] = useState(null);
   const [email, setEmail] = useState('');
   const [year, setYear] = useState('');
-  const [items, setItems] = useState([]);
+  const [pickerItems, setPickerItems] = useState([]);
   const openDatabase = () => {
     Database.open(newRealm => {
       setRealm(newRealm);
@@ -137,9 +137,9 @@ export function ShareScreen(props) {
     if (setting.email) {
       setEmail(setting.email);
     }
-    const pickerItems = Database.getYearListOfTripForPicker(realm);
-    console.log('pickerItems', pickerItems);
-    setItems(pickerItems);
+    const items = Database.getYearListOfTripForPicker(realm);
+    console.log('pickerItems', items);
+    setPickerItems(items);
   };
   const initTempDir = () => {
     FileManager.unlinkMailTempDir()
@@ -189,7 +189,7 @@ export function ShareScreen(props) {
         <View style={{width: '100%'}}>
           <YearPicker
             year={year}
-            items={items}
+            items={pickerItems}
             setYear={value => setYear(value)}
           />
         </View>
