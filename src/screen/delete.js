@@ -56,7 +56,7 @@ export function DeleteScreen({route, navigation}) {
   const Item = ({year, month, count}) => (
     <View style={styles.itemContainer}>
       <Text style={styles.itemTitle}>{month}월</Text>
-      <Text style={styles.itemTitle}>{count}개</Text>
+      <Text style={styles.itemTitle}>{count}건</Text>
       <Icon
         iconStyle={styles.menuItem}
         onPress={() => {

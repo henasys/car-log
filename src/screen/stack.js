@@ -21,7 +21,7 @@ export default function MyStack() {
           name="Main"
           component={MainScreen}
           options={({navigation, route}) => ({
-            title: '운행일지',
+            title: '운행 기록',
             headerRight: () => (
               <View style={styles.menuContainer}>
                 <Icon
@@ -83,14 +83,14 @@ export default function MyStack() {
           name="Search"
           component={SearchScreen}
           options={({navigation, route}) => ({
-            title: '출발/도착지 검출',
+            title: '출발점 검출',
           })}
         />
         <Stack.Screen
           name="Location"
           component={LocationScreen}
           options={({navigation, route}) => ({
-            title: '운행 기록',
+            title: '위치 정보',
           })}
         />
       </Stack.Navigator>
