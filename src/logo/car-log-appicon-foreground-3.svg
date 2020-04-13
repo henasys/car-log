@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:export-ydpi="96"
+   inkscape:export-xdpi="96"
+   inkscape:export-filename="/Users/AlexLee/Documents/Dev/projects/CarLog/src/logo/car-log-appicon-foreground.png"
+   version="1.1"
+   width="108"
+   height="108"
+   viewBox="0 0 108 108"
+   id="svg12"
+   sodipodi:docname="car-log-appicon-foreground-3.svg"
+   inkscape:version="1.0beta2 (2b71d25, 2019-12-03)">
+  <metadata
+     id="metadata18">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     inkscape:document-rotation="0"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1766"
+     inkscape:window-height="973"
+     id="namedview14"
+     showgrid="true"
+     inkscape:zoom="7.1388889"
+     inkscape:cx="25.076422"
+     inkscape:cy="48.396887"
+     inkscape:window-x="151"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     inkscape:pagecheckerboard="false" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="mask"
+     style="display:none">
+    <circle
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path61"
+       cx="53.731518"
+       cy="53.653698"
+       r="33" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="doc">
+    <path
+       style="fill:#999999;stroke-width:1.28799"
+       inkscape:connector-curvature="0"
+       d="m 75.731686,77.403575 -5.3075,-1.374614 1.473937,-1.703036 3.023117,0.658728 4.561578,-5.270605 2.284382,0.715885 M 69.070558,79.61664 56.699887,83.726619 c -1.76044,0.584882 -3.452625,0.216159 -3.802663,-0.828589 L 48.482341,69.721024 c -0.350037,-1.044748 0.780827,-2.351388 2.541267,-2.93627 l 22.203767,-7.376885 c 1.760441,-0.584881 3.452626,-0.216159 3.802663,0.828589 l 2.459721,7.341474 c -1.077823,-0.008 -2.219268,0.10973 -3.399018,0.376166 l -2.232669,-6.663799 -22.203765,7.376885 4.414883,13.177005 11.228762,-3.730596 c 0.417369,0.614445 1.025149,1.113328 1.772606,1.503047 m -2.530183,-3.343323 -7.929915,2.634602 -0.630699,-1.882429 7.929916,-2.634601 m 3.619738,-3.294577 -12.180351,4.046749 -0.630698,-1.88243 15.859832,-5.269203 0.340577,1.016511 c -1.303936,0.579653 -2.440092,1.29184 -3.38936,2.088373 m 2.418086,-4.987314 -15.859832,5.269203 -0.630698,-1.882429 15.859832,-5.269204"
+       id="path84" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="car"
+     style="display:inline">
+    <path
+       id="path155"
+       d="m 42.844006,32.521402 -7.964278,8.343827 h -5.309512 c -2.946783,0 -5.309516,1.856502 -5.309516,4.171914 v 6.25787 h 5.309516 c 0,3.462689 3.557374,6.257871 7.964271,6.257871 4.4069,0 7.964275,-2.795182 7.964275,-6.25787 h 15.928545 c 0,3.462688 3.557374,6.25787 7.964274,6.25787 4.406899,0 7.964274,-2.795182 7.964274,-6.25787 h 5.309514 v -6.257871 c 0,-2.315412 -2.362734,-4.171914 -5.309514,-4.171914 L 69.391581,32.521402 H 42.844006 m 14.601166,3.128935 h 9.955341 l 5.017491,5.214892 H 57.445172 v -5.214892 m -3.982138,0 v 5.214892 H 39.81758 l 5.017491,-5.214892 h 8.627963 m 15.928547,12.515742 c 2.203448,0 3.982139,1.39759 3.982139,3.128934 0,1.731344 -1.778691,3.128936 -3.982139,3.128936 -2.203449,0 -3.982138,-1.397592 -3.982138,-3.128936 0,-1.731344 1.778689,-3.128934 3.982138,-3.128934 m -31.857094,0 c 2.203449,0 3.982138,1.39759 3.982138,3.128934 0,1.731344 -1.778689,3.128936 -3.982138,3.128936 -2.203448,0 -3.982135,-1.397592 -3.982135,-3.128936 0,-1.731344 1.778687,-3.128934 3.982135,-3.128934 z"
+       inkscape:connector-curvature="0"
+       style="fill:#0414ff;fill-opacity:1;stroke-width:2.35325" />
+  </g>
+</svg>

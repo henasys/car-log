@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0beta2 (2b71d25, 2019-12-03)"
+   sodipodi:docname="car-log-appicon-foreground-2.svg"
+   id="svg12"
+   viewBox="0 0 108 108"
+   height="108"
+   width="108"
+   version="1.1"
+   inkscape:export-filename="/Users/AlexLee/Documents/Dev/projects/CarLog/src/logo/car-log-appicon-foreground.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <metadata
+     id="metadata18">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     inkscape:pagecheckerboard="false"
+     inkscape:current-layer="layer2"
+     inkscape:window-maximized="0"
+     inkscape:window-y="23"
+     inkscape:window-x="151"
+     inkscape:cy="42.793774"
+     inkscape:cx="25.076422"
+     inkscape:zoom="7.1388889"
+     showgrid="true"
+     id="namedview14"
+     inkscape:window-height="973"
+     inkscape:window-width="1766"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="1"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     inkscape:document-rotation="0"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <g
+     style="display:none"
+     inkscape:label="mask"
+     id="layer4"
+     inkscape:groupmode="layer">
+    <circle
+       r="33"
+       cy="53.653698"
+       cx="53.731518"
+       id="path61"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+  <g
+     inkscape:label="doc"
+     id="layer2"
+     inkscape:groupmode="layer">
+    <path
+       sodipodi:nodetypes="cccccccssccccccccccccccccccccccccc"
+       style="display:inline;stroke-width:1.34563;fill:#666666"
+       inkscape:connector-curvature="0"
+       d="m 80.928637,71.874434 -5.312339,-0.951003 0.278235,-2.223658 2.954532,0.393421 0.861089,-6.881845 2.357802,0.557578 m -5.545236,12.611481 -8.182417,6.511091 c -1.164421,0.926578 -2.818219,0.706359 -3.716399,-0.494878 L 53.295501,66.245896 c -0.89818,-1.201232 -0.684709,-2.907318 0.479713,-3.833895 L 68.461601,50.725426 c 1.164421,-0.926582 2.818218,-0.706359 3.716401,0.494875 l 6.31154,8.441119 c -0.923118,0.130437 -1.828258,0.419172 -2.680657,0.890331 l -5.728942,-7.661937 -14.686388,11.686575 11.328404,15.15072 7.427118,-5.910065 c 0.708487,0.679009 1.512888,1.195388 2.373643,1.563364 m -4.075905,-3.660971 -5.245139,4.173778 -1.618345,-2.164389 5.245141,-4.173777 m 1.19305,-4.401533 -8.056536,6.41092 -1.618342,-2.164389 10.490279,-8.347552 0.873903,1.168766 c -0.778387,0.861049 -1.337696,1.858461 -1.689304,2.932255 m -2.063643,-5.284868 -9.22958,7.367008 -1.618344,-2.164387 9.509734,-7.086857"
+       id="path841" />
+  </g>
+  <g
+     style="display:inline"
+     inkscape:label="car"
+     id="layer1"
+     inkscape:groupmode="layer">
+    <path
+       style="fill:#0414ff;fill-opacity:1;stroke-width:2.27273"
+       inkscape:connector-curvature="0"
+       d="m 43.391582,33.782102 -6.818184,9.090909 h -4.545452 c -2.522729,0 -4.545456,2.022727 -4.545456,4.545455 v 6.81818 h 4.545456 c 0,3.772729 3.045453,6.818183 6.81818,6.818183 3.772728,0 6.818183,-3.045454 6.818183,-6.818181 h 13.636363 c 0,3.772727 3.045454,6.818181 6.818182,6.818181 3.772728,0 6.818182,-3.045454 6.818182,-6.818181 h 4.545454 v -6.818182 c 0,-2.522728 -2.022727,-4.545455 -4.545454,-4.545455 L 66.118854,33.782102 H 43.391582 m 12.5,3.409091 h 8.522727 l 4.295454,5.681818 H 55.891582 v -5.681818 m -3.409092,0 v 5.681818 H 40.800672 l 4.295454,-5.681818 h 7.386364 m 13.636364,13.636365 c 1.886363,0 3.409092,1.522726 3.409092,3.409088 0,1.886364 -1.522729,3.409092 -3.409092,3.409092 -1.886364,0 -3.409091,-1.522728 -3.409091,-3.409092 0,-1.886362 1.522727,-3.409088 3.409091,-3.409088 m -27.272728,0 c 1.886364,0 3.409091,1.522726 3.409091,3.409088 0,1.886364 -1.522727,3.409092 -3.409091,3.409092 -1.886363,0 -3.40909,-1.522728 -3.40909,-3.409092 0,-1.886362 1.522727,-3.409088 3.40909,-3.409088 z"
+       id="path155" />
+  </g>
+</svg>
