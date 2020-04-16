@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
+import {Button} from 'react-native-elements';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
@@ -401,6 +402,11 @@ export default class MainScreen extends React.Component {
       return (
         <View style={styles.tripMessage}>
           <Text style={styles.tripMessageText}>아직 출발 전입니다.</Text>
+          <Button
+            type="outline"
+            title={'출발'}
+            icon={{name: 'car', type: 'material-community'}}
+          />
         </View>
       );
     }
