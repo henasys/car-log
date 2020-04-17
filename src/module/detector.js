@@ -35,7 +35,7 @@ export class TripDetector {
     this.tripEndCallback = callback;
   }
 
-  setPreviousLocation(location) {
+  setPreviousLocation(location = null) {
     this.previousLocation = location ? location : initEmptyLocation();
   }
 

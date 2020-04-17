@@ -185,19 +185,23 @@ export default class MainScreen extends React.Component {
     ).sorted('created', false);
     // console.log('to be processing locations', locations.map(x => x.created));
     console.log('to be processing locations', locations.length);
-    this.doDetectOnRemainedLocationList(locations);
+    this.doDetectOnRemainedLocationList(locations, lastTimestamp);
   }
 
-  doDetectOnRemainedLocationList(locations) {
+  doDetectOnRemainedLocationList(locations, lastTimestamp) {
     if (locations.length === 0) {
       return;
     }
-    this.tripDetector.setPreviousLocation(locations[0]);
+    this.tripDetector.setAllowTripEndAtFirst(true);
+    if (lastTimestamp === 0) {
+      this.tripDetector.setPreviousLocation();
+    } else {
+      this.tripDetector.setPreviousLocation(locations[0]);
+    }
     for (let index = 1; index < locations.length; index++) {
       const location = locations[index];
       this.tripDetector.detectAtOnce(location);
     }
-    this.tripDetector.setAllowTripEndAtFirst(true);
     const result = this.tripDetector.getResult();
     console.log('result', result.length);
     const previousLocation = this.tripDetector.getPreviousLocation();
