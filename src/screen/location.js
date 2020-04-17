@@ -37,7 +37,8 @@ export default class LocationScreen extends React.Component {
             iconStyle={styles.menuItem}
             onPress={() => {
               console.log('restore');
-              this.readJsonFromFile();
+              // this.readJsonFromFile();
+              this.readJsonThruFile();
             }}
             name="restore"
             type="material"
@@ -151,6 +152,13 @@ export default class LocationScreen extends React.Component {
       .catch(e => {
         console.log(e);
       });
+  }
+
+  readJsonThruFile() {
+    const json = require('../json/car-log-location-2020.json');
+    const locationList = Object.values(json);
+    console.log('locationList.length', locationList.length);
+    this.restoreToDatabase(locationList);
   }
 
   restoreToDatabase(locationList) {
