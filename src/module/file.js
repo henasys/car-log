@@ -60,6 +60,10 @@ const writeToMailTemp = (filename, contents, encoding = 'utf8') => {
   return RNFS.writeFile(path, contents, encoding);
 };
 
+const readFile = (path, encoding = 'utf8') => {
+  return RNFS.readFile(path, encoding);
+};
+
 export default {
   getTempDir,
   readTempDir,
@@ -72,4 +76,5 @@ export default {
   readMailTempDir,
   getPathOnMailTemp,
   writeToMailTemp,
+  readFile,
 };
