@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
 
 export default function MyStack() {
   const debugView = navigation => {
-    return __DEV__ === false ? (
+    return __DEV__ === true ? (
       <View>
         <Icon
           iconStyle={styles.menuItem}
