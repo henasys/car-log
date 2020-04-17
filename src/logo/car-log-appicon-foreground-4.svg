@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0beta2 (2b71d25, 2019-12-03)"
+   sodipodi:docname="car-log-appicon-foreground-4.svg"
+   id="svg12"
+   viewBox="0 0 108 108"
+   height="108"
+   width="108"
+   version="1.1"
+   inkscape:export-filename="/Users/AlexLee/Documents/Dev/projects/CarLog/src/logo/car-log-appicon-foreground.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <metadata
+     id="metadata18">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     inkscape:pagecheckerboard="false"
+     inkscape:current-layer="layer1"
+     inkscape:window-maximized="0"
+     inkscape:window-y="23"
+     inkscape:window-x="151"
+     inkscape:cy="54"
+     inkscape:cx="9.457745"
+     inkscape:zoom="7.1388889"
+     showgrid="true"
+     id="namedview14"
+     inkscape:window-height="973"
+     inkscape:window-width="1766"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="1"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     inkscape:document-rotation="0"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <g
+     style="display:none"
+     inkscape:label="mask"
+     id="layer4"
+     inkscape:groupmode="layer">
+    <circle
+       r="33"
+       cy="53.653698"
+       cx="53.731518"
+       id="path61"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+  <g
+     inkscape:label="doc"
+     id="layer2"
+     inkscape:groupmode="layer">
+    <g
+       transform="translate(61.680934,61.680933)"
+       id="g1509">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 3,17.25 V 21 H 6.75 L 17.81,9.94 14.06,6.19 Z M 20.71,7.04 c 0.39,-0.39 0.39,-1.02 0,-1.41 L 18.37,3.29 C 17.98,2.9 17.35,2.9 16.96,3.29 l -1.83,1.83 3.75,3.75 z"
+         id="path1495" />
+      <path
+         inkscape:connector-curvature="0"
+         d="M 0,0 H 24 V 24 H 0 Z"
+         fill="none"
+         id="path1497" />
+    </g>
+  </g>
+  <g
+     style="display:inline"
+     inkscape:label="car"
+     id="layer1"
+     inkscape:groupmode="layer">
+    <path
+       style="fill:#000080;fill-opacity:1;stroke-width:2.48747"
+       inkscape:connector-curvature="0"
+       d="m 44.218966,33.452578 -7.363634,10.083337 h -4.909094 c -2.724551,0 -4.909094,2.243543 -4.909094,5.041663 v 7.562499 h 4.909094 c 0,4.184591 3.289093,7.562502 7.363632,7.562502 4.074542,0 7.363638,-3.377911 7.363638,-7.562502 h 14.72727 c 0,4.184591 3.289092,7.562502 7.363635,7.562502 4.074542,0 7.363638,-3.377911 7.363638,-7.562502 h 4.909096 v -7.562499 c 0,-2.79812 -2.184555,-5.041663 -4.909096,-5.041663 L 68.764413,33.452578 H 44.218966 m 13.499993,3.781247 h 9.204548 l 4.63909,6.30209 H 57.718959 v -6.30209 m -3.68182,0 v 6.30209 H 41.420785 l 4.639087,-6.30209 h 7.977267 m 14.727274,15.125001 c 2.037271,0 3.681819,1.688961 3.681819,3.781251 0,2.092301 -1.644548,3.781251 -3.681819,3.781251 -2.037272,0 -3.681816,-1.68895 -3.681816,-3.781251 0,-2.09229 1.644544,-3.781251 3.681816,-3.781251 m -29.454543,0 c 2.037271,0 3.681823,1.688961 3.681823,3.781251 0,2.092301 -1.644552,3.781251 -3.681823,3.781251 -2.03727,0 -3.681815,-1.68895 -3.681815,-3.781251 0,-2.09229 1.644545,-3.781251 3.681815,-3.781251 z"
+       id="path1001" />
+  </g>
+</svg>
