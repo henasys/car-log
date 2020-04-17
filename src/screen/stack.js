@@ -13,25 +13,28 @@ import {DeleteScreen} from '../screen/delete';
 
 const Stack = createStackNavigator();
 
+const debugView = navigation => {
+  return __DEV__ === true ? (
+    <View style={styles.menuContainer}>
+      <Icon
+        iconStyle={styles.menuItem}
+        onPress={() => navigation.navigate('Location')}
+        name="location-pin"
+        type="entypo"
+      />
+      <Icon
+        iconStyle={styles.menuItem}
+        onPress={() => navigation.navigate('Search')}
+        name="search"
+        type="material"
+      />
+    </View>
+  ) : (
+    <View />
+  );
+};
+
 export default function MyStack() {
-  const debugView = navigation => {
-    return __DEV__ === true ? (
-      <View>
-        <Icon
-          iconStyle={styles.menuItem}
-          onPress={() => navigation.navigate('Location')}
-          name="location-pin"
-          type="entypo"
-        />
-        <Icon
-          iconStyle={styles.menuItem}
-          onPress={() => navigation.navigate('Search')}
-          name="search"
-          type="material"
-        />
-      </View>
-    ) : null;
-  };
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -42,7 +45,7 @@ export default function MyStack() {
             title: '운행 기록',
             headerRight: () => (
               <View style={styles.menuContainer}>
-                {debugView}
+                {debugView(navigation)}
                 <Icon
                   iconStyle={styles.menuItem}
                   onPress={() => navigation.navigate('Share')}
