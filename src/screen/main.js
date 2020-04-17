@@ -402,11 +402,11 @@ export default class MainScreen extends React.Component {
       return (
         <View style={styles.tripMessage}>
           <Text style={styles.tripMessageText}>아직 출발 전입니다.</Text>
-          <Button
+          {/* <Button
             type="outline"
             title={'출발'}
             icon={{name: 'car', type: 'material-community'}}
-          />
+          /> */}
         </View>
       );
     }
