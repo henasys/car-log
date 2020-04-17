@@ -59,7 +59,7 @@ export function SearchScreen(props) {
   const doSearch = () => {
     const speedMargin = 0.0;
     Database.open(realm => {
-      const locations = Database.getLocationList(realm);
+      const locations = Database.getLocationList(realm).sorted('created');
       const detector = new TripDetector(
         period,
         accuracyMargin,
