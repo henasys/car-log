@@ -48,7 +48,7 @@ const excelData = (realm, year) => {
   data.push(excelHeader());
   list.forEach(trip => {
     // console.log('trip', trip);
-    const date = timeToMonthDayWeek(trip.created);
+    const date = timeToMonthDayWeek(trip.startCreated);
     const distance = (trip.totalDistance / 1000).toFixed(2);
     data.push(excelDataRow(date, parseFloat(distance)));
   });
