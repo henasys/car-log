@@ -9,6 +9,7 @@ import Mailer from '../module/mail';
 import FileManager from '../module/file';
 import {timeToMonthDayWeek} from '../module/util';
 import YearPicker from '../view/yearPicker';
+import Picker from '../view/picker';
 
 const showAlert = (title, message) => {
   Alert.alert(
@@ -62,9 +63,16 @@ const makeExcel = data => {
   return XLSX.write(wb, {type: 'binary', bookType: 'xlsx'});
 };
 
+const jsonData = (realm, year) => {
+  const list = Database.getLocationListByYear(realm, year).sorted(
+    'created',
+    false,
+  );
+  return JSON.stringify(list);
+};
+
 const makeAttachFile = (filename, type, data, callback = null) => {
-  const blob = makeExcel(data);
-  FileManager.writeToMailTemp(filename, blob, 'ascii')
+  FileManager.writeToMailTemp(filename, data, 'ascii')
     .then(() => {
       const path = FileManager.getPathOnMailTemp(filename);
       const attchment = Mailer.attchment(path, type, filename);
@@ -76,7 +84,25 @@ const makeAttachFile = (filename, type, data, callback = null) => {
     });
 };
 
-const sendMail = (realm, email, year) => {
+const bundleTripExcel = (realm, year) => {
+  const subject = `업무용 승용차 운행기록부 ${String(year)}년`;
+  const body = '첨부파일 참조바랍니다.';
+  const filename = `car-log-trip-${String(year)}.xlsx`;
+  const type = 'xlsx';
+  const data = makeExcel(excelData(realm, year));
+  return {subject, body, filename, type, data};
+};
+
+const bundleLocationJson = (realm, year) => {
+  const subject = `업무용 승용차 운행 위치정보 ${String(year)}년`;
+  const body = '첨부파일 참조바랍니다.';
+  const filename = `car-log-location-${String(year)}.json`;
+  const type = 'json';
+  const data = jsonData(realm, year);
+  return {subject, body, filename, type, data};
+};
+
+const sendMail = (realm, email, year, dataType) => {
   console.log('send a mail');
   console.log(email, year);
   if (!email) {
@@ -89,23 +115,22 @@ const sendMail = (realm, email, year) => {
     showAlert('연도 미지정', '전송받을 운행기록의 연도를 입력해주세요.');
     return;
   }
-  const subject = `업무용 승용차 운행기록부 ${String(year)}년`;
-  const body = '첨부파일 참조바랍니다.';
   const callback = (error, event) => {
     if (error) {
       showAlert('Send Mail Error', error);
       return;
     }
   };
-  const filename = 'car-log.xlsx';
-  const type = 'xlsx';
-  const data = excelData(realm, year);
-  console.log('data', data);
-  makeAttachFile(filename, type, data, attchment => {
+  console.log('dataType', dataType);
+  const bundle =
+    dataType === 'Location'
+      ? bundleLocationJson(realm, year)
+      : bundleTripExcel(realm, year);
+  makeAttachFile(bundle.filename, bundle.type, bundle.data, attchment => {
     Mailer.sendEmailWithMailer(
       email,
-      subject,
-      body,
+      bundle.subject,
+      bundle.body,
       false,
       attchment,
       callback,
@@ -113,11 +138,21 @@ const sendMail = (realm, email, year) => {
   });
 };
 
+const dataTypeItems = [
+  {label: '운행정보', value: 'Trip'},
+  {label: '위치정보', value: 'Location'},
+];
+
+dataTypeItems.firstValue = () => {
+  return dataTypeItems[0].value;
+};
+
 export function ShareScreen(props) {
   const [realm, setRealm] = useState(null);
   const [email, setEmail] = useState('');
   const [year, setYear] = useState('');
   const [pickerItems, setPickerItems] = useState([]);
+  const [dataType, setDataType] = useState(dataTypeItems.firstValue());
   const openDatabase = () => {
     Database.open(newRealm => {
       setRealm(newRealm);
@@ -172,6 +207,8 @@ export function ShareScreen(props) {
     initStates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [realm]);
+  console.log('year', year);
+  console.log('dataType', dataType);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputBoxContainer}>
@@ -193,11 +230,18 @@ export function ShareScreen(props) {
             setYear={value => setYear(value)}
           />
         </View>
-
+        <View paddingVertical={5} />
+        <View style={{width: '100%'}}>
+          <Picker
+            value={dataType}
+            items={dataTypeItems}
+            onValueChange={value => setDataType(value)}
+          />
+        </View>
         <View paddingVertical={5} />
         <Icon
           onPress={() => {
-            sendMail(realm, email, year);
+            sendMail(realm, email, year, dataType);
           }}
           name="mail-outline"
           type="material"
