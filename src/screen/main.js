@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
-import {Button} from 'react-native-elements';
+import moment from 'moment';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
@@ -20,6 +20,7 @@ import {TripDetector} from '../module/detector';
 import FileManager from '../module/file';
 import YearPicker from '../view/yearPicker';
 import MonthPicker from '../view/monthPicker';
+import TripButton from '../view/tripButton';
 
 export default class MainScreen extends React.Component {
   state = {
@@ -401,20 +402,60 @@ export default class MainScreen extends React.Component {
     return listClone;
   }
 
-  renderItem(item, currentTrip = false) {
-    if (currentTrip && !item.endCreated) {
-      return (
-        <View style={styles.tripMessage}>
-          <Text style={styles.tripMessageText}>아직 출발 전입니다.</Text>
-          {/* <Button
-            type="outline"
-            title={'출발'}
-            icon={{name: 'car', type: 'material-community'}}
-          /> */}
-        </View>
-      );
+  onStartButton() {}
+  onEndButton() {}
+
+  getParamsFromCurrentTrip(item) {
+    const time = moment().format('HH:mm');
+    const startLabel = '출발';
+    const startTime = item.startCreated
+      ? timeToHourMin(item.startCreated)
+      : time;
+    const startDisabled = item.startCreated ? true : false;
+    let endLabel = 'OO';
+    let endTime = '00:00';
+    let endDisabled = true;
+    if (item.startCreated) {
+      endLabel = '운행';
+      endTime = time;
+      endDisabled = true;
+    } else if (item.endCreated) {
+      endLabel = '도착';
+      endTime = timeToHourMin(item.endCreated);
+      endDisabled = false;
     }
-    const tripLabel = currentTrip ? '운행' : '도착';
+    return {
+      startLabel,
+      startTime,
+      startDisabled,
+      endLabel,
+      endTime,
+      endDisabled,
+    };
+  }
+
+  renderCurrentTrip(item) {
+    const params = this.getParamsFromCurrentTrip(item);
+    return (
+      <View style={styles.tripContainer}>
+        <TripButton
+          label={params.startLabel}
+          time={params.startTime}
+          disabled={params.startDisabled}
+          onPress={this.onStartButton.bind(this)}
+        />
+        <TripButton
+          label={params.endLabel}
+          time={params.endTime}
+          disabled={params.endDisabled}
+          onPress={this.onEndButton.bind(this)}
+        />
+      </View>
+    );
+  }
+
+  renderItem(item) {
+    const tripLabel = '도착';
     const endCreated = item.endCreated
       ? timeToHourMin(item.endCreated)
       : '미확정';
@@ -460,7 +501,7 @@ export default class MainScreen extends React.Component {
     const listClone = this.listClone(list, trip);
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.currentTrip}>{this.renderItem(trip, true)}</View>
+        <View style={styles.currentTrip}>{this.renderCurrentTrip(trip)}</View>
         <View style={styles.yearMonthPickerContainer}>
           <View style={{width: '45%'}}>
             <YearPicker
@@ -492,6 +533,12 @@ const styles = StyleSheet.create({
   currentTrip: {
     paddingVertical: 10,
     backgroundColor: '#DCDCDC',
+  },
+  tripContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 10,
+    marginHorizontal: 20,
   },
   tripMessage: {
     alignItems: 'center',
