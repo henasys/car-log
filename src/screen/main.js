@@ -202,6 +202,7 @@ export default class MainScreen extends React.Component {
       const tripIdFinder = this.tripDetector.getTripIdFinder();
       const initNumber = this.tripDetector.getNumber();
       tripIdFinder.add(initNumber, lastTrip.id);
+      this.newTrip(lastTrip);
     }
     const locations = Database.getLocationListByTimestamp(
       this.state.realm,
@@ -245,6 +246,7 @@ export default class MainScreen extends React.Component {
       return;
     }
     const tripIdFinder = this.tripDetector.getTripIdFinder();
+    const lastIndex = result.length - 1;
     result.forEach((trip, index) => {
       Database.saveTrip(
         this.state.realm,
@@ -255,12 +257,15 @@ export default class MainScreen extends React.Component {
         .then(newTrip => {
           console.log('saveTrip done', newTrip);
           tripIdFinder.add(trip.start.number, newTrip.id);
+          if (index === lastIndex) {
+            this.newTrip(newTrip);
+          }
         })
         .catch(e => {
           console.log('saveTrip error', e);
         })
         .finally(() => {
-          if (index === result.length - 1) {
+          if (index === lastIndex) {
             console.log('setTripDetectorCallback');
             this.setTripDetectorCallback();
           }
