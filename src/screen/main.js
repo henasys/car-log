@@ -427,7 +427,8 @@ export default class MainScreen extends React.Component {
   onStartButton() {
     this.newTrip({startCreated: new Date().getTime()});
     setTimeout(() => {
-      this.updateTrip({endCreated: new Date().getTime()});
+      const endCreated = new Date().getTime();
+      this.updateTrip({endCreated});
     }, 3000);
   }
   onEndButton() {
@@ -444,9 +445,10 @@ export default class MainScreen extends React.Component {
     let endTime = '00:00';
     let endDisabled = true;
     if (item.startCreated) {
+      endTime = time;
+      startLabel = '운행중';
       startTime = timeToHourMin(item.startCreated);
       startDisabled = true;
-      endTime = time;
       endDisabled = false;
     }
     return {
