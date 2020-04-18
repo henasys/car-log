@@ -402,26 +402,29 @@ export default class MainScreen extends React.Component {
     return listClone;
   }
 
-  onStartButton() {}
-  onEndButton() {}
+  onStartButton() {
+    this.newTrip({startCreated: new Date().getTime()});
+    setTimeout(() => {
+      this.updateTrip({endCreated: new Date().getTime()});
+    }, 3000);
+  }
+  onEndButton() {
+    this.newTrip({});
+  }
 
   getParamsFromCurrentTrip(item) {
+    console.log('getParamsFromCurrentTrip', item);
     const time = moment().format('HH:mm');
-    const startLabel = '출발';
-    const startTime = item.startCreated
-      ? timeToHourMin(item.startCreated)
-      : time;
-    const startDisabled = item.startCreated ? true : false;
-    let endLabel = 'OO';
+    let startLabel = '출발';
+    let startTime = time;
+    let startDisabled = false;
+    let endLabel = '도착';
     let endTime = '00:00';
     let endDisabled = true;
     if (item.startCreated) {
-      endLabel = '운행';
+      startTime = timeToHourMin(item.startCreated);
+      startDisabled = true;
       endTime = time;
-      endDisabled = true;
-    } else if (item.endCreated) {
-      endLabel = '도착';
-      endTime = timeToHourMin(item.endCreated);
       endDisabled = false;
     }
     return {
@@ -436,6 +439,7 @@ export default class MainScreen extends React.Component {
 
   renderCurrentTrip(item) {
     const params = this.getParamsFromCurrentTrip(item);
+    console.log('renderCurrentTrip', params);
     return (
       <View style={styles.tripContainer}>
         <TripButton
