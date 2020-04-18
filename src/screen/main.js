@@ -30,8 +30,10 @@ export default class MainScreen extends React.Component {
     pickerItems: [],
     trip: {},
     list: [],
+    today: moment(),
   };
 
+  timer = null;
   locator = Locator.getInstance();
   setting = null;
   tripDetector = null;
@@ -39,6 +41,7 @@ export default class MainScreen extends React.Component {
 
   componentDidMount() {
     console.log('main componentDidMount');
+    this.callTimer();
     this.openDatabase();
     this.locator.initLocator(
       this.handleOnLocation.bind(this),
@@ -49,8 +52,27 @@ export default class MainScreen extends React.Component {
 
   componentWillUnmount() {
     console.log('main componentWillUnmount');
+    this.clearTimer();
     this.closeDatabase();
     this.locator.removeLocator();
+  }
+
+  callTimer() {
+    this.setTimer(() => {
+      this.setState({today: moment()});
+      this.callTimer();
+    });
+  }
+
+  setTimer(callback = null) {
+    this.timer = setTimeout(() => {
+      console.log('run this with Timer', new Date());
+      callback && callback();
+    }, 30000);
+  }
+
+  clearTimer() {
+    clearTimeout(this.timer);
   }
 
   setYear(year) {
@@ -412,9 +434,9 @@ export default class MainScreen extends React.Component {
     this.newTrip({});
   }
 
-  getParamsFromCurrentTrip(item) {
+  getParamsFromCurrentTrip(item, today) {
     console.log('getParamsFromCurrentTrip', item);
-    const time = moment().format('HH:mm');
+    const time = today.format('HH:mm');
     let startLabel = '출발';
     let startTime = time;
     let startDisabled = false;
@@ -437,8 +459,8 @@ export default class MainScreen extends React.Component {
     };
   }
 
-  renderCurrentTrip(item) {
-    const params = this.getParamsFromCurrentTrip(item);
+  renderCurrentTrip(item, today) {
+    const params = this.getParamsFromCurrentTrip(item, today);
     console.log('renderCurrentTrip', params);
     return (
       <View style={styles.tripContainer}>
@@ -498,14 +520,16 @@ export default class MainScreen extends React.Component {
 
   render() {
     console.log('main render');
-    const {trip, list, year, month, pickerItems} = this.state;
+    const {today, trip, list, year, month, pickerItems} = this.state;
     console.log('list', list.length);
     console.log('trip', trip);
     console.log('year', year, 'month', month);
     const listClone = this.listClone(list, trip);
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.currentTrip}>{this.renderCurrentTrip(trip)}</View>
+        <View style={styles.currentTrip}>
+          {this.renderCurrentTrip(trip, today)}
+        </View>
         <View style={styles.yearMonthPickerContainer}>
           <View style={{width: '45%'}}>
             <YearPicker
