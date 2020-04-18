@@ -14,6 +14,7 @@ import {
   positionToLocation,
   tripCallbackItemToTripRecord,
   clone,
+  getKilometers,
 } from '../module/util';
 import {toast} from '../module/toast';
 import {TripDetector} from '../module/detector';
@@ -428,7 +429,8 @@ export default class MainScreen extends React.Component {
     this.newTrip({startCreated: new Date().getTime()});
     setTimeout(() => {
       const endCreated = new Date().getTime();
-      this.updateTrip({endCreated});
+      const totalDistance = 12000;
+      this.updateTrip({endCreated, totalDistance});
     }, 3000);
   }
   onEndButton() {
@@ -444,6 +446,7 @@ export default class MainScreen extends React.Component {
     let endLabel = '도착';
     let endTime = '00:00';
     let endDisabled = true;
+    let totalDistance = getKilometers(item.totalDistance);
     if (item.startCreated) {
       endTime = time;
       startLabel = '운행중';
@@ -458,6 +461,7 @@ export default class MainScreen extends React.Component {
       endLabel,
       endTime,
       endDisabled,
+      totalDistance,
     };
   }
 
@@ -465,19 +469,24 @@ export default class MainScreen extends React.Component {
     const params = this.getParamsFromCurrentTrip(item, today);
     console.log('renderCurrentTrip', params);
     return (
-      <View style={styles.tripContainer}>
-        <TripButton
-          label={params.startLabel}
-          time={params.startTime}
-          disabled={params.startDisabled}
-          onPress={this.onStartButton.bind(this)}
-        />
-        <TripButton
-          label={params.endLabel}
-          time={params.endTime}
-          disabled={params.endDisabled}
-          onPress={this.onEndButton.bind(this)}
-        />
+      <View>
+        <View style={styles.tripContainer}>
+          <TripButton
+            label={params.startLabel}
+            time={params.startTime}
+            disabled={params.startDisabled}
+            onPress={this.onStartButton.bind(this)}
+          />
+          <TripButton
+            label={params.endLabel}
+            time={params.endTime}
+            disabled={params.endDisabled}
+            onPress={this.onEndButton.bind(this)}
+          />
+        </View>
+        <View style={styles.tripMessage}>
+          <Text style={styles.tripMessageText}>{params.totalDistance}</Text>
+        </View>
       </View>
     );
   }
@@ -489,7 +498,7 @@ export default class MainScreen extends React.Component {
       : '미확정';
     const endLatitude = item.endLatitude ? toFixed(item.endLatitude) : 0;
     const endLongitude = item.endLongitude ? toFixed(item.endLongitude) : 0;
-    const totalDistance = toFixed(item.totalDistance / 1000) + ' km';
+    const totalDistance = getKilometers(item.totalDistance);
     return (
       <View style={styles.itemContainer}>
         <View style={styles.itemColumnContainer}>
@@ -572,9 +581,15 @@ const styles = StyleSheet.create({
   },
   tripMessage: {
     alignItems: 'center',
+    marginBottom: 10,
   },
   tripMessageText: {
     fontSize: 18,
+    // fontWeight: 'bold',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
   },
   itemContainer: {
     flexDirection: 'row',

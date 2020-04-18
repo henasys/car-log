@@ -376,3 +376,10 @@ export const configureYearList = (minTimestamp, maxTimeStamp) => {
   }
   return result;
 };
+
+export const getKilometers = meters => {
+  if (meters === undefined || meters === null) {
+    return '0 km';
+  }
+  return toFixed(meters / 1000) + ' km';
+};
