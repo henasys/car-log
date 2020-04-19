@@ -6,10 +6,7 @@ import moment from 'moment';
 import Database from '../module/database';
 import {Locator} from '../module/locator';
 import {
-  timeToWeek,
-  timeToHourMin,
-  timeToMonthDay,
-  timeToDateHourMin,
+  TimeUtil,
   toFixed,
   positionToLocation,
   tripCallbackItemToTripRecord,
@@ -151,7 +148,7 @@ export default class MainScreen extends React.Component {
     const list = trips.filtered('endCreated != null');
     console.log('getList list', list.length);
     this.setState({list});
-    // this.testNewLocation();
+    this.testNewLocation();
   }
 
   // test purpose only
@@ -255,7 +252,7 @@ export default class MainScreen extends React.Component {
       lastPrevious = {...previousLocation};
     }
     const dt = todayTimestamp - lastPrevious.created;
-    console.log('dt', dt);
+    console.log('dt', dt, TimeUtil.msToTime(dt));
     const period = parseInt(this.setting.period, 10) * 60 * 1000;
     if (dt >= period) {
       console.log('lastTrip auto ending required');
@@ -316,7 +313,7 @@ export default class MainScreen extends React.Component {
     console.log(
       'tripStartCallback',
       item.created,
-      timeToDateHourMin(item.created),
+      TimeUtil.timeToDateHourMin(item.created),
     );
     console.log(item);
     const startTrip = tripCallbackItemToTripRecord(item);
@@ -336,7 +333,7 @@ export default class MainScreen extends React.Component {
     console.log(
       'tripEndCallback',
       item.created,
-      timeToDateHourMin(item.created),
+      TimeUtil.timeToDateHourMin(item.created),
     );
     console.log(item);
     const tripIdFinder = this.tripDetector.getTripIdFinder();
@@ -412,7 +409,7 @@ export default class MainScreen extends React.Component {
       accuracy: 48,
       altitude: 68.0428826137193,
       heading: 0,
-      latitude: 37.53006144198941,
+      latitude: 37.53006144198941 + 0.5,
       longitude: 126.99286469807542,
       speed: 0,
       created: 1586254156999,
@@ -506,7 +503,7 @@ export default class MainScreen extends React.Component {
     if (item.startCreated) {
       endTime = time;
       startLabel = '운행중';
-      startTime = timeToHourMin(item.startCreated);
+      startTime = TimeUtil.timeToHourMin(item.startCreated);
       startDisabled = true;
       endDisabled = false;
     }
@@ -550,7 +547,7 @@ export default class MainScreen extends React.Component {
   renderItem(item) {
     const tripLabel = '도착';
     const endCreated = item.endCreated
-      ? timeToHourMin(item.endCreated)
+      ? TimeUtil.timeToHourMin(item.endCreated)
       : '미확정';
     const endLatitude = item.endLatitude ? toFixed(item.endLatitude) : 0;
     const endLongitude = item.endLongitude ? toFixed(item.endLongitude) : 0;
@@ -559,13 +556,13 @@ export default class MainScreen extends React.Component {
       <View style={styles.itemContainer}>
         <View style={styles.itemColumnContainer}>
           <Text style={styles.dateText}>
-            {timeToMonthDay(item.startCreated)}
+            {TimeUtil.timeToMonthDay(item.startCreated)}
           </Text>
-          <Text>{timeToWeek(item.startCreated)}</Text>
+          <Text>{TimeUtil.timeToWeek(item.startCreated)}</Text>
         </View>
         <View style={styles.itemColumnContainer}>
           <Text style={styles.titleText}>
-            {'출발'} {timeToHourMin(item.startCreated)}
+            {'출발'} {TimeUtil.timeToHourMin(item.startCreated)}
           </Text>
           <Text style={styles.addressText}>
             {'    '} 좌표: {toFixed(item.startLatitude)},{' '}
