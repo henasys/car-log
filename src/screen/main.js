@@ -332,13 +332,13 @@ export default class MainScreen extends React.Component {
       TimeUtil.timeToDateHourMin(item.created),
     );
     console.log(item);
-    const startTrip = tripCallbackItemToTripRecord(item);
-    this.newTrip(startTrip);
     const tripIdFinder = this.tripDetector.getTripIdFinder();
     Database.saveTrip(this.state.realm, item)
       .then(trip => {
         console.log('saveTrip done', trip);
         tripIdFinder.add(item.number, trip.id);
+        trip.number = item.number;
+        this.newTrip(trip);
       })
       .catch(e => {
         console.log('saveTrip error', e);
@@ -531,6 +531,7 @@ export default class MainScreen extends React.Component {
         number: trip.number,
       };
       const tripIdFinder = this.tripDetector.getTripIdFinder();
+      console.log('tripIdFinder.getList', tripIdFinder.getList());
       const tripId = tripIdFinder.find(item.number);
       console.log('tripId', tripId);
       if (!tripId) {
