@@ -2,6 +2,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
 import moment from 'moment';
+import DeviceInfo from 'react-native-device-info';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
@@ -34,9 +35,11 @@ export default class MainScreen extends React.Component {
   locator = Locator.getInstance();
   setting = null;
   tripDetector = null;
+  isEmulator = false;
 
   componentDidMount() {
     console.log('main componentDidMount');
+    this.initDeviceInfo();
     this.callTimer();
     this.openDatabase();
     this.locator.initLocator(
@@ -51,6 +54,17 @@ export default class MainScreen extends React.Component {
     this.clearTimer();
     this.closeDatabase();
     this.locator.removeLocator();
+  }
+
+  initDeviceInfo() {
+    DeviceInfo.isEmulator()
+      .then(isEmulator => {
+        this.isEmulator = isEmulator;
+        console.log('isEmulator', isEmulator);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   callTimer() {
@@ -489,7 +503,7 @@ export default class MainScreen extends React.Component {
       const msg = `${error.code}: ${error.message}`;
       toast(msg);
     };
-    this.locator.getCurrentPosition(callback, errorCallback);
+    this.locator.getCurrentPosition(callback, errorCallback, this.isEmulator);
   }
 
   onEndButton() {
@@ -533,7 +547,7 @@ export default class MainScreen extends React.Component {
       const msg = `${error.code}: ${error.message}`;
       toast(msg);
     };
-    this.locator.getCurrentPosition(callback, errorCallback);
+    this.locator.getCurrentPosition(callback, errorCallback, this.isEmulator);
   }
 
   getParamsFromCurrentTrip(item, today) {
