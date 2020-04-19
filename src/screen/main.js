@@ -482,7 +482,7 @@ export default class MainScreen extends React.Component {
       const item = {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        created: new Date().getTime(),
+        created: position.timestamp ? position.timestamp : new Date().getTime(),
       };
       console.log('item', item);
       const tripIdFinder = this.tripDetector.getTripIdFinder();
@@ -493,6 +493,7 @@ export default class MainScreen extends React.Component {
           tripNumber += 1;
           tripIdFinder.add(tripNumber, trip.id);
           this.tripDetector.setNumber(tripNumber);
+          trip.number = tripNumber;
           this.newTrip(trip);
         })
         .catch(e => {
@@ -518,8 +519,8 @@ export default class MainScreen extends React.Component {
       console.log('getCurrentPosition', coords);
       const {trip} = this.state;
       console.log('trip', trip);
-      if (!trip.id) {
-        console.log('not found matching trip id', item);
+      if (!trip.number) {
+        console.log('not found matching trip number');
         return;
       }
       const item = {
@@ -527,11 +528,19 @@ export default class MainScreen extends React.Component {
         longitude: coords.longitude,
         created: new Date().getTime(),
         totalDistance: trip.totalDistance,
+        number: trip.number,
       };
+      const tripIdFinder = this.tripDetector.getTripIdFinder();
+      const tripId = tripIdFinder.find(item.number);
+      console.log('tripId', tripId);
+      if (!tripId) {
+        console.log('not found matching trip id', item.number);
+        return;
+      }
       // console.log('item', item);
       Database.updateTripEnd(
         this.state.realm,
-        trip.id,
+        tripId.id,
         item,
         item.totalDistance,
       )
