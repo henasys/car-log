@@ -233,18 +233,13 @@ export default class MainScreen extends React.Component {
   }
 
   lastTripAutoEnd() {
+    console.log('lastTripAutoEnd');
     const previousLocation = this.tripDetector.getPreviousLocation();
     let lastPrevious = this.tripDetector.getLastPrevious();
     const totalDistance = this.tripDetector.getTotalDistance();
     console.log('previousLocation', previousLocation);
     console.log('lastPrevious', lastPrevious);
     console.log('totalDistance', totalDistance);
-    const tripIdFinder = this.tripDetector.getTripIdFinder();
-    const tripNumber = this.tripDetector.getNumber();
-    const tripId = tripIdFinder.find(tripNumber);
-    console.log('tripIdFinder', tripIdFinder.getList());
-    console.log('tripNumber', tripNumber);
-    console.log('tripId', tripId);
     const {today} = this.state;
     const todayTimestamp = today.toDate().getTime();
     console.log('todayTimestamp', todayTimestamp);
@@ -254,26 +249,33 @@ export default class MainScreen extends React.Component {
     const dt = todayTimestamp - lastPrevious.created;
     console.log('dt', dt, TimeUtil.msToTime(dt));
     const period = parseInt(this.setting.period, 10) * 60 * 1000;
-    if (dt >= period) {
-      console.log('lastTrip auto ending required');
-      if (!tripId) {
-        console.log('not found matching trip id', tripNumber);
-        return;
-      }
-      const item = {
-        latitude: lastPrevious.latitude,
-        longitude: lastPrevious.longitude,
-        created: lastPrevious.created,
-      };
-      Database.updateTripEnd(this.state.realm, tripId.id, item, totalDistance)
-        .then(trip => {
-          console.log('updateTripEnd done', trip);
-          this.newTrip({});
-        })
-        .catch(e => {
-          console.log('updateTripEnd error', e);
-        });
+    if (lastPrevious.created === 0 || dt < period) {
+      return;
     }
+    console.log('lastTrip auto ending required');
+    const tripIdFinder = this.tripDetector.getTripIdFinder();
+    const tripNumber = this.tripDetector.getNumber();
+    const tripId = tripIdFinder.find(tripNumber);
+    console.log('tripIdFinder', tripIdFinder.getList());
+    console.log('tripNumber', tripNumber);
+    console.log('tripId', tripId);
+    if (!tripId) {
+      console.log('not found matching trip id', tripNumber);
+      return;
+    }
+    const item = {
+      latitude: lastPrevious.latitude,
+      longitude: lastPrevious.longitude,
+      created: lastPrevious.created,
+    };
+    Database.updateTripEnd(this.state.realm, tripId.id, item, totalDistance)
+      .then(trip => {
+        console.log('updateTripEnd done', trip);
+        this.newTrip({});
+      })
+      .catch(e => {
+        console.log('updateTripEnd error', e);
+      });
   }
 
   saveTripResult(result, afterCallback) {
@@ -520,7 +522,7 @@ export default class MainScreen extends React.Component {
 
   renderCurrentTrip(item, today) {
     const params = this.getParamsFromCurrentTrip(item, today);
-    console.log('renderCurrentTrip', params);
+    // console.log('renderCurrentTrip', params);
     return (
       <View>
         <View style={styles.tripContainer}>
@@ -585,9 +587,9 @@ export default class MainScreen extends React.Component {
   render() {
     console.log('main render');
     const {today, trip, list, year, month, pickerItems} = this.state;
-    console.log('list', list.length);
+    // console.log('list', list.length);
     console.log('trip', trip);
-    console.log('year', year, 'month', month);
+    // console.log('year', year, 'month', month);
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.currentTrip}>
