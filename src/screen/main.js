@@ -36,6 +36,7 @@ export default class MainScreen extends React.Component {
   setting = null;
   tripDetector = null;
   isEmulator = false;
+  isManualStart = false;
 
   componentDidMount() {
     console.log('main componentDidMount');
@@ -333,6 +334,13 @@ export default class MainScreen extends React.Component {
     );
     console.log(item);
     const tripIdFinder = this.tripDetector.getTripIdFinder();
+    if (this.isManualStart) {
+      const {trip} = this.state;
+      this.isManualStart = false;
+      tripIdFinder.add(item.number, trip.id);
+      this.updateTrip({number: item.number});
+      return;
+    }
     Database.saveTrip(this.state.realm, item)
       .then(trip => {
         console.log('saveTrip done', trip);
@@ -368,6 +376,7 @@ export default class MainScreen extends React.Component {
       .then(trip => {
         console.log('updateTripEnd done', trip);
         this.newTrip({});
+        this.isManualStart = false;
       })
       .catch(e => {
         console.log('updateTripEnd error', e);
@@ -496,6 +505,7 @@ export default class MainScreen extends React.Component {
           this.tripDetector.setNumber(tripNumber);
           trip.number = tripNumber;
           this.newTrip(trip);
+          this.isManualStart = true;
         })
         .catch(e => {
           console.log('saveTrip error', e);
@@ -549,6 +559,7 @@ export default class MainScreen extends React.Component {
         .then(updatedTrip => {
           console.log('updateTripEnd done', updatedTrip);
           this.newTrip({});
+          this.isManualStart = false;
         })
         .catch(e => {
           console.log('updateTripEnd error', e);
