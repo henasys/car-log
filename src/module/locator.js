@@ -56,7 +56,7 @@ export class Locator {
           longitude: 126.99440221939722,
           speed: 4,
         },
-        mocked: false,
+        mocked: true,
         timestamp: new Date().getTime(),
       };
       callback && callback(postion);
