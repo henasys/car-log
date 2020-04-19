@@ -200,8 +200,8 @@ export default class MainScreen extends React.Component {
     console.log('lastTrip', lastTrip);
     if (lastTrip.startCreated && !lastTrip.endCreated) {
       const tripIdFinder = this.tripDetector.getTripIdFinder();
-      const initNumber = this.tripDetector.getNumber();
-      tripIdFinder.add(initNumber, lastTrip.id);
+      const tripNumber = this.tripDetector.getNumber();
+      tripIdFinder.add(tripNumber, lastTrip.id);
       this.newTrip(lastTrip);
     }
     const locations = Database.getLocationListByTimestamp(
@@ -230,13 +230,17 @@ export default class MainScreen extends React.Component {
     const result = this.tripDetector.getResult();
     console.log('doDetectOnRemainedLocationList result', result.length);
     const afterCallback = () => {
-      const previousLocation = this.tripDetector.getPreviousLocation();
       const lastPrevious = this.tripDetector.getLastPrevious();
       const totalDistance = this.tripDetector.getTotalDistance();
       this.listFirstTotalDistance = totalDistance;
-      console.log('previousLocation', previousLocation);
       console.log('lastPrevious', lastPrevious);
       console.log('totalDistance', totalDistance);
+      const tripIdFinder = this.tripDetector.getTripIdFinder();
+      const tripNumber = this.tripDetector.getNumber();
+      const tripId = tripIdFinder.find(tripNumber);
+      console.log('tripIdFinder', tripIdFinder.getList());
+      console.log('tripNumber', tripNumber);
+      console.log('tripId', tripId);
       const {today} = this.state;
       const todayTimestamp = today.toDate().getTime();
       console.log('todayTimestamp', todayTimestamp);
@@ -245,6 +249,23 @@ export default class MainScreen extends React.Component {
       const period = parseInt(this.setting.period, 10) * 60 * 1000;
       if (dt >= period) {
         console.log('lastTrip auto ending required');
+        if (!tripId) {
+          console.log('not found matching trip id', tripNumber);
+          return;
+        }
+        const item = {
+          latitude: lastPrevious.latitude,
+          longitude: lastPrevious.longitude,
+          created: lastPrevious.created,
+        };
+        Database.updateTripEnd(this.state.realm, tripId.id, item, totalDistance)
+          .then(trip => {
+            console.log('updateTripEnd done', trip);
+            this.newTrip({});
+          })
+          .catch(e => {
+            console.log('updateTripEnd error', e);
+          });
       }
       console.log('setTripDetectorCallback');
       this.setTripDetectorCallback();
