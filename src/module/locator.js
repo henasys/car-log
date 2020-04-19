@@ -52,12 +52,12 @@ export class Locator {
           accuracy: 48,
           altitude: 68.60487305802874,
           heading: 0,
-          latitude: 37.52933550001321,
-          longitude: 126.99380221939722,
+          latitude: 37.52223550001321,
+          longitude: 126.99440221939722,
           speed: 4,
         },
         mocked: false,
-        timestamp: 1587296058000,
+        timestamp: new Date().getTime(),
       };
       callback && callback(postion);
       return;
