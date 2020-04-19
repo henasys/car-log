@@ -228,26 +228,39 @@ export default class MainScreen extends React.Component {
       this.tripDetector.detectAtOnce(location);
     }
     const result = this.tripDetector.getResult();
-    console.log('result', result.length);
-    const previousLocation = this.tripDetector.getPreviousLocation();
-    const lastPrevious = this.tripDetector.getLastPrevious();
-    const totalDistance = this.tripDetector.getTotalDistance();
-    this.listFirstTotalDistance = totalDistance;
-    console.log('previousLocation', previousLocation);
-    console.log('lastPrevious', lastPrevious);
-    console.log('totalDistance', totalDistance);
-    this.saveTripResult(result);
-  }
-
-  saveTripResult(result) {
-    if (result.length === 0) {
+    console.log('doDetectOnRemainedLocationList result', result.length);
+    const afterCallback = () => {
+      const previousLocation = this.tripDetector.getPreviousLocation();
+      const lastPrevious = this.tripDetector.getLastPrevious();
+      const totalDistance = this.tripDetector.getTotalDistance();
+      this.listFirstTotalDistance = totalDistance;
+      console.log('previousLocation', previousLocation);
+      console.log('lastPrevious', lastPrevious);
+      console.log('totalDistance', totalDistance);
+      const {today} = this.state;
+      const todayTimestamp = today.toDate().getTime();
+      console.log('todayTimestamp', todayTimestamp);
+      const dt = todayTimestamp - lastPrevious.created;
+      console.log('dt', dt);
+      const period = parseInt(this.setting.period, 10) * 60 * 1000;
+      if (dt >= period) {
+        console.log('lastTrip auto ending required');
+      }
       console.log('setTripDetectorCallback');
       this.setTripDetectorCallback();
+    };
+    this.saveTripResult(result, afterCallback);
+  }
+
+  saveTripResult(result, afterCallback) {
+    if (result.length === 0) {
+      afterCallback();
       return;
     }
     const tripIdFinder = this.tripDetector.getTripIdFinder();
     const lastIndex = result.length - 1;
-    result.forEach((trip, index) => {
+    for (let index = 0; index < result.length; index++) {
+      const trip = result[index];
       Database.saveTrip(
         this.state.realm,
         trip.start,
@@ -266,11 +279,10 @@ export default class MainScreen extends React.Component {
         })
         .finally(() => {
           if (index === lastIndex) {
-            console.log('setTripDetectorCallback');
-            this.setTripDetectorCallback();
+            afterCallback();
           }
         });
-    });
+    }
   }
 
   tripStartCallback = item => {
