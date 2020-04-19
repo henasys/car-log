@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: color.main1,
     // padding: 30,
-    width: 120,
-    height: 120,
+    width: 100,
+    height: 100,
     borderRadius: 60,
   },
   buttonLabel: {
