@@ -13,7 +13,6 @@ import {
   toFixed,
   positionToLocation,
   tripCallbackItemToTripRecord,
-  clone,
   getKilometers,
 } from '../module/util';
 import {toast} from '../module/toast';
@@ -38,7 +37,6 @@ export default class MainScreen extends React.Component {
   locator = Locator.getInstance();
   setting = null;
   tripDetector = null;
-  listFirstTotalDistance = 0;
 
   componentDidMount() {
     console.log('main componentDidMount');
@@ -143,13 +141,14 @@ export default class MainScreen extends React.Component {
     if (!realm) {
       return;
     }
-    const list =
+    const trips =
       year && month
         ? Database.getTripListByYearMonth(realm, year, month + 1, true)
         : Database.getTripList(this.state.realm).sorted('created', true);
     // this.deleteTrips(list);
     // this.writeJsonToFile(list);
     // this.readJsonFromFile();
+    const list = trips.filtered('endCreated != null');
     console.log('getList list', list.length);
     this.setState({list});
     // this.testNewLocation();
@@ -240,7 +239,6 @@ export default class MainScreen extends React.Component {
     const previousLocation = this.tripDetector.getPreviousLocation();
     let lastPrevious = this.tripDetector.getLastPrevious();
     const totalDistance = this.tripDetector.getTotalDistance();
-    this.listFirstTotalDistance = totalDistance;
     console.log('previousLocation', previousLocation);
     console.log('lastPrevious', lastPrevious);
     console.log('totalDistance', totalDistance);
@@ -458,20 +456,6 @@ export default class MainScreen extends React.Component {
     this.setState({trip: {...trip, ...updateTrip}});
   }
 
-  listClone(list, trip) {
-    const listFilter = trip.endCreated
-      ? list.filtered('endCreated != null')
-      : list;
-    const listClone = listFilter.map(x => clone(x));
-    if (listClone.length > 0) {
-      const listFirst = listClone[0];
-      if (!listFirst.endCreated) {
-        listFirst.totalDistance = this.listFirstTotalDistance;
-      }
-    }
-    return listClone;
-  }
-
   onStartButton() {
     const callback = position => {
       const coords = position && position.coords;
@@ -607,7 +591,6 @@ export default class MainScreen extends React.Component {
     console.log('list', list.length);
     console.log('trip', trip);
     console.log('year', year, 'month', month);
-    const listClone = this.listClone(list, trip);
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.currentTrip}>
@@ -628,7 +611,7 @@ export default class MainScreen extends React.Component {
           </View>
         </View>
         <FlatList
-          data={listClone}
+          data={list}
           renderItem={({item}) => this.renderItem(item)}
           keyExtractor={(item, index) => String(index)}
         />
