@@ -237,9 +237,11 @@ export default class MainScreen extends React.Component {
   }
 
   lastTripAutoEnd() {
+    const previousLocation = this.tripDetector.getPreviousLocation();
     const lastPrevious = this.tripDetector.getLastPrevious();
     const totalDistance = this.tripDetector.getTotalDistance();
     this.listFirstTotalDistance = totalDistance;
+    console.log('previousLocation', previousLocation);
     console.log('lastPrevious', lastPrevious);
     console.log('totalDistance', totalDistance);
     const tripIdFinder = this.tripDetector.getTripIdFinder();
@@ -251,7 +253,11 @@ export default class MainScreen extends React.Component {
     const {today} = this.state;
     const todayTimestamp = today.toDate().getTime();
     console.log('todayTimestamp', todayTimestamp);
-    const dt = todayTimestamp - lastPrevious.created;
+    const prevTimestamp =
+      lastPrevious && lastPrevious.created
+        ? lastPrevious.created
+        : previousLocation.created;
+    const dt = todayTimestamp - prevTimestamp;
     console.log('dt', dt);
     const period = parseInt(this.setting.period, 10) * 60 * 1000;
     if (dt >= period) {
