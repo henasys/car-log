@@ -155,10 +155,10 @@ export default class LocationScreen extends React.Component {
   }
 
   readJsonThruFile() {
-    const json = require('../json/car-log-location-2020.json');
-    const locationList = Object.values(json);
-    console.log('locationList.length', locationList.length);
-    this.restoreToDatabase(locationList);
+    // const json = require('../json/car-log-location-2020.json');
+    // const locationList = Object.values(json);
+    // console.log('locationList.length', locationList.length);
+    // this.restoreToDatabase(locationList);
   }
 
   restoreToDatabase(locationList) {
