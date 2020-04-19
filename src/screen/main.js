@@ -472,11 +472,13 @@ export default class MainScreen extends React.Component {
       };
       console.log('item', item);
       const tripIdFinder = this.tripDetector.getTripIdFinder();
-      const tripNumber = this.tripDetector.getNumber();
+      let tripNumber = this.tripDetector.getNumber();
       Database.saveTrip(this.state.realm, item)
         .then(trip => {
           console.log('saveTrip done', trip);
+          tripNumber += 1;
           tripIdFinder.add(tripNumber, trip.id);
+          this.tripDetector.setNumber(tripNumber);
           this.newTrip(trip);
         })
         .catch(e => {
