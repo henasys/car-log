@@ -468,12 +468,37 @@ export default class MainScreen extends React.Component {
   }
 
   onStartButton() {
-    this.newTrip({startCreated: new Date().getTime()});
-    setTimeout(() => {
-      const endCreated = new Date().getTime();
-      const totalDistance = 12000;
-      this.updateTrip({endCreated, totalDistance});
-    }, 3000);
+    const callback = position => {
+      const coords = position && position.coords;
+      if (!coords) {
+        const msg = 'GPS 정보 획득 실패, 잠시 후 다시 시도해주세요.';
+        toast(msg);
+        return;
+      }
+      console.log('getCurrentPosition', coords);
+      const item = {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        created: new Date().getTime(),
+      };
+      console.log('item', item);
+      const tripIdFinder = this.tripDetector.getTripIdFinder();
+      const tripNumber = this.tripDetector.getNumber();
+      Database.saveTrip(this.state.realm, item)
+        .then(trip => {
+          console.log('saveTrip done', trip);
+          tripIdFinder.add(tripNumber, trip.id);
+          this.newTrip(trip);
+        })
+        .catch(e => {
+          console.log('saveTrip error', e);
+        });
+    };
+    const errorCallback = error => {
+      const msg = `${error.code}: ${error.message}`;
+      toast(msg);
+    };
+    this.locator.getCurrentPosition(callback, errorCallback);
   }
   onEndButton() {
     this.newTrip({});
