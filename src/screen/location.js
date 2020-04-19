@@ -37,8 +37,8 @@ export default class LocationScreen extends React.Component {
             iconStyle={styles.menuItem}
             onPress={() => {
               console.log('restore');
-              // this.readJsonFromFile();
-              this.readJsonThruFile();
+              this.readJsonFromFile();
+              // this.readJsonThruFile();
             }}
             name="restore"
             type="material"
