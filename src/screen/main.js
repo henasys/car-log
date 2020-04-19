@@ -456,6 +456,7 @@ export default class MainScreen extends React.Component {
   }
 
   onStartButton() {
+    console.log('onStartButton');
     const callback = position => {
       const coords = position && position.coords;
       if (!coords) {
@@ -488,8 +489,49 @@ export default class MainScreen extends React.Component {
     };
     this.locator.getCurrentPosition(callback, errorCallback);
   }
+
   onEndButton() {
-    this.newTrip({});
+    console.log('onEndButton');
+    const callback = position => {
+      const coords = position && position.coords;
+      if (!coords) {
+        const msg = 'GPS 정보 획득 실패, 잠시 후 다시 시도해주세요.';
+        toast(msg);
+        return;
+      }
+      console.log('getCurrentPosition', coords);
+      const {trip} = this.state;
+      console.log('trip', trip);
+      if (!trip.id) {
+        console.log('not found matching trip id', item);
+        return;
+      }
+      const item = {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        created: new Date().getTime(),
+        totalDistance: trip.totalDistance,
+      };
+      // console.log('item', item);
+      Database.updateTripEnd(
+        this.state.realm,
+        trip.id,
+        item,
+        item.totalDistance,
+      )
+        .then(updatedTrip => {
+          console.log('updateTripEnd done', updatedTrip);
+          this.newTrip({});
+        })
+        .catch(e => {
+          console.log('updateTripEnd error', e);
+        });
+    };
+    const errorCallback = error => {
+      const msg = `${error.code}: ${error.message}`;
+      toast(msg);
+    };
+    this.locator.getCurrentPosition(callback, errorCallback);
   }
 
   getParamsFromCurrentTrip(item, today) {
