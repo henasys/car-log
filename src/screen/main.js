@@ -367,6 +367,7 @@ export default class MainScreen extends React.Component {
     )
       .then(trip => {
         console.log('updateTripEnd done', trip);
+        this.newTrip({});
       })
       .catch(e => {
         console.log('updateTripEnd error', e);
