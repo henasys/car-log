@@ -41,7 +41,27 @@ export class Locator {
     this.clearWatch();
   }
 
-  getCurrentPosition(callback = null, errorCallback = null) {
+  getCurrentPosition(
+    callback = null,
+    errorCallback = null,
+    isEmulator = false,
+  ) {
+    if (isEmulator) {
+      const postion = {
+        coords: {
+          accuracy: 48,
+          altitude: 68.60487305802874,
+          heading: 0,
+          latitude: 37.52933550001321,
+          longitude: 126.99380221939722,
+          speed: 4,
+        },
+        mocked: false,
+        timestamp: 1587296058000,
+      };
+      callback && callback(postion);
+      return;
+    }
     Geolocation.getCurrentPosition(
       position => {
         console.log('initPosition', position);
