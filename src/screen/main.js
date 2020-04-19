@@ -148,7 +148,7 @@ export default class MainScreen extends React.Component {
     const list = trips.filtered('endCreated != null');
     console.log('getList list', list.length);
     this.setState({list});
-    this.testNewLocation();
+    // this.testNewLocation();
   }
 
   // test purpose only
@@ -413,7 +413,7 @@ export default class MainScreen extends React.Component {
       heading: 0,
       latitude: 37.53006144198941 + 0.5,
       longitude: 126.99286469807542,
-      speed: 0,
+      speed: 5,
       created: 1586254156999,
     };
     setTimeout(() => {
