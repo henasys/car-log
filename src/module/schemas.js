@@ -124,9 +124,9 @@ Trip.schema = {
 };
 
 Trip.Type = {
-  commute: 0,
-  business: 1,
-  non_business: 2,
+  COMMUTE: 0,
+  BUSINESS: 1,
+  NON_BUSINESS: 2,
 };
 
 const schema8 = [Location, Setting, Trip];

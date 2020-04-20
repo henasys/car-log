@@ -4,7 +4,6 @@ import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
 import {YellowBox} from 'react-native';
 import moment from 'moment';
 import DeviceInfo from 'react-native-device-info';
-import {Button} from 'react-native-elements';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
@@ -21,6 +20,7 @@ import FileManager from '../module/file';
 import YearPicker from '../view/yearPicker';
 import MonthPicker from '../view/monthPicker';
 import TripButton from '../view/tripButton';
+import TripTypeButton from '../view/tripTypeButton';
 import color from '../module/color';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
@@ -602,7 +602,7 @@ export default class MainScreen extends React.Component {
     // console.log('renderCurrentTrip', params);
     return (
       <View>
-        <View style={styles.tripMessage}>
+        <View style={styles.tripDate}>
           <Text style={styles.todayDate}>
             {today.format('LL')} ({today.format('dd')})
           </Text>
@@ -621,9 +621,11 @@ export default class MainScreen extends React.Component {
             onPress={this.onEndButton.bind(this)}
           />
         </View>
-        <View style={styles.tripMessage}>
-          <Text style={styles.tripMessageText}>{params.totalDistance}</Text>
-          <Button title="출퇴근용" type="outline" />
+        <View style={styles.tripDistance}>
+          <Text style={styles.tripDistanceText}>{params.totalDistance}</Text>
+        </View>
+        <View style={styles.tripType}>
+          <TripTypeButton />
         </View>
       </View>
     );
@@ -724,19 +726,28 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 20,
   },
-  tripMessage: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+  tripDistance: {
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    // marginBottom: 10,
   },
-  tripMessageText: {
+  tripDistanceText: {
     fontSize: 18,
     // fontWeight: 'bold',
     paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: color.bg1,
     borderRadius: 10,
+  },
+  tripDate: {
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  tripType: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginRight: 10,
   },
   itemContainer: {
     flexDirection: 'row',
