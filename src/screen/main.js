@@ -584,6 +584,11 @@ export default class MainScreen extends React.Component {
     // console.log('renderCurrentTrip', params);
     return (
       <View>
+        <View style={styles.tripMessage}>
+          <Text style={styles.todayDate}>
+            {today.format('LL')} ({today.format('dd')})
+          </Text>
+        </View>
         <View style={styles.tripContainer}>
           <TripButton
             label={params.startLabel}
@@ -685,6 +690,13 @@ const styles = StyleSheet.create({
   currentTrip: {
     paddingVertical: 10,
     backgroundColor: '#DCDCDC',
+    justifyContent: 'center',
+  },
+  todayDate: {
+    fontSize: 20,
+    fontWeight: 'normal',
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
   tripContainer: {
     flexDirection: 'row',
