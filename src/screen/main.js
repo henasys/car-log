@@ -203,25 +203,30 @@ export default class MainScreen extends React.Component {
   }
 
   getRemainedLocationList(realm) {
-    const list = Database.getTripList(realm)
-      .sorted('created', true)
-      .slice(0, 1);
-    const lastTrip = list.length === 1 ? list[0] : {};
+    const lastTrip = this.getLastTrip(realm);
     const lastTimestamp = lastTrip.endCreated || lastTrip.startCreated || 0;
-    console.log('lastTrip', lastTrip);
     if (lastTrip.startCreated && !lastTrip.endCreated) {
       this.newTrip(lastTrip);
     }
     const locations = Database.getLocationListByTimestamp(
-      this.state.realm,
+      realm,
       lastTimestamp,
     ).sorted('created', false);
     // console.log('to be processing locations', locations.map(x => x.created));
     console.log('to be processing locations', locations.length);
-    this.doDetectOnRemainedLocationList(locations, lastTimestamp);
+    this.doDetectOnRemainedLocationList(realm, locations, lastTimestamp);
   }
 
-  doDetectOnRemainedLocationList(locations, lastTimestamp) {
+  getLastTrip(realm) {
+    const list = Database.getTripList(realm)
+      .sorted('created', true)
+      .slice(0, 1);
+    const lastTrip = list.length === 1 ? list[0] : {};
+    console.log('lastTrip', lastTrip);
+    return lastTrip;
+  }
+
+  doDetectOnRemainedLocationList(realm, locations, lastTimestamp) {
     if (locations.length === 0) {
       return;
     }
@@ -237,15 +242,21 @@ export default class MainScreen extends React.Component {
     }
     const result = this.tripDetector.getResult();
     console.log('doDetectOnRemainedLocationList result', result.length);
-    const afterCallback = () => {
-      this.lastTripAutoEnd();
+    const afterCallback = _realm => {
+      this.lastTripAutoEnd(_realm);
       this.setTripDetectorCallback();
     };
-    this.saveTripResult(result, afterCallback);
+    this.saveTripResult(realm, result, afterCallback);
   }
 
-  lastTripAutoEnd() {
+  lastTripAutoEnd(_realm = null) {
     console.log('lastTripAutoEnd');
+    const realm = _realm ? _realm : this.state.realm;
+    const lastTrip = this.getLastTrip(realm);
+    if (!lastTrip || lastTrip.endCreated) {
+      console.log('no lastTrip has empty end');
+      return;
+    }
     const previousLocation = this.tripDetector.getPreviousLocation();
     let lastPrevious = this.tripDetector.getLastPrevious();
     const totalDistance = this.tripDetector.getTotalDistance();
@@ -276,19 +287,19 @@ export default class MainScreen extends React.Component {
       longitude: lastPrevious.longitude,
       created: lastPrevious.created,
     };
-    this.updateTripEnd(item);
+    this.updateTripEnd(item, realm);
   }
 
-  saveTripResult(result, afterCallback) {
+  saveTripResult(realm, result, afterCallback) {
     if (result.length === 0) {
-      afterCallback();
+      afterCallback(realm);
       return;
     }
     const lastIndex = result.length - 1;
     for (let index = 0; index < result.length; index++) {
       const trip = result[index];
       Database.saveTrip(
-        this.state.realm,
+        realm,
         trip.start,
         trip.end,
         trip.end && trip.end.totalDistance,
@@ -304,7 +315,7 @@ export default class MainScreen extends React.Component {
         })
         .finally(() => {
           if (index === lastIndex) {
-            afterCallback();
+            afterCallback(realm);
           }
         });
     }
@@ -437,7 +448,7 @@ export default class MainScreen extends React.Component {
       const updateTrip = tripCallbackItemToTripRecord(previousLocation, true);
       this.updateTrip(updateTrip);
     }
-    // this.lastTripAutoEnd();
+    this.lastTripAutoEnd();
   }
 
   newTrip(newTrip) {
@@ -519,12 +530,13 @@ export default class MainScreen extends React.Component {
     this.locator.getCurrentPosition(callback, errorCallback, this.isEmulator);
   }
 
-  updateTripEnd(item) {
+  updateTripEnd(item, _realm = null) {
+    const realm = _realm ? _realm : this.state.realm;
     if (!item || !item.id) {
       console.log('not found current trip id', item);
       return;
     }
-    Database.updateTripEnd(this.state.realm, item.id, item, item.totalDistance)
+    Database.updateTripEnd(realm, item.id, item, item.totalDistance)
       .then(updatedTrip => {
         console.log('updateTripEnd done', updatedTrip);
         this.newTrip({});
