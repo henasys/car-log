@@ -1,8 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
+import {YellowBox} from 'react-native';
 import moment from 'moment';
 import DeviceInfo from 'react-native-device-info';
+import {Button} from 'react-native-elements';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
@@ -20,6 +22,8 @@ import YearPicker from '../view/yearPicker';
 import MonthPicker from '../view/monthPicker';
 import TripButton from '../view/tripButton';
 import color from '../module/color';
+
+YellowBox.ignoreWarnings(['Setting a timer']);
 
 export default class MainScreen extends React.Component {
   state = {
@@ -85,10 +89,13 @@ export default class MainScreen extends React.Component {
 
   setPeriodInterval(realm) {
     const setting = Database.getSetting(realm);
-    let interval = 10 * 60 * 1000;
+    const intervalLimit = 15 * 60 * 1000;
+    let interval = intervalLimit;
     if (setting && setting.period) {
-      interval = setting.period / 2;
-      interval = interval * 60 * 1000;
+      const intervalPeroid = (setting.period * 60 * 1000) / 2;
+      if (intervalPeroid <= intervalLimit) {
+        interval = intervalPeroid;
+      }
     }
     console.log('setPeriodInterval', interval);
     this.periodInterval = setInterval(() => {
@@ -616,6 +623,7 @@ export default class MainScreen extends React.Component {
         </View>
         <View style={styles.tripMessage}>
           <Text style={styles.tripMessageText}>{params.totalDistance}</Text>
+          <Button title="출퇴근용" type="outline" />
         </View>
       </View>
     );
@@ -717,6 +725,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   tripMessage: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     marginBottom: 10,
   },
