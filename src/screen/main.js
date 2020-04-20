@@ -43,6 +43,7 @@ export default class MainScreen extends React.Component {
   tripDetector = null;
   isEmulator = false;
   manualStartBackup = null;
+  tripType = null;
 
   componentDidMount() {
     console.log('main componentDidMount');
@@ -474,6 +475,7 @@ export default class MainScreen extends React.Component {
   }
 
   newTrip(newTrip) {
+    newTrip.tripType = this.tripType;
     console.log('newTrip', newTrip);
     this.setState({trip: newTrip});
   }
@@ -578,6 +580,7 @@ export default class MainScreen extends React.Component {
     let endTime = '00:00';
     let endDisabled = true;
     let totalDistance = getKilometers(0.0);
+    let tripType = item.tripType ? item.tripType : Database.Trip.Type.COMMUTE;
     if (item.startCreated) {
       endTime = time;
       startLabel = '운행중';
@@ -594,7 +597,14 @@ export default class MainScreen extends React.Component {
       endTime,
       endDisabled,
       totalDistance,
+      tripType,
     };
+  }
+
+  onTripTypeChanged(type) {
+    console.log('onTripTypeChanged', type);
+    this.tripType = type;
+    this.updateTrip({tripType: type});
   }
 
   renderCurrentTrip(item, today) {
@@ -625,7 +635,10 @@ export default class MainScreen extends React.Component {
           <Text style={styles.tripDistanceText}>{params.totalDistance}</Text>
         </View>
         <View style={styles.tripType}>
-          <TripTypeButton />
+          <TripTypeButton
+            type={params.tripType}
+            onValueChanged={this.onTripTypeChanged.bind(this)}
+          />
         </View>
       </View>
     );

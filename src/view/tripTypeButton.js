@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Button} from 'react-native-elements';
 
 import Database from '../module/database';
@@ -14,9 +14,15 @@ const getTitle = type => {
   }
 };
 
-export default function TripTypeButton(props) {
-  const [tripType, setTripType] = useState(Database.Trip.Type.COMMUTE);
+export default function TripTypeButton({type, onValueChanged}) {
   return (
-    <Button title={getTitle(tripType)} type="outline" onPress={() => {}} />
+    <Button
+      title={getTitle(type)}
+      type="outline"
+      onPress={() => {
+        const value = (type + 1) % 3;
+        onValueChanged && onValueChanged(value);
+      }}
+    />
   );
 }
