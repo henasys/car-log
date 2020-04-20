@@ -378,8 +378,9 @@ export const configureYearList = (minTimestamp, maxTimeStamp) => {
 };
 
 export const getKilometers = meters => {
+  let m = meters;
   if (meters === undefined || meters === null) {
-    return '0 km';
+    m = 0.0;
   }
-  return toFixed(meters / 1000) + ' km';
+  return toFixed(m / 1000) + ' km';
 };
