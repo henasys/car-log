@@ -38,8 +38,10 @@ const excelHeader = () => {
   ];
 };
 
-const excelDataRow = (date, distance) => {
-  return [date, '', '', '', '', distance, '', '', ''];
+const excelDataRow = (date, distance, type) => {
+  const commute = type === Database.Trip.Type.COMMUTE ? distance : '';
+  const business = type === Database.Trip.Type.BUSINESS ? distance : '';
+  return [date, '', '', '', '', distance, commute, business, ''];
 };
 
 const excelData = (realm, year) => {
@@ -50,7 +52,8 @@ const excelData = (realm, year) => {
     // console.log('trip', trip);
     const date = timeToMonthDayWeek(trip.startCreated);
     const distance = (trip.totalDistance / 1000).toFixed(2);
-    data.push(excelDataRow(date, parseFloat(distance)));
+    const row = excelDataRow(date, parseFloat(distance), trip.type);
+    data.push(row);
   });
   return data;
 };
