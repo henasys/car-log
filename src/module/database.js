@@ -202,12 +202,14 @@ const getSetting = realm => {
  * save Trip info
  * @param {*} realm Ream object
  * @param {*} start {latitude, longitude, created}
+ * @param {Number} type Trip.Type Integer
  * @param {*} end {latitude, longitude, created} optional
  * @param {*} totalDistance start ~ end, optional
  */
 const saveTrip = (
   realm,
   start,
+  type = null,
   end = {latitude: null, longitude: null, created: null},
   totalDistance = null,
 ) => {
@@ -225,6 +227,7 @@ const saveTrip = (
           endCreated: end.created,
           totalDistance: totalDistance,
           totalTime: totalTime,
+          type: type ? type : Trip.Type.COMMUTE,
           created: new Date().getTime(),
         });
         resolve(trip);

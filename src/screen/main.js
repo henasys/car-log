@@ -360,7 +360,7 @@ export default class MainScreen extends React.Component {
       this.manualStartBackup = null;
       return;
     }
-    Database.saveTrip(this.state.realm, item)
+    Database.saveTrip(this.state.realm, item, this.tripType)
       .then(trip => {
         console.log('saveTrip done', trip);
         trip.number = item.number;
@@ -502,7 +502,7 @@ export default class MainScreen extends React.Component {
       };
       console.log('item', item);
       let tripNumber = this.tripDetector.getNumber();
-      Database.saveTrip(this.state.realm, item)
+      Database.saveTrip(this.state.realm, item, this.tripType)
         .then(trip => {
           console.log('saveTrip done', trip);
           tripNumber += 1;
