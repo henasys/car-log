@@ -271,18 +271,12 @@ export default class MainScreen extends React.Component {
       return;
     }
     const item = {
+      id: trip.id,
       latitude: lastPrevious.latitude,
       longitude: lastPrevious.longitude,
       created: lastPrevious.created,
     };
-    Database.updateTripEnd(this.state.realm, trip.id, item, totalDistance)
-      .then(updatedTrip => {
-        console.log('updateTripEnd done', updatedTrip);
-        this.newTrip({});
-      })
-      .catch(e => {
-        console.log('updateTripEnd error', e);
-      });
+    this.updateTripEnd(item);
   }
 
   saveTripResult(result, afterCallback) {
@@ -358,14 +352,8 @@ export default class MainScreen extends React.Component {
       console.log('not found current trip id', trip);
       return;
     }
-    Database.updateTripEnd(this.state.realm, trip.id, item, item.totalDistance)
-      .then(updatedTrip => {
-        console.log('updateTripEnd done', updatedTrip);
-        this.newTrip({});
-      })
-      .catch(e => {
-        console.log('updateTripEnd error', e);
-      });
+    item.id = trip.id;
+    this.updateTripEnd(item);
   };
 
   newTripDetector() {
@@ -475,7 +463,7 @@ export default class MainScreen extends React.Component {
       const item = {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        created: position.timestamp ? position.timestamp : new Date().getTime(),
+        created: new Date().getTime(),
       };
       console.log('item', item);
       let tripNumber = this.tripDetector.getNumber();
@@ -510,37 +498,40 @@ export default class MainScreen extends React.Component {
       }
       console.log('getCurrentPosition', coords);
       const {trip} = this.state;
-      console.log('trip', trip);
       if (!trip || !trip.id) {
         console.log('not found current trip id', trip);
         return;
       }
       const item = {
+        id: trip.id,
         latitude: coords.latitude,
         longitude: coords.longitude,
         created: new Date().getTime(),
         totalDistance: trip.totalDistance,
         number: trip.number,
       };
-      Database.updateTripEnd(
-        this.state.realm,
-        trip.id,
-        item,
-        item.totalDistance,
-      )
-        .then(updatedTrip => {
-          console.log('updateTripEnd done', updatedTrip);
-          this.newTrip({});
-        })
-        .catch(e => {
-          console.log('updateTripEnd error', e);
-        });
+      this.updateTripEnd(item);
     };
     const errorCallback = error => {
       const msg = `${error.code}: ${error.message}`;
       toast(msg);
     };
     this.locator.getCurrentPosition(callback, errorCallback, this.isEmulator);
+  }
+
+  updateTripEnd(item) {
+    if (!item || !item.id) {
+      console.log('not found current trip id', item);
+      return;
+    }
+    Database.updateTripEnd(this.state.realm, item.id, item, item.totalDistance)
+      .then(updatedTrip => {
+        console.log('updateTripEnd done', updatedTrip);
+        this.newTrip({});
+      })
+      .catch(e => {
+        console.log('updateTripEnd error', e);
+      });
   }
 
   getParamsFromCurrentTrip(item, today) {
