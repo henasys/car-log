@@ -281,13 +281,8 @@ export default class MainScreen extends React.Component {
       return;
     }
     console.log('lastTrip auto ending required');
-    const {trip} = this.state;
-    if (!trip || !trip.id) {
-      console.log('not found current trip id', trip);
-      return;
-    }
     const item = {
-      id: trip.id,
+      id: lastTrip.id,
       latitude: lastPrevious.latitude,
       longitude: lastPrevious.longitude,
       created: lastPrevious.created,
