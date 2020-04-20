@@ -300,6 +300,7 @@ export default class MainScreen extends React.Component {
       id: lastTrip.id,
       latitude: lastPrevious.latitude,
       longitude: lastPrevious.longitude,
+      totalDistance: totalDistance,
       created: referTimestamp,
     };
     this.updateTripEnd(item, realm);
