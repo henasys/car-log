@@ -210,9 +210,6 @@ export default class MainScreen extends React.Component {
     const lastTimestamp = lastTrip.endCreated || lastTrip.startCreated || 0;
     console.log('lastTrip', lastTrip);
     if (lastTrip.startCreated && !lastTrip.endCreated) {
-      // const tripIdFinder = this.tripDetector.getTripIdFinder();
-      // const tripNumber = this.tripDetector.getNumber();
-      // tripIdFinder.add(tripNumber, lastTrip.id);
       this.newTrip(lastTrip);
     }
     const locations = Database.getLocationListByTimestamp(
@@ -268,16 +265,6 @@ export default class MainScreen extends React.Component {
       return;
     }
     console.log('lastTrip auto ending required');
-    // const tripIdFinder = this.tripDetector.getTripIdFinder();
-    // const tripNumber = this.tripDetector.getNumber();
-    // const tripId = tripIdFinder.find(tripNumber);
-    // console.log('tripIdFinder', tripIdFinder.getList());
-    // console.log('tripNumber', tripNumber);
-    // console.log('tripId', tripId);
-    // if (!tripId) {
-    //   console.log('not found matching trip id', tripNumber);
-    //   return;
-    // }
     const {trip} = this.state;
     if (!trip || !trip.id) {
       console.log('not found current trip id', trip);
@@ -303,7 +290,6 @@ export default class MainScreen extends React.Component {
       afterCallback();
       return;
     }
-    // const tripIdFinder = this.tripDetector.getTripIdFinder();
     const lastIndex = result.length - 1;
     for (let index = 0; index < result.length; index++) {
       const trip = result[index];
@@ -315,7 +301,6 @@ export default class MainScreen extends React.Component {
       )
         .then(newTrip => {
           console.log('saveTrip done', newTrip);
-          // tripIdFinder.add(trip.start.number, newTrip.id);
           if (index === lastIndex) {
             this.newTrip(newTrip);
           }
@@ -338,12 +323,10 @@ export default class MainScreen extends React.Component {
       TimeUtil.timeToDateHourMin(item.created),
     );
     console.log(item);
-    // const tripIdFinder = this.tripDetector.getTripIdFinder();
     if (this.manualStartBackup) {
       console.log('manualStartBackup true');
       const trip = this.manualStartBackup;
       trip.number = item.number;
-      // tripIdFinder.add(item.number, trip.id);
       this.newTrip(trip);
       this.manualStartBackup = null;
       return;
@@ -351,7 +334,6 @@ export default class MainScreen extends React.Component {
     Database.saveTrip(this.state.realm, item)
       .then(trip => {
         console.log('saveTrip done', trip);
-        // tripIdFinder.add(item.number, trip.id);
         trip.number = item.number;
         this.newTrip(trip);
       })
@@ -371,13 +353,6 @@ export default class MainScreen extends React.Component {
       console.log('manualStartBackup true');
       return;
     }
-    // const tripIdFinder = this.tripDetector.getTripIdFinder();
-    // const tripId = tripIdFinder.find(item.number);
-    // console.log('tripId', tripId);
-    // if (!tripId) {
-    //   console.log('not found matching trip id', item.number);
-    //   return;
-    // }
     const {trip} = this.state;
     if (!trip || !trip.id) {
       console.log('not found current trip id', trip);
@@ -461,8 +436,6 @@ export default class MainScreen extends React.Component {
     if (!this.tripDetector) {
       return;
     }
-    // const tripIdFinder = this.tripDetector.getTripIdFinder();
-    // console.log('tripIdFinder', tripIdFinder.getList());
     this.tripDetector.detectAtOnce(current);
     const previousLocation = this.tripDetector.getPreviousLocation();
     const lastPrevious = this.tripDetector.getLastPrevious();
@@ -505,13 +478,11 @@ export default class MainScreen extends React.Component {
         created: position.timestamp ? position.timestamp : new Date().getTime(),
       };
       console.log('item', item);
-      // const tripIdFinder = this.tripDetector.getTripIdFinder();
       let tripNumber = this.tripDetector.getNumber();
       Database.saveTrip(this.state.realm, item)
         .then(trip => {
           console.log('saveTrip done', trip);
           tripNumber += 1;
-          // tripIdFinder.add(tripNumber, trip.id);
           this.tripDetector.setNumber(tripNumber);
           trip.number = tripNumber;
           this.newTrip(trip);
@@ -551,15 +522,6 @@ export default class MainScreen extends React.Component {
         totalDistance: trip.totalDistance,
         number: trip.number,
       };
-      // const tripIdFinder = this.tripDetector.getTripIdFinder();
-      // console.log('tripIdFinder.getList', tripIdFinder.getList());
-      // const tripId = tripIdFinder.find(item.number);
-      // console.log('tripId', tripId);
-      // if (!tripId) {
-      //   console.log('not found matching trip id', item.number);
-      //   return;
-      // }
-      // console.log('item', item);
       Database.updateTripEnd(
         this.state.realm,
         trip.id,
