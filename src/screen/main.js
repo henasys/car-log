@@ -19,6 +19,7 @@ import FileManager from '../module/file';
 import YearPicker from '../view/yearPicker';
 import MonthPicker from '../view/monthPicker';
 import TripButton from '../view/tripButton';
+import color from '../module/color';
 
 export default class MainScreen extends React.Component {
   state = {
@@ -697,6 +698,7 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     paddingHorizontal: 20,
     paddingTop: 10,
+    color: color.font1,
   },
   tripContainer: {
     flexDirection: 'row',
@@ -713,7 +715,7 @@ const styles = StyleSheet.create({
     // fontWeight: 'bold',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: 'white',
+    backgroundColor: color.bg1,
     borderRadius: 10,
   },
   itemContainer: {
