@@ -84,7 +84,7 @@ Trip.schema11 = {
   },
 };
 
-Trip.schema = {
+Trip.schema12 = {
   name: 'Trip',
   primaryKey: 'id',
   properties: {
@@ -103,11 +103,38 @@ Trip.schema = {
   },
 };
 
+Trip.schema = {
+  name: 'Trip',
+  primaryKey: 'id',
+  properties: {
+    id: {type: 'string'},
+    startLatitude: {type: 'double'},
+    startLongitude: {type: 'double'},
+    startAddress: {type: 'string', optional: true},
+    startCreated: {type: 'int', indexed: true},
+    endLatitude: {type: 'double', optional: true},
+    endLongitude: {type: 'double', optional: true},
+    endAddress: {type: 'string', optional: true},
+    endCreated: {type: 'int', indexed: true, optional: true},
+    totalDistance: {type: 'double', optional: true},
+    totalTime: {type: 'int', optional: true},
+    type: {type: 'int', indexed: true, default: 0},
+    created: {type: 'int', indexed: true},
+  },
+};
+
+Trip.Type = {
+  commute: 0,
+  business: 1,
+  non_business: 2,
+};
+
 const schema8 = [Location, Setting, Trip];
 const schema9 = [Location, Setting, Trip.schema9];
 const schema10 = [Location, Setting.schema10, Trip];
 const schema11 = [Location, Setting, Trip.schema11];
-const schema12 = [Location, Setting, Trip];
+const schema12 = [Location, Setting, Trip.schema12];
+const schema13 = [Location, Setting, Trip];
 
 function migrationFunctionNothing(oldRealm, newRealm) {
   console.log('migrationFunctionNothing', oldRealm, newRealm);
@@ -161,6 +188,11 @@ export const schemas = [
   {
     schema: schema12,
     schemaVersion: 12,
+    migration: migrationFunctionNothing,
+  },
+  {
+    schema: schema13,
+    schemaVersion: 13,
     migration: migrationFunctionNothing,
   },
 ];

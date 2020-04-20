@@ -361,6 +361,27 @@ const updateTripAddress = (realm, id, startAddress, endAddress) => {
   });
 };
 
+/**
+ * update Trip with address
+ * @param {*} realm Realm Object
+ * @param {*} id Primary key
+ * @param {*} type Trip.Type
+ */
+const updateTripType = (realm, id, type) => {
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        const trip = realm.objectForPrimaryKey('Trip', id);
+        trip.type = type;
+        resolve(trip);
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
+};
+
 const deleteTrip = (realm, year, month) => {
   const list =
     month === null
@@ -428,6 +449,7 @@ export default {
   getYearListOfTripForPicker,
   updateTripEnd,
   updateTripAddress,
+  updateTripType,
   deleteTrip,
   clearAllDatabase,
 };
