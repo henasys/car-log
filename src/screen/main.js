@@ -263,13 +263,17 @@ export default class MainScreen extends React.Component {
     console.log('previousLocation', previousLocation);
     console.log('lastPrevious', lastPrevious);
     console.log('totalDistance', totalDistance);
-    const {today} = this.state;
-    const todayTimestamp = today.toDate().getTime();
-    console.log('todayTimestamp', todayTimestamp);
+    const nowTimestamp = new Date().getTime();
+    console.log('nowTimestamp', nowTimestamp);
     if (!lastPrevious) {
       lastPrevious = {...previousLocation};
     }
-    const dt = todayTimestamp - lastPrevious.created;
+    const referTimestamp = Math.max(
+      lastTrip.startCreated,
+      lastPrevious.created,
+    );
+    const dt = Math.abs(nowTimestamp - referTimestamp);
+    console.log('referTimestamp', referTimestamp);
     console.log('dt', dt, TimeUtil.msToTime(dt));
     const period = parseInt(this.setting.period, 10) * 60 * 1000;
     if (lastPrevious.created === 0 || dt < period) {
