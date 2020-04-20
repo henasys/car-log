@@ -559,13 +559,14 @@ export default class MainScreen extends React.Component {
     let endLabel = '도착';
     let endTime = '00:00';
     let endDisabled = true;
-    let totalDistance = getKilometers(item.totalDistance);
+    let totalDistance = getKilometers(0.0);
     if (item.startCreated) {
       endTime = time;
       startLabel = '운행중';
       startTime = TimeUtil.timeToHourMin(item.startCreated);
       startDisabled = true;
       endDisabled = false;
+      totalDistance = getKilometers(item.totalDistance);
     }
     return {
       startLabel,
