@@ -142,7 +142,7 @@ const sendMail = (realm, email, year, dataType) => {
 };
 
 const dataTypeItems = [
-  {label: '운행정보', value: 'Trip'},
+  {label: '운행정보 (국세청 양식)', value: 'Trip'},
   {label: '위치정보', value: 'Location'},
 ];
 
