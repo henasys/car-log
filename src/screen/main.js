@@ -273,7 +273,7 @@ export default class MainScreen extends React.Component {
       lastTrip.startCreated,
       lastPrevious.created,
     );
-    const dt = Math.abs(nowTimestamp - referTimestamp);
+    const dt = nowTimestamp - referTimestamp;
     console.log('referTimestamp', referTimestamp);
     console.log('dt', dt, TimeUtil.msToTime(dt));
     const period = parseInt(this.setting.period, 10) * 60 * 1000;
@@ -285,7 +285,7 @@ export default class MainScreen extends React.Component {
       id: lastTrip.id,
       latitude: lastPrevious.latitude,
       longitude: lastPrevious.longitude,
-      created: lastPrevious.created,
+      created: referTimestamp,
     };
     this.updateTripEnd(item, realm);
   }
