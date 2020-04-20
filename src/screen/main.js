@@ -32,7 +32,8 @@ export default class MainScreen extends React.Component {
     today: moment(),
   };
 
-  timer = null;
+  timerInterval = null;
+  periodInterval = null;
   locator = Locator.getInstance();
   setting = null;
   tripDetector = null;
@@ -42,7 +43,7 @@ export default class MainScreen extends React.Component {
   componentDidMount() {
     console.log('main componentDidMount');
     this.initDeviceInfo();
-    this.callTimer();
+    this.setTimerInterval();
     this.openDatabase();
     this.locator.initLocator(
       this.handleOnLocation.bind(this),
@@ -53,7 +54,8 @@ export default class MainScreen extends React.Component {
 
   componentWillUnmount() {
     console.log('main componentWillUnmount');
-    this.clearTimer();
+    this.clearTimerInterval();
+    this.clearPeriodInterval();
     this.closeDatabase();
     this.locator.removeLocator();
   }
@@ -69,22 +71,34 @@ export default class MainScreen extends React.Component {
       });
   }
 
-  callTimer() {
-    this.setTimer(() => {
+  setTimerInterval() {
+    const interval = 29000;
+    this.timerInterval = setInterval(() => {
+      console.log('run with timerInterval');
       this.setState({today: moment()});
-      this.callTimer();
-    });
+    }, interval);
   }
 
-  setTimer(callback = null) {
-    this.timer = setTimeout(() => {
-      console.log('run this with Timer', new Date());
-      callback && callback();
-    }, 30000);
+  clearTimerInterval() {
+    clearInterval(this.timerInterval);
   }
 
-  clearTimer() {
-    clearTimeout(this.timer);
+  setPeriodInterval(realm) {
+    const setting = Database.getSetting(realm);
+    let interval = 10 * 60 * 1000;
+    if (setting && setting.period) {
+      interval = setting.period / 2;
+      interval = interval * 60 * 1000;
+    }
+    console.log('setPeriodInterval', interval);
+    this.periodInterval = setInterval(() => {
+      console.log('run with setPeriodInterval()', moment().format('LLLL'));
+      this.lastTripAutoEnd();
+    }, interval);
+  }
+
+  clearPeriodInterval() {
+    clearInterval(this.periodInterval);
   }
 
   setYear(year) {
@@ -109,6 +123,7 @@ export default class MainScreen extends React.Component {
         Database.setRealm(realm);
         this.initPicker(realm);
         this.initTripDetector(realm);
+        this.setPeriodInterval(realm);
         this.getRemainedLocationList(realm);
         this.getList();
       });
@@ -276,7 +291,7 @@ export default class MainScreen extends React.Component {
     const dt = nowTimestamp - referTimestamp;
     console.log('referTimestamp', referTimestamp);
     console.log('dt', dt, TimeUtil.msToTime(dt));
-    const period = parseInt(this.setting.period, 10) * 60 * 1000;
+    const period = this.setting.period * 60 * 1000;
     if (lastPrevious.created === 0 || dt < period) {
       return;
     }
@@ -448,7 +463,6 @@ export default class MainScreen extends React.Component {
       const updateTrip = tripCallbackItemToTripRecord(previousLocation, true);
       this.updateTrip(updateTrip);
     }
-    this.lastTripAutoEnd();
   }
 
   newTrip(newTrip) {
