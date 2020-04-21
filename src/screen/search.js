@@ -42,7 +42,7 @@ const renderItem = item => {
   );
 };
 
-export function SearchScreen(props) {
+export default function SearchScreen(props) {
   const [accuracyMargin, setAccuracyMargin] = useState('0');
   const [period, setPeriod] = useState('0');
   const [radiusOfArea, setRadiusOfArea] = useState('0');

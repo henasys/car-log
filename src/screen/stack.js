@@ -6,10 +6,10 @@ import {Icon} from 'react-native-elements';
 
 import MainScreen from '../screen/main';
 import LocationScreen from '../screen/location';
-import {ShareScreen} from '../screen/share';
+import ShareScreen from '../screen/share';
 import SettingScreen from '../screen/setting';
-import {SearchScreen} from '../screen/search';
-import {DeleteScreen} from '../screen/delete';
+import SearchScreen from '../screen/search';
+import DeleteScreen from '../screen/delete';
 
 const Stack = createStackNavigator();
 

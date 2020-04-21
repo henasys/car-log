@@ -95,7 +95,7 @@ dataTypeItems.firstValue = () => {
   return dataTypeItems[0].value;
 };
 
-export function ShareScreen(props) {
+export default function ShareScreen(props) {
   const [realm, setRealm] = useState(null);
   const [email, setEmail] = useState('');
   const [year, setYear] = useState('');

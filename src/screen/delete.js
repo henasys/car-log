@@ -4,7 +4,7 @@ import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
 
-export function DeleteScreen({route, navigation}) {
+export default function DeleteScreen({route, navigation}) {
   const [realm, setRealm] = useState(null);
   const [list, setList] = useState([]);
   const openDatabase = () => {
