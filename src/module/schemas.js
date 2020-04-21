@@ -129,6 +129,17 @@ Trip.Type = {
   NON_BUSINESS: 2,
 };
 
+Trip.getTypeLabel = type => {
+  switch (type) {
+    case Trip.Type.BUSINESS:
+      return '업무';
+    case Trip.Type.NON_BUSINESS:
+      return '비업무';
+    default:
+      return '출퇴근';
+  }
+};
+
 const schema8 = [Location, Setting, Trip];
 const schema9 = [Location, Setting, Trip.schema9];
 const schema10 = [Location, Setting.schema10, Trip];

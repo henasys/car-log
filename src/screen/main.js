@@ -652,7 +652,7 @@ export default class MainScreen extends React.Component {
     const endLatitude = item.endLatitude ? toFixed(item.endLatitude) : 0;
     const endLongitude = item.endLongitude ? toFixed(item.endLongitude) : 0;
     const totalDistance = getKilometers(item.totalDistance);
-    const tripTypeLabel = TripTypeButton.getLabel(item.type);
+    const tripTypeLabel = Database.Trip.getTypeLabel(item.type);
     return (
       <View style={styles.itemContainer}>
         <View style={styles.itemColumnContainer}>

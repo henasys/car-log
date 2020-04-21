@@ -47,7 +47,7 @@ const excelDetailDataRow = trip => {
   const startDate = TimeUtil.timeToDateHourMin(trip.startCreated);
   const endDate = TimeUtil.timeToDateHourMin(trip.endCreated);
   const duration = TimeUtil.msToTime(trip.endCreated - trip.startCreated);
-  const purpose = '';
+  const purpose = Database.Trip.getTypeLabel(trip.type);
   const distance = parseFloat((trip.totalDistance / 1000).toFixed(2));
   return [
     date,
