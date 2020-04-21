@@ -1,11 +1,11 @@
 import XLSX from 'xlsx';
 
 import Database from './database';
-import {timeToMonthDayWeek} from './util';
+import {TimeUtil} from './util';
 
 const excelHeader = () => {
   return [
-    '③사용 \n일자 \n(요일)',
+    '③사용 일자 \n(요일)',
     '부서',
     '성명',
     '⑤주행 전 \n계기판의 거리(㎞)',
@@ -17,21 +17,61 @@ const excelHeader = () => {
   ];
 };
 
-const excelDataRow = (date, distance, type) => {
-  const commute = type === Database.Trip.Type.COMMUTE ? distance : '';
-  const business = type === Database.Trip.Type.BUSINESS ? distance : '';
+const excelDataRow = trip => {
+  const date = TimeUtil.timeToMonthDayWeek(trip.startCreated);
+  const distance = parseFloat((trip.totalDistance / 1000).toFixed(2));
+  const commute = trip.type === Database.Trip.Type.COMMUTE ? distance : '';
+  const business = trip.type === Database.Trip.Type.BUSINESS ? distance : '';
   return [date, '', '', '', '', distance, commute, business, ''];
 };
 
-const excelData = (realm, year) => {
+const excelDetailHeader = () => {
+  return [
+    '사용 일자 \n(요일)',
+    '출발시각',
+    '도착시각',
+    '소요시간',
+    '용도',
+    '주행거리(㎞)',
+    '출발지 위도',
+    '출발지 경도',
+    '출발지 주소',
+    '도착지 위도',
+    '도착지 경도',
+    '도착지 주소',
+  ];
+};
+
+const excelDetailDataRow = trip => {
+  const date = TimeUtil.timeToMonthDayWeek(trip.startCreated);
+  const startDate = TimeUtil.timeToDateHourMin(trip.startCreated);
+  const endDate = TimeUtil.timeToDateHourMin(trip.endCreated);
+  const duration = TimeUtil.msToTime(trip.endCreated - trip.startCreated);
+  const purpose = '';
+  const distance = parseFloat((trip.totalDistance / 1000).toFixed(2));
+  return [
+    date,
+    startDate,
+    endDate,
+    duration,
+    purpose,
+    distance,
+    trip.startLatitude,
+    trip.startLongitude,
+    trip.startAddress,
+    trip.endLatitude,
+    trip.endLongitude,
+    trip.endAddress,
+  ];
+};
+
+const excelData = (realm, year, detail = false) => {
   const list = Database.getTripListByYear(realm, year);
   const data = [];
-  data.push(excelHeader());
+  data.push(detail ? excelDetailHeader() : excelHeader());
   list.forEach(trip => {
     // console.log('trip', trip);
-    const date = timeToMonthDayWeek(trip.startCreated);
-    const distance = (trip.totalDistance / 1000).toFixed(2);
-    const row = excelDataRow(date, parseFloat(distance), trip.type);
+    const row = detail ? excelDetailDataRow(trip) : excelDataRow(trip);
     data.push(row);
   });
   return data;
@@ -49,6 +89,15 @@ export const bundleTripExcel = (realm, year) => {
   const subject = `업무용 승용차 운행기록부 ${String(year)}년`;
   const body = '첨부파일 참조바랍니다.';
   const filename = `car-log-trip-${String(year)}.xlsx`;
+  const type = 'xlsx';
+  const data = makeExcel(excelData(realm, year));
+  return {subject, body, filename, type, data};
+};
+
+export const bundleTripDetailExcel = (realm, year) => {
+  const subject = `업무용 승용차 운행 상세기록 ${String(year)}년`;
+  const body = '첨부파일 참조바랍니다.';
+  const filename = `car-log-trip-detail-${String(year)}.xlsx`;
   const type = 'xlsx';
   const data = makeExcel(excelData(realm, year));
   return {subject, body, filename, type, data};
