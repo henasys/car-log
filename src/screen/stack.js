@@ -10,6 +10,7 @@ import ShareScreen from '../screen/share';
 import SettingScreen from '../screen/setting';
 import SearchScreen from '../screen/search';
 import DeleteScreen from '../screen/delete';
+import TripScreen from '../screen/trip';
 
 const Stack = createStackNavigator();
 
@@ -46,6 +47,12 @@ export default function MyStack() {
             headerRight: () => (
               <View style={styles.menuContainer}>
                 {debugView(navigation)}
+                <Icon
+                  iconStyle={styles.menuItem}
+                  onPress={() => navigation.navigate('Trip')}
+                  name="playlist-edit"
+                  type="material-community"
+                />
                 <Icon
                   iconStyle={styles.menuItem}
                   onPress={() => navigation.navigate('Share')}
@@ -101,6 +108,13 @@ export default function MyStack() {
           component={LocationScreen}
           options={({navigation, route}) => ({
             title: '위치 정보',
+          })}
+        />
+        <Stack.Screen
+          name="Trip"
+          component={TripScreen}
+          options={({navigation, route}) => ({
+            title: '운행 정보',
           })}
         />
       </Stack.Navigator>
