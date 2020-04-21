@@ -22,7 +22,7 @@ export default function TripTypeButton({type, onValueChanged}) {
       title={TripTypeButton.getLabel(type)}
       type="outline"
       onPress={() => {
-        const value = (type + 1) % 3;
+        const value = (type + 1) % Object.keys(Database.Trip.Type).length;
         onValueChanged && onValueChanged(value);
       }}
     />
