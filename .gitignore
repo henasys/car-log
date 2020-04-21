@@ -72,3 +72,6 @@ google-services.json
 __tests__/data/
 __tests__/map/
 src/json/car-log-location-2020.json
+
+# keys
+.env
