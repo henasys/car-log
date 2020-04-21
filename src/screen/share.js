@@ -2,6 +2,7 @@
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet, View, TextInput, Alert} from 'react-native';
 import {Icon} from 'react-native-elements';
+import NetInfo from '@react-native-community/netinfo';
 
 import Database from '../module/database';
 import Mailer from '../module/mail';
@@ -140,8 +141,22 @@ export function ShareScreen(props) {
         console.log('FileManager.makeMailTempDir', e);
       });
   };
+  const checkNetInfo = () => {
+    NetInfo.fetch().then(state => {
+      console.log('checkNetInfo state', state);
+      console.log('Connection type', state.type);
+      console.log('Is connected?', state.isConnected);
+      if (!state.isInternetReachable) {
+        showAlert(
+          '인터넷 연결 오류',
+          '현재 메일 전송이 가능한 상태가 아닙니다. 와이파이 또는 이동통신 연결을 확인해주세요.',
+        );
+      }
+    });
+  };
   useEffect(() => {
     console.log('share useEffect start');
+    checkNetInfo();
     initTempDir();
     openDatabase();
     return () => {
