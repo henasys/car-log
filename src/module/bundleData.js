@@ -99,7 +99,7 @@ export const bundleTripDetailExcel = (realm, year) => {
   const body = '첨부파일 참조바랍니다.';
   const filename = `car-log-trip-detail-${String(year)}.xlsx`;
   const type = 'xlsx';
-  const data = makeExcel(excelData(realm, year));
+  const data = makeExcel(excelData(realm, year, true));
   return {subject, body, filename, type, data};
 };
 

@@ -8,7 +8,11 @@ import Mailer from '../module/mail';
 import FileManager from '../module/file';
 import YearPicker from '../view/yearPicker';
 import Picker from '../view/picker';
-import {bundleLocationJson, bundleTripExcel} from '../module/bundleData';
+import {
+  bundleLocationJson,
+  bundleTripExcel,
+  bundleTripDetailExcel,
+} from '../module/bundleData';
 
 const showAlert = (title, message) => {
   Alert.alert(
@@ -56,10 +60,18 @@ const sendMail = (realm, email, year, dataType) => {
     }
   };
   console.log('dataType', dataType);
-  const bundle =
-    dataType === 'Location'
-      ? bundleLocationJson(realm, year)
-      : bundleTripExcel(realm, year);
+  let bundle = null;
+  switch (dataType) {
+    case 'Location':
+      bundle = bundleLocationJson(realm, year);
+      break;
+    case 'TripDetail':
+      bundle = bundleTripDetailExcel(realm, year);
+      break;
+    default:
+      bundle = bundleTripExcel(realm, year);
+      break;
+  }
   makeAttachFile(bundle.filename, bundle.type, bundle.data, attchment => {
     Mailer.sendEmailWithMailer(
       email,
@@ -73,8 +85,9 @@ const sendMail = (realm, email, year, dataType) => {
 };
 
 const dataTypeItems = [
-  {label: '운행정보 (국세청 양식)', value: 'Trip'},
-  {label: '위치정보', value: 'Location'},
+  {label: '운행정보 Excel (국세청 양식)', value: 'Trip'},
+  {label: '운행정보 Excel (위치, 시간)', value: 'TripDetail'},
+  {label: '위치정보 JSON', value: 'Location'},
 ];
 
 dataTypeItems.firstValue = () => {
