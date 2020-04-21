@@ -193,7 +193,12 @@ const saveSetting = (
 const getSetting = realm => {
   const rs = realm.objects('Setting');
   if (rs.isEmpty()) {
-    return {period: 30, accuracyMargin: 40, radiusOfArea: 300, speedMargin: 0};
+    return {
+      period: 30,
+      accuracyMargin: 40,
+      radiusOfArea: 150,
+      speedMargin: 0.1,
+    };
   }
   return rs[0];
 };
