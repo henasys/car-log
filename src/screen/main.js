@@ -738,6 +738,7 @@ const styles = StyleSheet.create({
   tripType: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 10,
     marginRight: 0,
   },
   todayDate: {

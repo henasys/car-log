@@ -1,22 +1,19 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {Button} from 'react-native-elements';
+import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 
 import Database from '../module/database';
 import color from '../module/color';
 
 export default function TripTypeButton({type, onValueChanged}) {
   return (
-    <Button
-      title={Database.Trip.getTypeLabel(type)}
-      type="outline"
-      buttonStyle={styles.buttonStyle}
-      titleStyle={styles.titleStyle}
+    <TouchableOpacity
+      style={styles.buttonStyle}
       onPress={() => {
         const value = (type + 1) % Object.keys(Database.Trip.Type).length;
         onValueChanged && onValueChanged(value);
-      }}
-    />
+      }}>
+      <Text style={styles.titleStyle}>{Database.Trip.getTypeLabel(type)}</Text>
+    </TouchableOpacity>
   );
 }
 
@@ -25,7 +22,11 @@ const styles = StyleSheet.create({
     borderColor: color.black,
     backgroundColor: color.bg1,
     borderWidth: 0.5,
-    borderRadius: 20,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingTop: 8,
+    paddingBottom: 8,
+    marginTop: 4,
   },
   titleStyle: {
     color: color.black,
