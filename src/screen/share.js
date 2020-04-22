@@ -141,7 +141,7 @@ export default function ShareScreen(props) {
         console.log('FileManager.makeMailTempDir', e);
       });
   };
-  const checkNetInfo = () => {
+  const checkNetInfo = (callback = null) => {
     NetInfo.fetch().then(state => {
       console.log('checkNetInfo state', state);
       console.log('Connection type', state.type);
@@ -151,12 +151,13 @@ export default function ShareScreen(props) {
           '인터넷 연결 오류',
           '현재 메일 전송이 가능한 상태가 아닙니다. 와이파이 또는 이동통신 연결을 확인해주세요.',
         );
+        return;
       }
+      callback && callback();
     });
   };
   useEffect(() => {
     console.log('share useEffect start');
-    checkNetInfo();
     initTempDir();
     openDatabase();
     return () => {
@@ -203,7 +204,9 @@ export default function ShareScreen(props) {
         <View paddingVertical={5} />
         <Icon
           onPress={() => {
-            sendMail(realm, email, year, dataType);
+            checkNetInfo(() => {
+              sendMail(realm, email, year, dataType);
+            });
           }}
           name="mail-outline"
           type="material"
