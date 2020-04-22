@@ -9,6 +9,7 @@ const inputBox = props => {
         style={props.textInputStyle ? props.textInputStyle : styles.textInput}
         onChangeText={text => props.onChangeTextHandler(text)}
         defaultValue={props.defaultValue}
+        keyboardType="numeric"
       />
       <Text>{props.unitLabel}</Text>
     </View>
