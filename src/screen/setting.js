@@ -215,7 +215,7 @@ export default class SettingScreen extends React.Component {
               textInputStyle: styles.textInput,
             })}
             {inputBox({
-              label: 'GPS Speed ≤',
+              label: 'GPS Speed ≥',
               unitLabel: 'm/s',
               defaultValue: speedMargin,
               onChangeTextHandler: text => {
