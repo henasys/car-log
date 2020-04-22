@@ -616,6 +616,12 @@ export default class MainScreen extends React.Component {
           <Text style={styles.todayDate}>
             {today.format('LL')} ({today.format('dd')})
           </Text>
+          <View style={styles.tripType}>
+            <TripTypeButton
+              type={params.tripType}
+              onValueChanged={this.onTripTypeChanged.bind(this)}
+            />
+          </View>
         </View>
         <View style={styles.tripContainer}>
           <TripButton
@@ -633,12 +639,6 @@ export default class MainScreen extends React.Component {
         </View>
         <View style={styles.tripDistance}>
           <Text style={styles.tripDistanceText}>{params.totalDistance}</Text>
-        </View>
-        <View style={styles.tripType}>
-          <TripTypeButton
-            type={params.tripType}
-            onValueChanged={this.onTripTypeChanged.bind(this)}
-          />
         </View>
       </View>
     );
@@ -728,11 +728,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#DCDCDC',
     justifyContent: 'center',
   },
+  tripDate: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  tripType: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 0,
+  },
   todayDate: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'normal',
-    paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingHorizontal: 10,
     color: color.font1,
   },
   tripContainer: {
@@ -744,25 +755,15 @@ const styles = StyleSheet.create({
   tripDistance: {
     justifyContent: 'center',
     alignItems: 'center',
-    // marginBottom: 10,
+    marginBottom: 10,
   },
   tripDistanceText: {
-    fontSize: 18,
-    // fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: 'bold',
     paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: color.bg1,
     borderRadius: 10,
-  },
-  tripDate: {
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  tripType: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginRight: 10,
   },
   itemContainer: {
     flexDirection: 'row',
