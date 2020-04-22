@@ -49,7 +49,7 @@ export default function MyStack() {
           name="Main"
           component={MainScreen}
           options={({navigation, route}) => ({
-            title: '운행 기록',
+            title: '운행 자동 기록',
             headerRight: () => (
               <View style={styles.menuContainer}>
                 {debugView(navigation)}
