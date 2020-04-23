@@ -5,7 +5,7 @@ import Database from '../module/database';
 import {TimeUtil, toFixed, getKilometers} from '../module/util';
 import TripTypeButton from './tripTypeButton';
 
-export default function TripItem({item, realm}) {
+export default function TripItem({item, realm, transform = null}) {
   const tripLabel = '도착';
   const endCreated = item.endCreated
     ? TimeUtil.timeToHourMin(item.endCreated)
@@ -13,8 +13,11 @@ export default function TripItem({item, realm}) {
   const endLatitude = item.endLatitude ? toFixed(item.endLatitude) : 0;
   const endLongitude = item.endLongitude ? toFixed(item.endLongitude) : 0;
   const totalDistance = getKilometers(item.totalDistance);
+  const containerStyle = transform
+    ? styles.itemTransformContainer
+    : styles.itemContainer;
   return (
-    <View style={styles.itemContainer}>
+    <View style={containerStyle}>
       <View style={styles.itemColumnContainer}>
         <Text style={styles.dateText}>
           {TimeUtil.timeToMonthDay(item.startCreated)}
@@ -43,6 +46,9 @@ export default function TripItem({item, realm}) {
           type={item.type}
           onValueChanged={value => {
             console.log('item', item);
+            if (!realm) {
+              return;
+            }
             Database.updateTripType(realm, item.id, value)
               .then(newTrip => {
                 console.log('updateTripType done', newTrip.id);
@@ -59,6 +65,12 @@ export default function TripItem({item, realm}) {
 
 const styles = StyleSheet.create({
   itemContainer: {
+    flexDirection: 'row',
+    margin: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  itemTransformContainer: {
     flexDirection: 'row',
     margin: 10,
     justifyContent: 'space-between',

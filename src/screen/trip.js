@@ -113,7 +113,9 @@ export default class TripScreen extends React.Component {
           <FlatList
             ref={ref => (this.flatList = ref)}
             data={list}
-            renderItem={({item}) => <TripItem item={item} realm={realm} />}
+            renderItem={({item}) => (
+              <TripItem item={item} realm={realm} transform />
+            )}
             keyExtractor={(item, index) => `${item.created}_${index}`}
             onEndReached={this.onLoadPreviousList.bind(this)}
             onRefresh={this.onRefreshList.bind(this)}

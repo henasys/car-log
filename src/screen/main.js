@@ -22,6 +22,7 @@ import MonthPicker from '../view/monthPicker';
 import TripButton from '../view/tripButton';
 import TripTypeButton from '../view/tripTypeButton';
 import color from '../module/color';
+import TripItem from '../view/tripItem';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 
@@ -712,7 +713,7 @@ export default class MainScreen extends React.Component {
 
   render() {
     console.log('main render');
-    const {today, trip, list, year, month, pickerItems} = this.state;
+    const {today, trip, list, year, month, pickerItems, realm} = this.state;
     // console.log('list', list.length);
     console.log('trip', trip);
     // console.log('year', year, 'month', month);
@@ -736,7 +737,7 @@ export default class MainScreen extends React.Component {
         </View>
         <FlatList
           data={list}
-          renderItem={({item}) => this.renderItem(item)}
+          renderItem={({item}) => <TripItem item={item} realm={realm} />}
           keyExtractor={(item, index) => String(index)}
         />
       </SafeAreaView>
