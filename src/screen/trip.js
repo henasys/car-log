@@ -52,22 +52,18 @@ export default class TripScreen extends React.Component {
   }
 
   openDatabase() {
-    Database.open(realm => {
-      this.setState({realm}, () => {
-        Database.setRealm(realm);
-        this.initPicker(realm);
-        this.getList();
-      });
+    const realm = Database.getRealm();
+    this.setState({realm}, () => {
+      this.initPicker(realm);
+      this.getList();
     });
   }
 
-  closeDatabase() {
-    Database.close(this.state.realm);
-  }
+  closeDatabase() {}
 
   initPicker(realm) {
     const items = Database.getYearListOfTripForPicker(realm);
-    console.log('pickerItems', items);
+    // console.log('pickerItems', items);
     this.setPickerItems(items);
   }
 
@@ -92,7 +88,7 @@ export default class TripScreen extends React.Component {
   }
 
   getList() {
-    console.log('trip getList');
+    // console.log('trip getList');
     const {realm, year, month} = this.state;
     if (!realm) {
       return;
@@ -102,7 +98,7 @@ export default class TripScreen extends React.Component {
         ? Database.getTripListByYearMonth(realm, year, month + 1, false)
         : Database.getTripList(this.state.realm).sorted('created', false);
     const list = trips.filtered('endCreated != null');
-    console.log('getList list', list.length);
+    // console.log('getList list', list.length);
     this.setState({list});
   }
 
