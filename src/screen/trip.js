@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Text, View, StyleSheet, SafeAreaView, FlatList} from 'react-native';
 import Geocoder from 'react-native-geocoding';
@@ -6,18 +5,17 @@ import {Icon} from 'react-native-elements';
 import {REACT_APP_GOOGLE_API_KEY} from 'react-native-dotenv';
 
 import Database from '../module/database';
-import YearPicker from '../view/yearPicker';
-import MonthPicker from '../view/monthPicker';
 import {TimeUtil, toFixed, getKilometers} from '../module/util';
+
+const NUMBERS_PER_PAGE = 10;
 
 export default class TripScreen extends React.Component {
   state = {
     realm: null,
-    year: null,
-    month: null,
-    pickerItems: [],
     list: [],
   };
+
+  pagingStartIndex = 0;
 
   constructor(props) {
     super(props);
@@ -27,44 +25,22 @@ export default class TripScreen extends React.Component {
   componentDidMount() {
     console.log('trip componentDidMount');
     this.initGeocoder();
-    this.openDatabase();
+    this.setDatabase();
   }
 
   componentWillUnmount() {
     console.log('trip componentWillUnmount');
-    this.closeDatabase();
   }
 
-  setYear(year) {
-    this.setState({year}, () => {
-      this.getList();
-    });
-  }
-
-  setMonth(month) {
-    this.setState({month}, () => {
-      this.getList();
-    });
-  }
-
-  setPickerItems(pickerItems) {
-    this.setState({pickerItems});
-  }
-
-  openDatabase() {
+  setDatabase() {
     const realm = Database.getRealm();
+    console.log('realm', realm.schemaVersion);
+    if (realm === null) {
+      console.log('realm is null');
+    }
     this.setState({realm}, () => {
-      this.initPicker(realm);
-      this.getList();
+      this.initList();
     });
-  }
-
-  closeDatabase() {}
-
-  initPicker(realm) {
-    const items = Database.getYearListOfTripForPicker(realm);
-    // console.log('pickerItems', items);
-    this.setPickerItems(items);
   }
 
   initGeocoder() {
@@ -87,19 +63,38 @@ export default class TripScreen extends React.Component {
     });
   }
 
-  getList() {
-    // console.log('trip getList');
-    const {realm, year, month} = this.state;
-    if (!realm) {
-      return;
-    }
-    const trips =
-      year && month
-        ? Database.getTripListByYearMonth(realm, year, month + 1, false)
-        : Database.getTripList(this.state.realm).sorted('created', false);
-    const list = trips.filtered('endCreated != null');
-    // console.log('getList list', list.length);
+  initList() {
+    console.log('initList');
+    this.pagingStartIndex = 0;
+    const list = this.getList(this.pagingStartIndex);
+    // console.log('list', list);
     this.setState({list});
+  }
+
+  onLoadPreviousList() {
+    console.log('onLoadPreviousList', this.pagingStartIndex);
+    const logs = this.getList(this.pagingStartIndex + NUMBERS_PER_PAGE);
+    if (logs.length !== 0) {
+      this.pagingStartIndex += NUMBERS_PER_PAGE;
+      const {list} = this.state;
+      this.setState({list: list.concat(logs)});
+    }
+  }
+
+  onRefreshList() {
+    console.log('onRefreshList');
+    this.initList();
+  }
+
+  getList(startIndex) {
+    console.log('getList startIndex', startIndex);
+    if (this.state.realm === null) {
+      return [];
+    }
+    const list = Database.getTripList(this.state.realm).sorted('created', true);
+    const sliced = list.slice(startIndex, startIndex + NUMBERS_PER_PAGE);
+    // console.log('getList', sliced);
+    return sliced;
   }
 
   renderItem(item) {
@@ -143,30 +138,28 @@ export default class TripScreen extends React.Component {
   }
 
   render() {
-    console.log('trip render');
-    const {list, year, month, pickerItems} = this.state;
-    // console.log('list', list.length);
-    // console.log('year', year, 'month', month);
+    const {list} = this.state;
+    console.log('trip render', list.length);
+    if (list.length === 0) {
+      return (
+        <View style={styles.alertMessage}>
+          <Text style={styles.alertMessageText}>운행 기록이 없습니다.</Text>
+        </View>
+      );
+    }
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.yearMonthPickerContainer}>
-          <View style={{width: '45%'}}>
-            <YearPicker
-              year={year}
-              items={pickerItems}
-              setYear={this.setYear.bind(this)}
-            />
-          </View>
-          <View style={{paddingHorizontal: 5}} />
-          <View style={{width: '45%'}}>
-            <MonthPicker month={month} setMonth={this.setMonth.bind(this)} />
-          </View>
+        <View style={styles.ListContainer}>
+          <FlatList
+            ref={ref => (this.flatList = ref)}
+            data={list}
+            renderItem={({item}) => this.renderItem(item)}
+            keyExtractor={(item, index) => `${item.created}_${index}`}
+            onEndReached={this.onLoadPreviousList.bind(this)}
+            onRefresh={this.onRefreshList.bind(this)}
+            refreshing={false}
+          />
         </View>
-        <FlatList
-          data={list}
-          renderItem={({item}) => this.renderItem(item)}
-          keyExtractor={(item, index) => String(index)}
-        />
       </SafeAreaView>
     );
   }
@@ -176,18 +169,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 10,
+  ListContainer: {
+    flex: 1,
+    padding: 0,
+    margin: 0,
+    transform: [{scaleY: -1}],
   },
   itemContainer: {
     flexDirection: 'row',
+    margin: 10,
     justifyContent: 'space-between',
     alignItems: 'center',
-    margin: 10,
-    // borderWidth: 1,
+    transform: [{scaleY: -1}],
+  },
+  alertMessage: {
+    paddingVertical: 10,
+    // backgroundColor: '#DCDCDC',
+    alignItems: 'center',
+  },
+  alertMessageText: {
+    fontSize: 16,
   },
   itemColumnContainer: {
     flexDirection: 'column',
@@ -199,12 +200,6 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     marginRight: 10,
-  },
-  yearMonthPickerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    // marginHorizontal: 10,
-    marginVertical: 10,
   },
   dateText: {
     fontSize: 16,
