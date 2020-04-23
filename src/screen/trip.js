@@ -5,7 +5,7 @@ import {Icon} from 'react-native-elements';
 import {REACT_APP_GOOGLE_API_KEY} from 'react-native-dotenv';
 
 import Database from '../module/database';
-import {TimeUtil, toFixed, getKilometers, clone} from '../module/util';
+import {TimeUtil, toFixed, getKilometers} from '../module/util';
 import TripTypeButton from '../view/tripTypeButton';
 
 const NUMBERS_PER_PAGE = 10;
@@ -160,13 +160,12 @@ export default class TripScreen extends React.Component {
         </View>
       );
     }
-    const listClone = list.map(x => clone(x));
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.ListContainer}>
           <FlatList
             ref={ref => (this.flatList = ref)}
-            data={listClone}
+            data={list}
             renderItem={({item}) => this.renderItem(item)}
             keyExtractor={(item, index) => `${item.created}_${index}`}
             onEndReached={this.onLoadPreviousList.bind(this)}
