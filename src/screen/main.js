@@ -729,7 +729,6 @@ export default class MainScreen extends React.Component {
               setYear={this.setYear.bind(this)}
             />
           </View>
-
           <View style={{paddingHorizontal: 5}} />
           <View style={{width: '45%'}}>
             <MonthPicker month={month} setMonth={this.setMonth.bind(this)} />
