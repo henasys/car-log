@@ -5,7 +5,8 @@ import {Icon} from 'react-native-elements';
 import {REACT_APP_GOOGLE_API_KEY} from 'react-native-dotenv';
 
 import Database from '../module/database';
-import {TimeUtil, toFixed, getKilometers} from '../module/util';
+import {TimeUtil, toFixed, getKilometers, clone} from '../module/util';
+import TripTypeButton from '../view/tripTypeButton';
 
 const NUMBERS_PER_PAGE = 10;
 
@@ -105,7 +106,6 @@ export default class TripScreen extends React.Component {
     const endLatitude = item.endLatitude ? toFixed(item.endLatitude) : 0;
     const endLongitude = item.endLongitude ? toFixed(item.endLongitude) : 0;
     const totalDistance = getKilometers(item.totalDistance);
-    const tripTypeLabel = Database.Trip.getTypeLabel(item.type);
     return (
       <View style={styles.itemContainer}>
         <View style={styles.itemColumnContainer}>
@@ -114,7 +114,7 @@ export default class TripScreen extends React.Component {
           </Text>
           <Text>{TimeUtil.timeToWeek(item.startCreated)}</Text>
         </View>
-        <View style={styles.itemColumnContainer}>
+        <View style={styles.itemStartEndContainer}>
           <Text style={styles.titleText}>
             {'출발'} {TimeUtil.timeToHourMin(item.startCreated)}
           </Text>
@@ -131,7 +131,20 @@ export default class TripScreen extends React.Component {
         </View>
         <View style={styles.itemColumnContainer}>
           <Text style={styles.totalDistanceText}>{totalDistance}</Text>
-          <Text>{tripTypeLabel}</Text>
+          <TripTypeButton
+            keepState="true"
+            type={item.type}
+            onValueChanged={value => {
+              console.log('item', item);
+              Database.updateTripType(this.state.realm, item.id, value)
+                .then(newTrip => {
+                  console.log('updateTripType done', newTrip.id);
+                })
+                .catch(e => {
+                  console.log('updateTripType error', e);
+                });
+            }}
+          />
         </View>
       </View>
     );
@@ -147,12 +160,13 @@ export default class TripScreen extends React.Component {
         </View>
       );
     }
+    const listClone = list.map(x => clone(x));
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.ListContainer}>
           <FlatList
             ref={ref => (this.flatList = ref)}
-            data={list}
+            data={listClone}
             renderItem={({item}) => this.renderItem(item)}
             keyExtractor={(item, index) => `${item.created}_${index}`}
             onEndReached={this.onLoadPreviousList.bind(this)}
@@ -192,8 +206,13 @@ const styles = StyleSheet.create({
   },
   itemColumnContainer: {
     flexDirection: 'column',
-    marginLeft: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
     // borderWidth: 1,
+  },
+  itemStartEndContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   menuContainer: {
     flexDirection: 'row',
