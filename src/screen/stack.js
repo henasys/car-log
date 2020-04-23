@@ -114,7 +114,7 @@ export default function MyStack() {
           name="Trip"
           component={TripScreen}
           options={({navigation, route}) => ({
-            title: '운행 정보 편집',
+            title: '운행 기록 편집',
           })}
         />
       </Stack.Navigator>
