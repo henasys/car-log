@@ -1,18 +1,30 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 
 import Database from '../module/database';
 import color from '../module/color';
 
-export default function TripTypeButton({type, onValueChanged}) {
+export default function TripTypeButton({type, onValueChanged, keepState}) {
+  const [typeValue, setTypeValue] = useState(Database.Trip.Type.COMMUTE);
+  const initStates = () => {
+    setTypeValue(type);
+  };
+  useEffect(() => {
+    initStates();
+  }, []);
+  const keepValue = keepState ? typeValue : type;
   return (
     <TouchableOpacity
       style={styles.buttonStyle}
       onPress={() => {
-        const value = (type + 1) % Object.keys(Database.Trip.Type).length;
+        const value = (keepValue + 1) % Object.keys(Database.Trip.Type).length;
         onValueChanged && onValueChanged(value);
+        setTypeValue(value);
       }}>
-      <Text style={styles.titleStyle}>{Database.Trip.getTypeLabel(type)}</Text>
+      <Text style={styles.titleStyle}>
+        {Database.Trip.getTypeLabel(keepValue)}
+      </Text>
     </TouchableOpacity>
   );
 }
