@@ -44,11 +44,13 @@ export default class MainScreen extends React.Component {
   isEmulator = false;
   manualStartBackup = null;
   tripType = null;
+  focusEventUnsubscribe = null;
+  blurEventUnsubscribe = null;
 
   componentDidMount() {
     console.log('main componentDidMount');
+    this.initNavigationEvent();
     this.initDeviceInfo();
-    this.setTimerInterval();
     this.openDatabase();
     this.locator.initLocator(
       this.handleOnLocation.bind(this),
@@ -59,10 +61,34 @@ export default class MainScreen extends React.Component {
 
   componentWillUnmount() {
     console.log('main componentWillUnmount');
-    this.clearTimerInterval();
+    this.removeNavigationEvent();
     this.clearPeriodInterval();
     this.closeDatabase();
     this.locator.removeLocator();
+  }
+
+  initNavigationEvent() {
+    this.focusEventUnsubscribe = this.props.navigation.addListener(
+      'focus',
+      this.handleFocusEvent.bind(this),
+    );
+    this.blurEventUnsubscribe = this.props.navigation.addListener(
+      'blur',
+      this.handleBlurEvent.bind(this),
+    );
+  }
+
+  removeNavigationEvent() {
+    this.focusEventUnsubscribe && this.focusEventUnsubscribe();
+    this.blurEventUnsubscribe && this.blurEventUnsubscribe();
+  }
+
+  handleFocusEvent() {
+    this.setTimerInterval();
+  }
+
+  handleBlurEvent() {
+    this.clearTimerInterval();
   }
 
   initDeviceInfo() {
