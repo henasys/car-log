@@ -5,8 +5,7 @@ import {Icon} from 'react-native-elements';
 import {REACT_APP_GOOGLE_API_KEY} from 'react-native-dotenv';
 
 import Database from '../module/database';
-import {TimeUtil, toFixed, getKilometers} from '../module/util';
-import TripTypeButton from '../view/tripTypeButton';
+import TripItem from '../view/tripItem';
 
 const NUMBERS_PER_PAGE = 10;
 
@@ -98,60 +97,8 @@ export default class TripScreen extends React.Component {
     return sliced;
   }
 
-  renderItem(item) {
-    const tripLabel = '도착';
-    const endCreated = item.endCreated
-      ? TimeUtil.timeToHourMin(item.endCreated)
-      : '미확정';
-    const endLatitude = item.endLatitude ? toFixed(item.endLatitude) : 0;
-    const endLongitude = item.endLongitude ? toFixed(item.endLongitude) : 0;
-    const totalDistance = getKilometers(item.totalDistance);
-    return (
-      <View style={styles.itemContainer}>
-        <View style={styles.itemColumnContainer}>
-          <Text style={styles.dateText}>
-            {TimeUtil.timeToMonthDay(item.startCreated)}
-          </Text>
-          <Text>{TimeUtil.timeToWeek(item.startCreated)}</Text>
-        </View>
-        <View style={styles.itemStartEndContainer}>
-          <Text style={styles.titleText}>
-            {'출발'} {TimeUtil.timeToHourMin(item.startCreated)}
-          </Text>
-          <Text style={styles.addressText}>
-            {'    '} 좌표: {toFixed(item.startLatitude)},{' '}
-            {toFixed(item.startLongitude)}
-          </Text>
-          <Text style={styles.titleText}>
-            {tripLabel} {endCreated}
-          </Text>
-          <Text style={styles.addressText}>
-            {'    '} 좌표: {endLatitude}, {endLongitude}
-          </Text>
-        </View>
-        <View style={styles.itemColumnContainer}>
-          <Text style={styles.totalDistanceText}>{totalDistance}</Text>
-          <TripTypeButton
-            keepState="true"
-            type={item.type}
-            onValueChanged={value => {
-              console.log('item', item);
-              Database.updateTripType(this.state.realm, item.id, value)
-                .then(newTrip => {
-                  console.log('updateTripType done', newTrip.id);
-                })
-                .catch(e => {
-                  console.log('updateTripType error', e);
-                });
-            }}
-          />
-        </View>
-      </View>
-    );
-  }
-
   render() {
-    const {list} = this.state;
+    const {list, realm} = this.state;
     console.log('trip render', list.length);
     if (list.length === 0) {
       return (
@@ -166,7 +113,7 @@ export default class TripScreen extends React.Component {
           <FlatList
             ref={ref => (this.flatList = ref)}
             data={list}
-            renderItem={({item}) => this.renderItem(item)}
+            renderItem={({item}) => <TripItem item={item} realm={realm} />}
             keyExtractor={(item, index) => `${item.created}_${index}`}
             onEndReached={this.onLoadPreviousList.bind(this)}
             onRefresh={this.onRefreshList.bind(this)}
@@ -188,13 +135,6 @@ const styles = StyleSheet.create({
     margin: 0,
     transform: [{scaleY: -1}],
   },
-  itemContainer: {
-    flexDirection: 'row',
-    margin: 10,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    transform: [{scaleY: -1}],
-  },
   alertMessage: {
     paddingVertical: 10,
     // backgroundColor: '#DCDCDC',
@@ -203,35 +143,10 @@ const styles = StyleSheet.create({
   alertMessageText: {
     fontSize: 16,
   },
-  itemColumnContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // borderWidth: 1,
-  },
-  itemStartEndContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
   menuContainer: {
     flexDirection: 'row',
   },
   menuItem: {
     marginRight: 10,
-  },
-  dateText: {
-    fontSize: 16,
-    fontWeight: 'normal',
-  },
-  titleText: {
-    fontSize: 16,
-    fontWeight: 'normal',
-  },
-  totalDistanceText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  addressText: {
-    fontSize: 14,
   },
 });
