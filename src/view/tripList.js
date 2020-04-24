@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
 
@@ -49,6 +49,12 @@ export default function TripList({
       </TouchableOpacity>
     </View>
   );
+  useEffect(() => {
+    console.log('TripList useEffect');
+    return () => {
+      console.log('TripList useEffect return');
+    };
+  });
   return (
     <View style={styles.container}>
       <SwipeListView
@@ -62,6 +68,7 @@ export default function TripList({
         onRefresh={onRefreshList}
         refreshing={false}
         renderHiddenItem={renderHiddenItem}
+        disableRightSwipe
         leftOpenValue={75}
         rightOpenValue={-150}
         previewRowKey={'0'}
