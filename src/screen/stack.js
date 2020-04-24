@@ -11,12 +11,19 @@ import SettingScreen from '../screen/setting';
 import SearchScreen from '../screen/search';
 import DeleteScreen from '../screen/delete';
 import TripScreen from '../screen/trip';
+import Basic from '../screen/swipeTest';
 
 const Stack = createStackNavigator();
 
 const debugView = navigation => {
   return __DEV__ === true ? (
     <View style={styles.menuContainer}>
+      <Icon
+        iconStyle={styles.menuItem}
+        onPress={() => navigation.navigate('SwipeTest')}
+        name="bug"
+        type="material-community"
+      />
       <Icon
         iconStyle={styles.menuItem}
         onPress={() => navigation.navigate('Location')}
@@ -115,6 +122,13 @@ export default function MyStack() {
           component={TripScreen}
           options={({navigation, route}) => ({
             title: '운행 기록 편집',
+          })}
+        />
+        <Stack.Screen
+          name="SwipeTest"
+          component={Basic}
+          options={({navigation, route}) => ({
+            title: 'Swipe Test',
           })}
         />
       </Stack.Navigator>
