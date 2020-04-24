@@ -670,6 +670,20 @@ export default class MainScreen extends React.Component {
     );
   }
 
+  onDeleteRow(rowKey) {
+    Database.deleteTripById(this.state.realm, rowKey)
+      .then(() => {
+        console.log('Database.deleteTripById done', rowKey);
+      })
+      .catch(e => {
+        console.log('Database.deleteTripById error', rowKey, e);
+      });
+  }
+
+  onSetList(newList) {
+    this.setState({list: newList});
+  }
+
   render() {
     console.log('main render');
     const {today, trip, list, year, month, pickerItems, realm} = this.state;
@@ -695,7 +709,12 @@ export default class MainScreen extends React.Component {
           </View>
         </View>
         <View style={styles.ListContainer}>
-          <TripList list={list} realm={realm} />
+          <TripList
+            list={list}
+            realm={realm}
+            onDeleteRow={this.onDeleteRow.bind(this)}
+            onSetList={this.onSetList.bind(this)}
+          />
         </View>
       </SafeAreaView>
     );

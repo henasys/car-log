@@ -97,6 +97,20 @@ export default class TripScreen extends React.Component {
     return sliced;
   }
 
+  onDeleteRow(rowKey) {
+    Database.deleteTripById(this.state.realm, rowKey)
+      .then(() => {
+        console.log('Database.deleteTripById done', rowKey);
+      })
+      .catch(e => {
+        console.log('Database.deleteTripById error', rowKey, e);
+      });
+  }
+
+  onSetList(newList) {
+    this.setState({list: newList});
+  }
+
   render() {
     const {list, realm} = this.state;
     console.log('trip render', list.length);
@@ -116,6 +130,8 @@ export default class TripScreen extends React.Component {
             transform
             onLoadPreviousList={this.onLoadPreviousList.bind(this)}
             onRefreshList={this.onRefreshList.bind(this)}
+            onDeleteRow={this.onDeleteRow.bind(this)}
+            onSetList={this.onSetList.bind(this)}
           />
         </View>
       </SafeAreaView>

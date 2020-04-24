@@ -6,32 +6,14 @@ import TripItem from '../view/tripItem';
 
 const hiddenButtonWidth = 75;
 
-const onRowDidOpen = rowKey => {
-  console.log('This row opened', rowKey);
-};
-
-const closeRow = (rowMap, rowKey) => {
-  console.log('closeRow');
-  if (rowMap[rowKey]) {
-    rowMap[rowKey].closeRow();
-  }
-};
-
-const deleteRow = (rowMap, rowKey) => {
-  console.log('deleteRow');
-  closeRow(rowMap, rowKey);
-  // const newData = [...listData];
-  // const prevIndex = listData.findIndex(item => item.key === rowKey);
-  // newData.splice(prevIndex, 1);
-  // this.setListData(newData);
-};
-
 export default function TripList({
   list,
   realm,
   transform = null,
   onLoadPreviousList = null,
   onRefreshList = null,
+  onDeleteRow = null,
+  onSetList = null,
 }) {
   const rowBackStyle = transform
     ? {...styles.rowBack, ...{transform: [{scaleY: -1}]}}
@@ -45,6 +27,24 @@ export default function TripList({
       </TouchableOpacity>
     </View>
   );
+  const onRowDidOpen = rowKey => {
+    console.log('This row opened', rowKey);
+  };
+  const closeRow = (rowMap, rowKey) => {
+    // console.log('closeRow');
+    if (rowMap[rowKey]) {
+      rowMap[rowKey].closeRow();
+    }
+  };
+  const deleteRow = (rowMap, rowKey) => {
+    // console.log('deleteRow');
+    closeRow(rowMap, rowKey);
+    const newData = [...list];
+    const prevIndex = list.findIndex(item => item.id === rowKey);
+    newData.splice(prevIndex, 1);
+    onSetList && onSetList(newData);
+    onDeleteRow && onDeleteRow(rowKey);
+  };
   if (list.length === 0) {
     return <View />;
   }

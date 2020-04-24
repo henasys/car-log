@@ -408,6 +408,21 @@ const deleteTrip = (realm, year, month) => {
   });
 };
 
+const deleteTripById = (realm, id) => {
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        const trip = realm.objectForPrimaryKey('Trip', id);
+        realm.delete(trip);
+        resolve();
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
+};
+
 const clearAllDatabase = () => {
   return new Promise((resolve, reject) => {
     Realm.open(schemas.getLatestConfig())
@@ -459,5 +474,6 @@ export default {
   updateTripAddress,
   updateTripType,
   deleteTrip,
+  deleteTripById,
   clearAllDatabase,
 };
