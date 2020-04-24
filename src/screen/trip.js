@@ -111,12 +111,11 @@ export default class TripScreen extends React.Component {
       <SafeAreaView style={styles.container}>
         <View style={styles.ListContainer}>
           <FlatList
-            ref={ref => (this.flatList = ref)}
             data={list}
             renderItem={({item}) => (
               <TripItem item={item} realm={realm} transform />
             )}
-            keyExtractor={(item, index) => `${item.created}_${index}`}
+            keyExtractor={(item, index) => item.id}
             onEndReached={this.onLoadPreviousList.bind(this)}
             onRefresh={this.onRefreshList.bind(this)}
             refreshing={false}
