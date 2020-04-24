@@ -40,7 +40,7 @@ export default class SwipeableRow extends Component {
       }}>
       {this.renderRightAction('닫기', '#ffab00', 128, progress)}
       {this.renderRightAction('삭제', '#dd2c00', 64, progress, () => {
-        this.props.deleteRow && this.props.deleteRow(this.props.rowKey);
+        this.props.onDeleteRow && this.props.onDeleteRow(this.props.rowKey);
       })}
     </View>
   );

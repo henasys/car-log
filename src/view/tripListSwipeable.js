@@ -14,8 +14,8 @@ export default function TripList({
   onDeleteRow = null,
   onSetList = null,
 }) {
-  const deleteRow = rowKey => {
-    console.log('deleteRow', rowKey);
+  const _onDeleteRow = rowKey => {
+    console.log('_onDeleteRow', rowKey);
     if (!rowKey) {
       return;
     }
@@ -36,7 +36,7 @@ export default function TripList({
         renderItem={({item}) => (
           <SwipeableRow
             rowKey={item.id}
-            deleteRow={deleteRow}
+            onDeleteRow={_onDeleteRow}
             transform={transform}>
             <TripItem item={item} realm={realm} transform={transform} />
           </SwipeableRow>
