@@ -1,4 +1,5 @@
-import React, {useEffect} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useEffect} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
 
@@ -17,7 +18,7 @@ const closeRow = (rowMap, rowKey) => {
 
 const deleteRow = (rowMap, rowKey) => {
   console.log('deleteRow');
-  this.closeRow(rowMap, rowKey);
+  closeRow(rowMap, rowKey);
   // const newData = [...listData];
   // const prevIndex = listData.findIndex(item => item.key === rowKey);
   // newData.splice(prevIndex, 1);
@@ -31,17 +32,12 @@ export default function TripList({
   onLoadPreviousList = null,
   onRefreshList = null,
 }) {
+  const [listData, setListData] = useState([]);
   const rowBackStyle = transform
     ? {...styles.rowBack, ...{transform: [{scaleY: -1}]}}
     : styles.rowBack;
   const renderHiddenItem = (data, rowMap) => (
     <View style={rowBackStyle}>
-      <Text>Left</Text>
-      <TouchableOpacity
-        style={[styles.backRightBtn, styles.backRightBtnLeft]}
-        onPress={() => closeRow(rowMap, data.item.id)}>
-        <Text style={styles.backTextWhite}>닫기</Text>
-      </TouchableOpacity>
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
         onPress={() => deleteRow(rowMap, data.item.id)}>
@@ -51,15 +47,20 @@ export default function TripList({
   );
   useEffect(() => {
     console.log('TripList useEffect');
+    setListData(list);
     return () => {
       console.log('TripList useEffect return');
+      setListData([]);
     };
-  });
+  }, []);
+  if (listData.length === 0) {
+    return <View />;
+  }
   return (
     <View style={styles.container}>
       <SwipeListView
         useFlatList={true}
-        data={list}
+        data={listData}
         renderItem={({item}) => (
           <TripItem item={item} realm={realm} transform={transform} />
         )}
@@ -70,7 +71,7 @@ export default function TripList({
         renderHiddenItem={renderHiddenItem}
         disableRightSwipe
         leftOpenValue={75}
-        rightOpenValue={-150}
+        rightOpenValue={-75}
         previewRowKey={'0'}
         previewOpenValue={-40}
         previewOpenDelay={3000}
