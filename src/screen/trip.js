@@ -5,7 +5,7 @@ import {Icon} from 'react-native-elements';
 import {REACT_APP_GOOGLE_API_KEY} from 'react-native-dotenv';
 
 import Database from '../module/database';
-import TripList from '../view/tripList';
+import TripList from '../view/tripListSwipeable';
 
 const NUMBERS_PER_PAGE = 10;
 

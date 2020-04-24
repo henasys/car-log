@@ -21,7 +21,7 @@ import MonthPicker from '../view/monthPicker';
 import TripButton from '../view/tripButton';
 import TripTypeButton from '../view/tripTypeButton';
 import color from '../module/color';
-import TripList from '../view/tripList';
+import TripList from '../view/tripListSwipeable';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 
