@@ -9,7 +9,6 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 export default class SwipeableRow extends Component {
   constructor(props) {
     super(props);
-    console.log('SwipeableRow', this.props);
   }
   renderRightAction = (text, color, x, progress, callback = null) => {
     const trans = progress.interpolate({
@@ -41,7 +40,6 @@ export default class SwipeableRow extends Component {
       }}>
       {this.renderRightAction('닫기', '#ffab00', 128, progress)}
       {this.renderRightAction('삭제', '#dd2c00', 64, progress, () => {
-        console.log('delete callback', this.props.rowKey);
         this.props.deleteRow && this.props.deleteRow(this.props.rowKey);
       })}
     </View>

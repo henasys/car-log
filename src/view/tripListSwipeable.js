@@ -35,7 +35,7 @@ export default function TripList({
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         renderItem={({item}) => (
           <SwipeableRow
-            rowkey={item.id}
+            rowKey={item.id}
             deleteRow={deleteRow}
             transform={transform}>
             <TripItem item={item} realm={realm} transform={transform} />
