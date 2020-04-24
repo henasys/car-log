@@ -12,6 +12,7 @@ import SearchScreen from '../screen/search';
 import DeleteScreen from '../screen/delete';
 import TripScreen from '../screen/trip';
 import Basic from '../screen/swipeTest';
+import Example from '../screen/swipeable';
 
 const Stack = createStackNavigator();
 
@@ -126,7 +127,7 @@ export default function MyStack() {
         />
         <Stack.Screen
           name="SwipeTest"
-          component={Basic}
+          component={Example}
           options={({navigation, route}) => ({
             title: 'Swipe Test',
           })}
