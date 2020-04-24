@@ -11,7 +11,20 @@ export default function TripList({
   transform = null,
   onLoadPreviousList = null,
   onRefreshList = null,
+  onDeleteRow = null,
+  onSetList = null,
 }) {
+  const deleteRow = rowKey => {
+    console.log('deleteRow', rowKey);
+    if (!rowKey) {
+      return;
+    }
+    const newData = [...list];
+    const prevIndex = list.findIndex(item => item.id === rowKey);
+    newData.splice(prevIndex, 1);
+    onSetList && onSetList(newData);
+    onDeleteRow && onDeleteRow(rowKey);
+  };
   if (list.length === 0) {
     return <View />;
   }
@@ -21,7 +34,10 @@ export default function TripList({
         data={list}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         renderItem={({item}) => (
-          <SwipeableRow transform>
+          <SwipeableRow
+            rowkey={item.id}
+            deleteRow={deleteRow}
+            transform={transform}>
             <TripItem item={item} realm={realm} transform={transform} />
           </SwipeableRow>
         )}

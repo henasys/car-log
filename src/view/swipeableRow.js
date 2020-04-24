@@ -7,13 +7,18 @@ import {RectButton} from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 export default class SwipeableRow extends Component {
-  renderRightAction = (text, color, x, progress) => {
+  constructor(props) {
+    super(props);
+    console.log('SwipeableRow', this.props);
+  }
+  renderRightAction = (text, color, x, progress, callback = null) => {
     const trans = progress.interpolate({
       inputRange: [0, 1],
       outputRange: [x, 0],
     });
     const pressHandler = () => {
       this.close();
+      callback && callback();
     };
     const actionStyle = this.props.transform
       ? {...styles.rightAction, ...{transform: [{scaleY: -1}]}}
@@ -35,7 +40,10 @@ export default class SwipeableRow extends Component {
         flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
       }}>
       {this.renderRightAction('닫기', '#ffab00', 128, progress)}
-      {this.renderRightAction('삭제', '#dd2c00', 64, progress)}
+      {this.renderRightAction('삭제', '#dd2c00', 64, progress, () => {
+        console.log('delete callback', this.props.rowKey);
+        this.props.deleteRow && this.props.deleteRow(this.props.rowKey);
+      })}
     </View>
   );
   updateRef = ref => {
