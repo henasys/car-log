@@ -84,10 +84,12 @@ export default class MainScreen extends React.Component {
   }
 
   handleFocusEvent() {
+    console.log('handleFocusEvent');
     this.setTimerInterval();
   }
 
   handleBlurEvent() {
+    console.log('handleBlurEvent');
     this.clearTimerInterval();
   }
 
