@@ -1,15 +1,42 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {Animated, StyleSheet, Text, View, I18nManager} from 'react-native';
-
 import {RectButton} from 'react-native-gesture-handler';
-
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+const buttonWidth = 64;
+const rightButtonCount = 2;
+const leftButtonCount = 1;
 
 export default class SwipeableRow extends Component {
-  constructor(props) {
-    super(props);
-  }
+  renderLeftActions = (progress, dragX) => {
+    const scale = dragX.interpolate({
+      inputRange: [0, 80],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    });
+    const actionStyle = this.props.transform
+      ? {...styles.leftAction, ...{transform: [{scaleY: -1}]}}
+      : styles.leftAction;
+    return (
+      <View
+        style={{
+          width: buttonWidth * leftButtonCount,
+          flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+        }}>
+        <RectButton style={actionStyle} onPress={this.close}>
+          <AnimatedIcon
+            name="pin"
+            size={30}
+            color="#fff"
+            style={[styles.actionIcon, {transform: [{scale}]}]}
+          />
+        </RectButton>
+      </View>
+    );
+  };
   renderRightAction = (text, color, x, progress, callback = null) => {
     const trans = progress.interpolate({
       inputRange: [0, 1],
@@ -35,11 +62,16 @@ export default class SwipeableRow extends Component {
   renderRightActions = progress => (
     <View
       style={{
-        width: 128,
+        width: buttonWidth * rightButtonCount,
         flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
       }}>
-      {this.renderRightAction('닫기', '#ffab00', 128, progress)}
-      {this.renderRightAction('삭제', '#dd2c00', 64, progress, () => {
+      {this.renderRightAction(
+        '닫기',
+        '#ffab00',
+        buttonWidth * rightButtonCount,
+        progress,
+      )}
+      {this.renderRightAction('삭제', '#dd2c00', buttonWidth, progress, () => {
         this.props.onDeleteRow && this.props.onDeleteRow(this.props.rowKey);
       })}
     </View>
@@ -58,6 +90,7 @@ export default class SwipeableRow extends Component {
         friction={2}
         leftThreshold={30}
         rightThreshold={40}
+        renderLeftActions={this.renderLeftActions}
         renderRightActions={this.renderRightActions.bind(this)}>
         {children}
       </Swipeable>
@@ -68,8 +101,14 @@ export default class SwipeableRow extends Component {
 const styles = StyleSheet.create({
   leftAction: {
     flex: 1,
-    backgroundColor: '#497AFC',
-    justifyContent: 'center',
+    backgroundColor: '#388e3c',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse',
+  },
+  actionIcon: {
+    width: 30,
+    marginHorizontal: 10,
   },
   actionText: {
     color: 'white',
