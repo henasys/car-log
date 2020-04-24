@@ -14,7 +14,7 @@ import {
   tripCallbackItemToTripRecord,
   getKilometers,
 } from '../module/util';
-import {toast} from '../module/toast';
+import {toast, toastError} from '../module/toast';
 import {TripDetector} from '../module/detector';
 import FileManager from '../module/file';
 import YearPicker from '../view/yearPicker';
@@ -179,8 +179,8 @@ export default class MainScreen extends React.Component {
       toast(msg);
     };
     const errorCallback = error => {
-      const msg = `${error.code}: ${error.message}`;
-      toast(msg);
+      const msg = `init: ${error.code}: ${error.message}`;
+      toastError(msg);
     };
     this.locator.getCurrentPosition(callback, errorCallback);
   }
@@ -450,7 +450,7 @@ export default class MainScreen extends React.Component {
     )
       .then(log => {
         console.log('saveLocation done', log);
-        const msg = `new: ${coords.latitude}, ${coords.longitude}`;
+        const msg = `${coords.latitude}, ${coords.longitude}`;
         toast(msg);
         const updater = this.locator.getUpdater();
         updater.next(coords);
@@ -462,7 +462,7 @@ export default class MainScreen extends React.Component {
 
   handleOnLocationError(error) {
     const msg = `${error.code}: ${error.message}`;
-    toast(msg);
+    toastError(msg);
   }
 
   testNewLocation() {
