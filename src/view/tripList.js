@@ -1,9 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
 
 import TripItem from '../view/tripItem';
+
+const hiddenButtonWidth = 75;
 
 const onRowDidOpen = rowKey => {
   console.log('This row opened', rowKey);
@@ -32,7 +33,6 @@ export default function TripList({
   onLoadPreviousList = null,
   onRefreshList = null,
 }) {
-  const [listData, setListData] = useState([]);
   const rowBackStyle = transform
     ? {...styles.rowBack, ...{transform: [{scaleY: -1}]}}
     : styles.rowBack;
@@ -45,33 +45,25 @@ export default function TripList({
       </TouchableOpacity>
     </View>
   );
-  useEffect(() => {
-    console.log('TripList useEffect');
-    setListData(list);
-    return () => {
-      console.log('TripList useEffect return');
-      setListData([]);
-    };
-  }, []);
-  if (listData.length === 0) {
+  if (list.length === 0) {
     return <View />;
   }
   return (
     <View style={styles.container}>
       <SwipeListView
         useFlatList={true}
-        data={listData}
+        data={list}
         renderItem={({item}) => (
           <TripItem item={item} realm={realm} transform={transform} />
         )}
-        keyExtractor={(item, index) => item.id}
+        keyExtractor={item => item.id}
         onEndReached={onLoadPreviousList}
         onRefresh={onRefreshList}
         refreshing={false}
         renderHiddenItem={renderHiddenItem}
         disableRightSwipe
-        leftOpenValue={75}
-        rightOpenValue={-75}
+        leftOpenValue={hiddenButtonWidth}
+        rightOpenValue={-hiddenButtonWidth}
         previewRowKey={'0'}
         previewOpenValue={-40}
         previewOpenDelay={3000}
@@ -99,7 +91,7 @@ const styles = StyleSheet.create({
   },
   rowBack: {
     alignItems: 'center',
-    backgroundColor: '#DDD',
+    // backgroundColor: '#DDD',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -111,14 +103,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     top: 0,
-    width: 75,
+    width: hiddenButtonWidth,
   },
   backRightBtnLeft: {
     backgroundColor: 'blue',
-    right: 75,
+    right: hiddenButtonWidth,
   },
   backRightBtnRight: {
-    backgroundColor: 'red',
+    backgroundColor: 'crimson',
     right: 0,
   },
 });
