@@ -14,7 +14,7 @@ export default function TripItem({item, realm, transform = null}) {
   const endLongitude = item.endLongitude ? toFixed(item.endLongitude) : 0;
   const totalDistance = getKilometers(item.totalDistance);
   const containerStyle = transform
-    ? styles.itemTransformContainer
+    ? {...styles.itemContainer, ...{transform: [{scaleY: -1}]}}
     : styles.itemContainer;
   return (
     <View style={containerStyle}>
@@ -66,16 +66,11 @@ export default function TripItem({item, realm, transform = null}) {
 const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
-    margin: 10,
+    margin: 0,
+    padding: 10,
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  itemTransformContainer: {
-    flexDirection: 'row',
-    margin: 10,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    transform: [{scaleY: -1}],
+    backgroundColor: 'white',
   },
   itemColumnContainer: {
     flexDirection: 'column',

@@ -1,11 +1,11 @@
 import React from 'react';
-import {Text, View, StyleSheet, SafeAreaView, FlatList} from 'react-native';
+import {Text, View, StyleSheet, SafeAreaView} from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import {Icon} from 'react-native-elements';
 import {REACT_APP_GOOGLE_API_KEY} from 'react-native-dotenv';
 
 import Database from '../module/database';
-import TripItem from '../view/tripItem';
+import TripList from '../view/tripList';
 
 const NUMBERS_PER_PAGE = 10;
 
@@ -110,15 +110,12 @@ export default class TripScreen extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.ListContainer}>
-          <FlatList
-            data={list}
-            renderItem={({item}) => (
-              <TripItem item={item} realm={realm} transform />
-            )}
-            keyExtractor={(item, index) => item.id}
-            onEndReached={this.onLoadPreviousList.bind(this)}
-            onRefresh={this.onRefreshList.bind(this)}
-            refreshing={false}
+          <TripList
+            list={list}
+            realm={realm}
+            transform
+            onLoadPreviousList={this.onLoadPreviousList.bind(this)}
+            onRefreshList={this.onRefreshList.bind(this)}
           />
         </View>
       </SafeAreaView>

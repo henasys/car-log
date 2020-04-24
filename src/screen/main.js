@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
 import {YellowBox} from 'react-native';
 import moment from 'moment';
 import DeviceInfo from 'react-native-device-info';
@@ -9,7 +9,6 @@ import Database from '../module/database';
 import {Locator} from '../module/locator';
 import {
   TimeUtil,
-  toFixed,
   positionToLocation,
   tripCallbackItemToTripRecord,
   getKilometers,
@@ -22,7 +21,7 @@ import MonthPicker from '../view/monthPicker';
 import TripButton from '../view/tripButton';
 import TripTypeButton from '../view/tripTypeButton';
 import color from '../module/color';
-import TripItem from '../view/tripItem';
+import TripList from '../view/tripList';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 
@@ -671,46 +670,6 @@ export default class MainScreen extends React.Component {
     );
   }
 
-  renderItem(item) {
-    const tripLabel = '도착';
-    const endCreated = item.endCreated
-      ? TimeUtil.timeToHourMin(item.endCreated)
-      : '미확정';
-    const endLatitude = item.endLatitude ? toFixed(item.endLatitude) : 0;
-    const endLongitude = item.endLongitude ? toFixed(item.endLongitude) : 0;
-    const totalDistance = getKilometers(item.totalDistance);
-    const tripTypeLabel = Database.Trip.getTypeLabel(item.type);
-    return (
-      <View style={styles.itemContainer}>
-        <View style={styles.itemColumnContainer}>
-          <Text style={styles.dateText}>
-            {TimeUtil.timeToMonthDay(item.startCreated)}
-          </Text>
-          <Text>{TimeUtil.timeToWeek(item.startCreated)}</Text>
-        </View>
-        <View style={styles.itemColumnContainer}>
-          <Text style={styles.titleText}>
-            {'출발'} {TimeUtil.timeToHourMin(item.startCreated)}
-          </Text>
-          <Text style={styles.addressText}>
-            {'    '} 좌표: {toFixed(item.startLatitude)},{' '}
-            {toFixed(item.startLongitude)}
-          </Text>
-          <Text style={styles.titleText}>
-            {tripLabel} {endCreated}
-          </Text>
-          <Text style={styles.addressText}>
-            {'    '} 좌표: {endLatitude}, {endLongitude}
-          </Text>
-        </View>
-        <View style={styles.itemColumnContainer}>
-          <Text style={styles.totalDistanceText}>{totalDistance}</Text>
-          <Text>{tripTypeLabel}</Text>
-        </View>
-      </View>
-    );
-  }
-
   render() {
     console.log('main render');
     const {today, trip, list, year, month, pickerItems, realm} = this.state;
@@ -735,11 +694,9 @@ export default class MainScreen extends React.Component {
             <MonthPicker month={month} setMonth={this.setMonth.bind(this)} />
           </View>
         </View>
-        <FlatList
-          data={list}
-          renderItem={({item}) => <TripItem item={item} realm={realm} />}
-          keyExtractor={(item, index) => String(index)}
-        />
+        <View style={styles.ListContainer}>
+          <TripList list={list} realm={realm} />
+        </View>
       </SafeAreaView>
     );
   }
@@ -792,32 +749,11 @@ const styles = StyleSheet.create({
     backgroundColor: color.bg1,
     borderRadius: 10,
   },
-  itemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    margin: 10,
-    // borderWidth: 1,
-  },
-  itemColumnContainer: {
-    flexDirection: 'column',
-    marginLeft: 10,
-    // borderWidth: 1,
-  },
-  dateText: {
-    fontSize: 16,
-    fontWeight: 'normal',
-  },
-  titleText: {
-    fontSize: 16,
-    fontWeight: 'normal',
-  },
-  totalDistanceText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  addressText: {
-    fontSize: 14,
+  ListContainer: {
+    flex: 1,
+    padding: 0,
+    margin: 0,
+    backgroundColor: 'white',
   },
   yearMonthPickerContainer: {
     flexDirection: 'row',
