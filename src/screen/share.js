@@ -39,7 +39,10 @@ const sendMail = (realm, email, year, dataType) => {
   }
   if (!year) {
     console.log('not defined year');
-    MyAlert.showAlert('연도 미지정', '전송받을 운행기록의 연도를 입력해주세요.');
+    MyAlert.showAlert(
+      '연도 미지정',
+      '전송받을 운행기록의 연도를 입력해주세요.',
+    );
     return;
   }
   const callback = (error, event) => {
