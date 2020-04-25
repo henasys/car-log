@@ -23,10 +23,10 @@ export default function TripList({
     if (!rowKey) {
       return;
     }
-    const newData = [...list];
+    const newList = [...list];
     const prevIndex = list.findIndex(item => item.id === rowKey);
-    newData.splice(prevIndex, 1);
-    onSetList && onSetList(newData);
+    newList.splice(prevIndex, 1);
+    onSetList && onSetList(newList);
     onDeleteRow && onDeleteRow(rowKey);
   };
   const _onMergeRow = (rowKey, rowIndex) => {
@@ -55,18 +55,7 @@ export default function TripList({
     const okCallback = () => {
       const tripId = trip.id;
       const nextId = next.id;
-      const newData = [...list];
-      const tripClone = clone(trip);
-      tripClone.endLatitude = next.endLatitude;
-      tripClone.endLongitude = next.endLongitude;
-      tripClone.endAddress = next.endAddress;
-      tripClone.endCreated = next.endCreated;
-      tripClone.totalDistance = trip.totalDistance + next.totalDistance;
-      tripClone.totalTime = trip.totalDistance + next.totalDistance;
-      newData[rowIndex] = tripClone;
-      newData.splice(rowIndex - 1, 1);
-      onSetList && onSetList(newData);
-      onMergeRow && onMergeRow(tripId, nextId);
+      onMergeRow && onMergeRow(tripId, nextId, rowIndex);
     };
     const cancelCallback = () => {};
     MyAlert.showTwoButtonAlert(

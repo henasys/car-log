@@ -687,11 +687,15 @@ export default class MainScreen extends React.Component {
     this.setState({list: newList});
   }
 
-  onMergeRow(tripId, nextId) {
+  onMergeRow(tripId, nextId, rowIndex) {
     console.log('onMergeRow');
     Database.mergeTrip(this.state.realm, tripId, nextId)
       .then(trip => {
         console.log('Database.mergeTrip done', tripId);
+        const newList = [...this.state.list];
+        newList[rowIndex] = trip;
+        newList.splice(rowIndex - 1, 1);
+        this.onSetList(newList);
       })
       .catch(e => {
         console.log('Database.mergeTrip error', tripId, e);
