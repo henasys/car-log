@@ -6,7 +6,6 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import Alert from '../view/alert';
 import {getDetailDataRow} from '../module/bundleData';
-import {getKilometers} from '../module/util';
 
 const buttonWidth = 64;
 const rightButtonCount = 2;
