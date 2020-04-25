@@ -17,10 +17,14 @@ export default class SwipeableRow extends Component {
     this.tripData = getDetailDataRow(props.rowItem);
     // console.log('tripData', this.tripData);
   }
-  getTripBrief() {
+  getTripBriefMessage() {
     if (this.tripData) {
       const trip = this.tripData;
-      return `${trip.startHour} -> ${trip.endHour}\n${trip.distance} km`;
+      const messages = [];
+      messages.push(`출발: ${trip.startHour}`);
+      messages.push(`도착: ${trip.endHour}`);
+      messages.push(`거리: ${trip.distance} km`);
+      return messages.join('\n');
     }
     return null;
   }
@@ -64,7 +68,7 @@ export default class SwipeableRow extends Component {
       )}
       {this.renderRightAction('삭제', '#dd2c00', buttonWidth, progress, () => {
         const title = `운행기록 삭제: ${this.tripData.date}`;
-        const message = this.getTripBrief();
+        const message = this.getTripBriefMessage();
         const okCallback = () => {
           this.props.onDeleteRow && this.props.onDeleteRow(this.props.rowKey);
         };
