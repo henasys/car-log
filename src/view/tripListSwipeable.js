@@ -4,6 +4,7 @@ import {FlatList} from 'react-native-gesture-handler';
 
 import SwipeableRow from '../view/swipeableRow';
 import TripItem from './tripItem';
+import Alert from '../view/alert';
 
 export default function TripList({
   list,
@@ -13,6 +14,7 @@ export default function TripList({
   onRefreshList = null,
   onDeleteRow = null,
   onSetList = null,
+  onMergeRow = null,
 }) {
   const [mergeStart, setMergeStart] = useState(null);
   const _onDeleteRow = rowKey => {
@@ -25,6 +27,17 @@ export default function TripList({
     newData.splice(prevIndex, 1);
     onSetList && onSetList(newData);
     onDeleteRow && onDeleteRow(rowKey);
+  };
+  const _onMergeRow = (rowKey, rowIndex) => {
+    console.log('onMergeRow', rowKey, rowIndex);
+    const date = '';
+    const title = `운행기록 합치기: ${date}`;
+    const message = '';
+    const okCallback = () => {
+      onMergeRow && onMergeRow(rowKey, rowIndex);
+    };
+    const cancelCallback = () => {};
+    Alert.showTwoButtonAlert(title, message, okCallback, cancelCallback);
   };
   const onSwipeableLeftOpen = (rowKey, rowIndex) => {
     console.log('onSwipeableLeftOpen', rowKey, rowIndex);
@@ -63,6 +76,7 @@ export default function TripList({
             onDeleteRow={_onDeleteRow}
             onSwipeableLeftOpen={onSwipeableLeftOpen}
             onSwipeableClose={onSwipeableClose}
+            onMergeRow={_onMergeRow}
             transform={transform}>
             <TripItem item={item} realm={realm} transform={transform} />
           </SwipeableRow>

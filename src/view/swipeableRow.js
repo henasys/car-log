@@ -58,14 +58,8 @@ export default class SwipeableRow extends Component {
         buttonWidth * rightButtonCount,
         progress,
         () => {
-          const title = `운행기록 합치기: ${this.tripData.date}`;
-          const message = this.getTripBrief();
-          const okCallback = () => {
-            this.props.onMergeRow &&
-              this.props.onMergeRow(this.props.rowKey, this.props.rowIndex);
-          };
-          const cancelCallback = () => {};
-          Alert.showTwoButtonAlert(title, message, okCallback, cancelCallback);
+          this.props.onMergeRow &&
+            this.props.onMergeRow(this.props.rowKey, this.props.rowIndex);
         },
       )}
       {this.renderRightAction('삭제', '#dd2c00', buttonWidth, progress, () => {
