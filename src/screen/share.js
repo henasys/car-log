@@ -2,11 +2,11 @@
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet, View, TextInput} from 'react-native';
 import {Icon} from 'react-native-elements';
-import NetInfo from '@react-native-community/netinfo';
 
 import Database from '../module/database';
 import Mailer from '../module/mail';
 import FileManager from '../module/file';
+import Network from '../module/network';
 import YearPicker from '../view/yearPicker';
 import Picker from '../view/picker';
 import {
@@ -132,21 +132,6 @@ export default function ShareScreen(props) {
         console.log('FileManager.makeMailTempDir', e);
       });
   };
-  const checkNetInfo = (callback = null) => {
-    NetInfo.fetch().then(state => {
-      console.log('checkNetInfo state', state);
-      console.log('Connection type', state.type);
-      console.log('Is connected?', state.isConnected);
-      if (!state.isInternetReachable) {
-        MyAlert.showAlert(
-          '인터넷 연결 오류',
-          '현재 메일 전송이 가능한 상태가 아닙니다. 와이파이 또는 이동통신 연결을 확인해주세요.',
-        );
-        return;
-      }
-      callback && callback();
-    });
-  };
   useEffect(() => {
     console.log('share useEffect start');
     initTempDir();
@@ -195,9 +180,16 @@ export default function ShareScreen(props) {
         <View paddingVertical={5} />
         <Icon
           onPress={() => {
-            checkNetInfo(() => {
+            const callback = () => {
               sendMail(realm, email, year, dataType);
-            });
+            };
+            const errorCallback = () => {
+              MyAlert.showAlert(
+                '인터넷 연결 오류',
+                '현재 메일 전송이 가능한 상태가 아닙니다. 와이파이 또는 이동통신 연결을 확인해주세요.',
+              );
+            };
+            Network.checkNetInfo(callback, errorCallback);
           }}
           name="mail-outline"
           type="material"
