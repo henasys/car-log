@@ -4,7 +4,7 @@ import {FlatList} from 'react-native-gesture-handler';
 
 import SwipeableRow from '../view/swipeableRow';
 import TripItem from './tripItem';
-import Alert from '../view/alert';
+import MyAlert from '../view/alert';
 
 export default function TripList({
   list,
@@ -37,7 +37,7 @@ export default function TripList({
       onMergeRow && onMergeRow(rowKey, rowIndex);
     };
     const cancelCallback = () => {};
-    Alert.showTwoButtonAlert(title, message, okCallback, cancelCallback);
+    MyAlert.showTwoButtonAlert(title, message, okCallback, cancelCallback);
   };
   const onSwipeableLeftOpen = (rowKey, rowIndex) => {
     console.log('onSwipeableLeftOpen', rowKey, rowIndex);

@@ -4,7 +4,7 @@ import {Animated, StyleSheet, Text, View, I18nManager} from 'react-native';
 import {RectButton} from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
-import Alert from '../view/alert';
+import MyAlert from '../view/alert';
 import {getDetailDataRow} from '../module/bundleData';
 
 const buttonWidth = 64;
@@ -69,7 +69,7 @@ export default class SwipeableRow extends Component {
           this.props.onDeleteRow && this.props.onDeleteRow(this.props.rowKey);
         };
         const cancelCallback = () => {};
-        Alert.showTwoButtonAlert(title, message, okCallback, cancelCallback);
+        MyAlert.showTwoButtonAlert(title, message, okCallback, cancelCallback);
       })}
     </View>
   );
