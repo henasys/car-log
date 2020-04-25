@@ -5,8 +5,10 @@ import {Button} from 'react-native-elements';
 import {REACT_APP_GOOGLE_API_KEY} from 'react-native-dotenv';
 
 import Database from '../module/database';
-import TripList from '../view/tripListSwipeable';
+import Network from '../module/network';
 import Color from '../module/color';
+import TripList from '../view/tripListSwipeable';
+import MyAlert from '../view/alert';
 
 const NUMBERS_PER_PAGE = 10;
 
@@ -56,7 +58,18 @@ export default class TripScreen extends React.Component {
           <Button
             buttonStyle={styles.menuItem}
             titleStyle={styles.menuTitle}
-            onPress={() => {}}
+            onPress={() => {
+              const callback = () => {
+                console.log('Network.checkNetInfo ok');
+              };
+              const errorCallback = () => {
+                MyAlert.showAlert(
+                  '인터넷 연결 오류',
+                  '현재 인터넷 사용이 가능한 상태가 아닙니다. 와이파이 또는 이동통신 연결을 확인해주세요.',
+                );
+              };
+              Network.checkNetInfo(callback, errorCallback);
+            }}
             title="주소변환"
             type="clear"
           />
