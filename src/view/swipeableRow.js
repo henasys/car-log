@@ -57,7 +57,7 @@ export default class SwipeableRow extends Component {
         flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
       }}>
       {this.renderRightAction(
-        '아래와 합치기',
+        this.props.transform ? '아래와 합치기' : '위쪽과 합치기',
         '#ffab00',
         buttonWidth * rightButtonCount,
         progress,
