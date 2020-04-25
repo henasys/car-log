@@ -1,11 +1,12 @@
 import React from 'react';
 import {Text, View, StyleSheet, SafeAreaView} from 'react-native';
 import Geocoder from 'react-native-geocoding';
-import {Icon} from 'react-native-elements';
+import {Button} from 'react-native-elements';
 import {REACT_APP_GOOGLE_API_KEY} from 'react-native-dotenv';
 
 import Database from '../module/database';
 import TripList from '../view/tripListSwipeable';
+import Color from '../module/color';
 
 const NUMBERS_PER_PAGE = 10;
 
@@ -52,11 +53,12 @@ export default class TripScreen extends React.Component {
     this.props.navigation.setOptions({
       headerRight: () => (
         <View style={styles.menuContainer}>
-          <Icon
-            iconStyle={styles.menuItem}
+          <Button
+            buttonStyle={styles.menuItem}
+            titleStyle={styles.menuTitle}
             onPress={() => {}}
-            name="address"
-            type="entypo"
+            title="주소변환"
+            type="clear"
           />
         </View>
       ),
@@ -179,5 +181,8 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     marginRight: 10,
+  },
+  menuTitle: {
+    color: Color.font1,
   },
 });

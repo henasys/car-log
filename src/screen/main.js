@@ -20,7 +20,7 @@ import YearPicker from '../view/yearPicker';
 import MonthPicker from '../view/monthPicker';
 import TripButton from '../view/tripButton';
 import TripTypeButton from '../view/tripTypeButton';
-import color from '../module/color';
+import Color from '../module/color';
 import TripList from '../view/tripListSwipeable';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
@@ -766,7 +766,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'normal',
     paddingHorizontal: 10,
-    color: color.font1,
+    color: Color.font1,
   },
   tripContainer: {
     flexDirection: 'row',
@@ -784,7 +784,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: color.bg1,
+    backgroundColor: Color.bg1,
     borderRadius: 10,
   },
   ListContainer: {

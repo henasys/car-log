@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 
 import Database from '../module/database';
-import color from '../module/color';
+import Color from '../module/color';
 
 export default function TripTypeButton({type, onValueChanged, keepState}) {
   const [typeValue, setTypeValue] = useState(Database.Trip.Type.COMMUTE);
@@ -31,8 +31,8 @@ export default function TripTypeButton({type, onValueChanged, keepState}) {
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    borderColor: color.black,
-    backgroundColor: color.bg1,
+    borderColor: Color.black,
+    backgroundColor: Color.bg1,
     borderWidth: 0.5,
     borderRadius: 10,
     paddingHorizontal: 10,
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   titleStyle: {
-    color: color.black,
+    color: Color.black,
     fontWeight: 'bold',
   },
 });
