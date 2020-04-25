@@ -17,7 +17,7 @@ const excelHeader = () => {
   ];
 };
 
-const excelDataRow = trip => {
+const getExcelDataRow = trip => {
   const date = TimeUtil.timeToMonthDayWeek(trip.startCreated);
   const distance = parseFloat((trip.totalDistance / 1000).toFixed(2));
   const commute = trip.type === Database.Trip.Type.COMMUTE ? distance : '';
@@ -42,26 +42,58 @@ const excelDetailHeader = () => {
   ];
 };
 
-const excelDetailDataRow = trip => {
-  const date = TimeUtil.timeToMonthDayWeek(trip.startCreated);
-  const startDate = TimeUtil.timeToDateHourMin(trip.startCreated);
-  const endDate = TimeUtil.timeToDateHourMin(trip.endCreated);
-  const duration = TimeUtil.msToTime(trip.endCreated - trip.startCreated);
+export const getDetailDataRow = trip => {
+  const date = trip.startCreated
+    ? TimeUtil.timeToMonthDayWeek(trip.startCreated)
+    : null;
+  const startDate = trip.startCreated
+    ? TimeUtil.timeToDateHourMin(trip.startCreated)
+    : null;
+  const endDate = trip.endCreated
+    ? TimeUtil.timeToDateHourMin(trip.endCreated)
+    : null;
+  const startHour = trip.startCreated
+    ? TimeUtil.timeToHourMin(trip.startCreated)
+    : null;
+  const endHour = trip.endCreated
+    ? TimeUtil.timeToHourMin(trip.endCreated)
+    : null;
+  const duration = TimeUtil.msToTime(trip.totalTime);
   const purpose = Database.Trip.getTypeLabel(trip.type);
   const distance = parseFloat((trip.totalDistance / 1000).toFixed(2));
-  return [
+  return {
     date,
     startDate,
     endDate,
+    startHour,
+    endHour,
     duration,
     purpose,
     distance,
-    trip.startLatitude,
-    trip.startLongitude,
-    trip.startAddress,
-    trip.endLatitude,
-    trip.endLongitude,
-    trip.endAddress,
+    startLatitude: trip.startLatitude,
+    startLongitude: trip.startLongitude,
+    startAddress: trip.startAddress,
+    endLatitude: trip.endLatitude,
+    endLongitude: trip.endLongitude,
+    endAddress: trip.endAddress,
+  };
+};
+
+const getExcelDetailDataRow = trip => {
+  const dataRow = getDetailDataRow(trip);
+  return [
+    dataRow.date,
+    dataRow.startDate,
+    dataRow.endDate,
+    dataRow.duration,
+    dataRow.purpose,
+    dataRow.distance,
+    dataRow.startLatitude,
+    dataRow.startLongitude,
+    dataRow.startAddress,
+    dataRow.endLatitude,
+    dataRow.endLongitude,
+    dataRow.endAddress,
   ];
 };
 
@@ -71,7 +103,7 @@ const excelData = (realm, year, detail = false) => {
   data.push(detail ? excelDetailHeader() : excelHeader());
   list.forEach(trip => {
     // console.log('trip', trip);
-    const row = detail ? excelDetailDataRow(trip) : excelDataRow(trip);
+    const row = detail ? getExcelDetailDataRow(trip) : getExcelDataRow(trip);
     data.push(row);
   });
   return data;
