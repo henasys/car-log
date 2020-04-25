@@ -683,7 +683,12 @@ export default class MainScreen extends React.Component {
   }
 
   onSetList(newList) {
+    console.log('onSetList', newList.length);
     this.setState({list: newList});
+  }
+
+  onMergeRow(rowKey, rowIndex) {
+    console.log('onMergeRow');
   }
 
   render() {
@@ -716,6 +721,7 @@ export default class MainScreen extends React.Component {
             realm={realm}
             onDeleteRow={this.onDeleteRow.bind(this)}
             onSetList={this.onSetList.bind(this)}
+            onMergeRow={this.onMergeRow.bind(this)}
           />
         </View>
       </SafeAreaView>

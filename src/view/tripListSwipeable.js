@@ -6,6 +6,7 @@ import SwipeableRow from '../view/swipeableRow';
 import TripItem from './tripItem';
 import MyAlert from '../view/alert';
 import {getDetailDataRow} from '../module/bundleData';
+import {clone} from '../module/util';
 
 export default function TripList({
   list,
@@ -52,6 +53,17 @@ export default function TripList({
       } km`,
     );
     const okCallback = () => {
+      const newData = [...list];
+      const tripClone = clone(trip);
+      tripClone.endLatitude = next.endLatitude;
+      tripClone.endLongitude = next.endLongitude;
+      tripClone.endAddress = next.endAddress;
+      tripClone.endCreated = next.endCreated;
+      tripClone.totalDistance = trip.totalDistance + next.totalDistance;
+      tripClone.totalTime = trip.totalDistance + next.totalDistance;
+      newData[rowIndex] = tripClone;
+      newData.splice(rowIndex - 1, 1);
+      onSetList && onSetList(newData);
       onMergeRow && onMergeRow(rowKey, rowIndex);
     };
     const cancelCallback = () => {};
