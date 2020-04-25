@@ -248,6 +248,11 @@ const getTripList = realm => {
   return realm.objects('Trip');
 };
 
+const getEmptyAddressTripList = realm => {
+  return realm
+    .objects('Trip')
+    .filtered('startAddress = null OR endAddress = null');
+};
 /**
  * TripList By Timestamp
  * @param {*} realm Realm object
@@ -485,6 +490,7 @@ export default {
   getSetting,
   saveTrip,
   getTripList,
+  getEmptyAddressTripList,
   getTripListByTimestamp,
   getTripListByYear,
   getTripListByYearMonth,

@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, View, StyleSheet, SafeAreaView} from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import {Button} from 'react-native-elements';
+import {Overlay} from 'react-native-elements';
 import {REACT_APP_GOOGLE_API_KEY} from 'react-native-dotenv';
 
 import Database from '../module/database';
@@ -16,6 +17,8 @@ export default class TripScreen extends React.Component {
   state = {
     realm: null,
     list: [],
+    emptyList: [],
+    isVisibleForOverlay: true,
   };
 
   pagingStartIndex = 0;
@@ -43,6 +46,7 @@ export default class TripScreen extends React.Component {
     }
     this.setState({realm}, () => {
       this.initList();
+      this.initEmptyAddressTripList(realm);
     });
   }
 
@@ -84,6 +88,11 @@ export default class TripScreen extends React.Component {
     const list = this.getList(this.pagingStartIndex);
     // console.log('list', list);
     this.setState({list});
+  }
+
+  initEmptyAddressTripList(realm) {
+    const emptyList = Database.getEmptyAddressTripList(realm);
+    this.setState({emptyList});
   }
 
   onLoadPreviousList() {
@@ -143,7 +152,7 @@ export default class TripScreen extends React.Component {
   }
 
   render() {
-    const {list, realm} = this.state;
+    const {list, realm, isVisibleForOverlay, emptyList} = this.state;
     console.log('trip render', list.length);
     if (list.length === 0) {
       return (
@@ -166,6 +175,33 @@ export default class TripScreen extends React.Component {
             onMergeRow={this.onMergeRow.bind(this)}
           />
         </View>
+        <Overlay
+          isVisible={isVisibleForOverlay}
+          windowBackgroundColor="rgba(0, 0, 0, .5)"
+          overlayBackgroundColor="white"
+          width="80%"
+          height="auto">
+          <View>
+            <Text style={styles.overlayTitle}>위도/경도 -> 주소 변환</Text>
+            <Text style={styles.overlayContents}>
+              변환 건수: {emptyList.length}
+            </Text>
+            <View style={styles.buttonsContainer}>
+              <Button
+                title="닫기"
+                type="outline"
+                onPress={() => this.setState({isVisibleForOverlay: false})}
+              />
+              <Button
+                title="변환"
+                type="outline"
+                onPress={() => {
+                  console.log('convert');
+                }}
+              />
+            </View>
+          </View>
+        </Overlay>
       </SafeAreaView>
     );
   }
@@ -196,6 +232,21 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   menuTitle: {
-    color: Color.font1,
+    color: Color.black,
+  },
+  overlayTitle: {
+    fontSize: 18,
+    marginVertical: 10,
+    marginHorizontal: 10,
+  },
+  overlayContents: {
+    fontSize: 16,
+    marginVertical: 10,
+    marginHorizontal: 10,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 10,
   },
 });
