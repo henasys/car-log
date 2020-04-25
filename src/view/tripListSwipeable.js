@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
 import SwipeableRow from '../view/swipeableRow';
 import TripItem from './tripItem';
 import MyAlert from '../view/alert';
+import {getDetailDataRow} from '../module/bundleData';
 
 export default function TripList({
   list,
@@ -16,7 +17,6 @@ export default function TripList({
   onSetList = null,
   onMergeRow = null,
 }) {
-  const [mergeStart, setMergeStart] = useState(null);
   const _onDeleteRow = rowKey => {
     console.log('_onDeleteRow', rowKey);
     if (!rowKey) {
@@ -30,34 +30,43 @@ export default function TripList({
   };
   const _onMergeRow = (rowKey, rowIndex) => {
     console.log('onMergeRow', rowKey, rowIndex);
-    const date = '';
-    const title = `운행기록 합치기: ${date}`;
-    const message = '';
+    const trip = list[rowIndex];
+    const next = list[rowIndex - 1];
+    const tripData = getDetailDataRow(trip);
+    const title = `운행기록 합치기: ${tripData.date}`;
+    if (!next) {
+      const message = '합치기에 필요한 다음 항목이 없습니다.';
+      MyAlert.showAlert(title, message);
+      return;
+    }
+    const nextData = getDetailDataRow(next);
+    const messages = [];
+    messages.push(
+      `선택: ${tripData.startHour} -> ${tripData.endHour} ${
+        tripData.distance
+      } km`,
+    );
+    messages.push(
+      `다음: ${nextData.startHour} -> ${nextData.endHour} ${
+        nextData.distance
+      } km`,
+    );
     const okCallback = () => {
       onMergeRow && onMergeRow(rowKey, rowIndex);
     };
     const cancelCallback = () => {};
-    MyAlert.showTwoButtonAlert(title, message, okCallback, cancelCallback);
+    MyAlert.showTwoButtonAlert(
+      title,
+      messages.join('\n'),
+      okCallback,
+      cancelCallback,
+    );
   };
-  const onSwipeableLeftOpen = (rowKey, rowIndex) => {
-    console.log('onSwipeableLeftOpen', rowKey, rowIndex);
-    if (mergeStart) {
-      const deltaIndex = Math.abs(mergeStart.rowIndex - rowIndex);
-      if (deltaIndex === 1) {
-        console.log('exactly adjacent item');
-        mergeStart.item.adjacent = true;
-        return;
-      }
-    }
-    setMergeStart({rowIndex, rowKey, item: list[rowIndex]});
+  const onSwipeableLeftOpen = () => {
+    // console.log('onSwipeableLeftOpen', rowKey, rowIndex);
   };
-  const onSwipeableClose = (rowKey, rowIndex) => {
-    console.log('onSwipeableClose', rowKey, rowIndex);
-    if (mergeStart) {
-      if (mergeStart.rowIndex === rowIndex) {
-        setMergeStart(null);
-      }
-    }
+  const onSwipeableClose = () => {
+    // console.log('onSwipeableClose', rowKey, rowIndex);
   };
   if (list.length === 0) {
     return <View />;
