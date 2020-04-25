@@ -390,6 +390,28 @@ const updateTripType = (realm, id, type) => {
   });
 };
 
+const mergeTrip = (realm, tripId, nextId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        const trip = realm.objectForPrimaryKey('Trip', tripId);
+        const next = realm.objectForPrimaryKey('Trip', nextId);
+        trip.endLatitude = next.endLatitude;
+        trip.endLongitude = next.endLongitude;
+        trip.endAddress = next.endAddress;
+        trip.endCreated = next.endCreated;
+        trip.totalDistance = trip.totalDistance + next.totalDistance;
+        trip.totalTime = trip.totalDistance + next.totalDistance;
+        realm.delete(next);
+        resolve(trip);
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
+};
+
 const deleteTrip = (realm, year, month) => {
   const list =
     month === null
@@ -473,6 +495,7 @@ export default {
   updateTripEnd,
   updateTripAddress,
   updateTripType,
+  mergeTrip,
   deleteTrip,
   deleteTripById,
   clearAllDatabase,

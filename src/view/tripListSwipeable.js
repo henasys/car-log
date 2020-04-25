@@ -53,6 +53,8 @@ export default function TripList({
       } km`,
     );
     const okCallback = () => {
+      const tripId = trip.id;
+      const nextId = next.id;
       const newData = [...list];
       const tripClone = clone(trip);
       tripClone.endLatitude = next.endLatitude;
@@ -64,7 +66,7 @@ export default function TripList({
       newData[rowIndex] = tripClone;
       newData.splice(rowIndex - 1, 1);
       onSetList && onSetList(newData);
-      onMergeRow && onMergeRow(rowKey, rowIndex);
+      onMergeRow && onMergeRow(tripId, nextId);
     };
     const cancelCallback = () => {};
     MyAlert.showTwoButtonAlert(
