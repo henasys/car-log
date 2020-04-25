@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
@@ -14,6 +14,7 @@ export default function TripList({
   onDeleteRow = null,
   onSetList = null,
 }) {
+  const [mergeStart, setMergeStart] = useState(null);
   const _onDeleteRow = rowKey => {
     console.log('_onDeleteRow', rowKey);
     if (!rowKey) {
@@ -25,18 +26,42 @@ export default function TripList({
     onSetList && onSetList(newData);
     onDeleteRow && onDeleteRow(rowKey);
   };
+  const onSwipeableLeftOpen = (rowKey, rowIndex) => {
+    console.log('onSwipeableLeftOpen', rowKey, rowIndex);
+    if (mergeStart) {
+      const deltaIndex = Math.abs(mergeStart.rowIndex - rowIndex);
+      if (deltaIndex === 1) {
+        console.log('exactly adjacent item');
+        mergeStart.item.adjacent = true;
+        return;
+      }
+    }
+    setMergeStart({rowIndex, rowKey, item: list[rowIndex]});
+  };
+  const onSwipeableClose = (rowKey, rowIndex) => {
+    console.log('onSwipeableClose', rowKey, rowIndex);
+    if (mergeStart) {
+      if (mergeStart.rowIndex === rowIndex) {
+        setMergeStart(null);
+      }
+    }
+  };
   if (list.length === 0) {
     return <View />;
   }
+  console.log('TripList render');
   return (
     <View style={styles.container}>
       <FlatList
         data={list}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        renderItem={({item}) => (
+        renderItem={({item, index}) => (
           <SwipeableRow
             rowKey={item.id}
+            rowIndex={index}
             onDeleteRow={_onDeleteRow}
+            onSwipeableLeftOpen={onSwipeableLeftOpen}
+            onSwipeableClose={onSwipeableClose}
             transform={transform}>
             <TripItem item={item} realm={realm} transform={transform} />
           </SwipeableRow>

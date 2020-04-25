@@ -76,6 +76,16 @@ export default class SwipeableRow extends Component {
       })}
     </View>
   );
+  onSwipeableLeftOpen = () => {
+    console.log('onSwipeableLeftOpen');
+    this.props.onSwipeableLeftOpen &&
+      this.props.onSwipeableLeftOpen(this.props.rowKey, this.props.rowIndex);
+  };
+  onSwipeableClose = () => {
+    console.log('onSwipeableClose');
+    this.props.onSwipeableClose &&
+      this.props.onSwipeableClose(this.props.rowKey, this.props.rowIndex);
+  };
   updateRef = ref => {
     this._swipeableRow = ref;
   };
@@ -90,8 +100,10 @@ export default class SwipeableRow extends Component {
         friction={2}
         leftThreshold={30}
         rightThreshold={40}
-        renderLeftActions={this.renderLeftActions}
-        renderRightActions={this.renderRightActions.bind(this)}>
+        renderLeftActions={this.renderLeftActions.bind(this)}
+        renderRightActions={this.renderRightActions.bind(this)}
+        onSwipeableLeftOpen={this.onSwipeableLeftOpen.bind(this)}
+        onSwipeableClose={this.onSwipeableClose.bind(this)}>
         {children}
       </Swipeable>
     );
