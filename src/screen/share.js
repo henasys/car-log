@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, StyleSheet, View, TextInput, Alert} from 'react-native';
+import {SafeAreaView, StyleSheet, View, TextInput} from 'react-native';
 import {Icon} from 'react-native-elements';
 import NetInfo from '@react-native-community/netinfo';
 
@@ -14,19 +14,7 @@ import {
   bundleTripExcel,
   bundleTripDetailExcel,
 } from '../module/bundleData';
-
-const showAlert = (title, message) => {
-  Alert.alert(
-    title,
-    message,
-    [
-      {
-        text: 'Ok',
-      },
-    ],
-    {cancelable: true},
-  );
-};
+import Alert from '../view/alert';
 
 const makeAttachFile = (filename, type, data, callback = null) => {
   FileManager.writeToMailTemp(filename, data, 'ascii')
@@ -46,17 +34,17 @@ const sendMail = (realm, email, year, dataType) => {
   console.log(email, year);
   if (!email) {
     console.log('not defined email');
-    showAlert('Email 미지정', '전송받을 이메일 주소를 입력해주세요.');
+    Alert.showAlert('Email 미지정', '전송받을 이메일 주소를 입력해주세요.');
     return;
   }
   if (!year) {
     console.log('not defined year');
-    showAlert('연도 미지정', '전송받을 운행기록의 연도를 입력해주세요.');
+    Alert.showAlert('연도 미지정', '전송받을 운행기록의 연도를 입력해주세요.');
     return;
   }
   const callback = (error, event) => {
     if (error) {
-      showAlert('Send Mail Error', error);
+      Alert.showAlert('Send Mail Error', error);
       return;
     }
   };
@@ -147,7 +135,7 @@ export default function ShareScreen(props) {
       console.log('Connection type', state.type);
       console.log('Is connected?', state.isConnected);
       if (!state.isInternetReachable) {
-        showAlert(
+        Alert.showAlert(
           '인터넷 연결 오류',
           '현재 메일 전송이 가능한 상태가 아닙니다. 와이파이 또는 이동통신 연결을 확인해주세요.',
         );
