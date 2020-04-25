@@ -3,40 +3,28 @@ import React, {Component} from 'react';
 import {Animated, StyleSheet, Text, View, I18nManager} from 'react-native';
 import {RectButton} from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+import Alert from '../view/alert';
+import {getDetailDataRow} from '../module/bundleData';
+import {getKilometers} from '../module/util';
+
 const buttonWidth = 64;
 const rightButtonCount = 2;
-const leftButtonCount = 1;
 
 export default class SwipeableRow extends Component {
-  renderLeftActions = (progress, dragX) => {
-    const scale = dragX.interpolate({
-      inputRange: [0, 80],
-      outputRange: [0, 1],
-      extrapolate: 'clamp',
-    });
-    const actionStyle = this.props.transform
-      ? {...styles.leftAction, ...{transform: [{scaleY: -1}]}}
-      : styles.leftAction;
-    return (
-      <View
-        style={{
-          width: buttonWidth * leftButtonCount,
-          flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-        }}>
-        <RectButton style={actionStyle} onPress={this.close}>
-          <AnimatedIcon
-            name="pin"
-            size={30}
-            color="#fff"
-            style={[styles.actionIcon, {transform: [{scale}]}]}
-          />
-        </RectButton>
-      </View>
-    );
-  };
+  constructor(props) {
+    super(props);
+    // console.log('props.rowItem', props.rowItem);
+    this.tripData = getDetailDataRow(props.rowItem);
+    // console.log('tripData', this.tripData);
+  }
+  getTripBrief() {
+    if (this.tripData) {
+      const trip = this.tripData;
+      return `${trip.startHour} -> ${trip.endHour}\n${trip.distance} km`;
+    }
+    return null;
+  }
   renderRightAction = (text, color, x, progress, callback = null) => {
     const trans = progress.interpolate({
       inputRange: [0, 1],
@@ -66,13 +54,29 @@ export default class SwipeableRow extends Component {
         flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
       }}>
       {this.renderRightAction(
-        '닫기',
+        '아래와 합치기',
         '#ffab00',
         buttonWidth * rightButtonCount,
         progress,
+        () => {
+          const title = `운행기록 합치기: ${this.tripData.date}`;
+          const message = this.getTripBrief();
+          const okCallback = () => {
+            this.props.onMergeRow &&
+              this.props.onMergeRow(this.props.rowKey, this.props.rowIndex);
+          };
+          const cancelCallback = () => {};
+          Alert.showTwoButtonAlert(title, message, okCallback, cancelCallback);
+        },
       )}
       {this.renderRightAction('삭제', '#dd2c00', buttonWidth, progress, () => {
-        this.props.onDeleteRow && this.props.onDeleteRow(this.props.rowKey);
+        const title = `운행기록 삭제: ${this.tripData.date}`;
+        const message = this.getTripBrief();
+        const okCallback = () => {
+          this.props.onDeleteRow && this.props.onDeleteRow(this.props.rowKey);
+        };
+        const cancelCallback = () => {};
+        Alert.showTwoButtonAlert(title, message, okCallback, cancelCallback);
       })}
     </View>
   );
@@ -100,7 +104,6 @@ export default class SwipeableRow extends Component {
         friction={2}
         leftThreshold={30}
         rightThreshold={40}
-        renderLeftActions={this.renderLeftActions.bind(this)}
         renderRightActions={this.renderRightActions.bind(this)}
         onSwipeableLeftOpen={this.onSwipeableLeftOpen.bind(this)}
         onSwipeableClose={this.onSwipeableClose.bind(this)}>

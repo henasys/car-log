@@ -59,6 +59,7 @@ export default function TripList({
           <SwipeableRow
             rowKey={item.id}
             rowIndex={index}
+            rowItem={item}
             onDeleteRow={_onDeleteRow}
             onSwipeableLeftOpen={onSwipeableLeftOpen}
             onSwipeableClose={onSwipeableClose}
