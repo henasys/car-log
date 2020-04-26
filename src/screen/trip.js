@@ -155,6 +155,65 @@ export default class TripScreen extends React.Component {
       });
   }
 
+  handleAddressTransform(realm, emptyList) {
+    const processList = [];
+    emptyList.forEach(trip => {
+      if (trip.startLatitude) {
+        const location = {
+          lat: trip.startLatitude,
+          lng: trip.startLongitude,
+          tripId: trip.id,
+          tripType: TripType.START,
+        };
+        processList.push(location);
+      }
+      if (trip.endLatitude) {
+        const location = {
+          lat: trip.endLatitude,
+          lng: trip.endLongitude,
+          tripId: trip.id,
+          tripType: TripType.END,
+        };
+        processList.push(location);
+      }
+    });
+    console.log('processList', processList.length);
+    processList.forEach((location, index) => {
+      Geocoder.from(location)
+        .then(response => {
+          console.log('location', location);
+          console.log('Geocoder.from', response.results[0]);
+          if (!response.results || response.results.length === 0) {
+            return new Error('response.results is empty');
+          }
+          const address = response.results[0].formatted_address;
+          if (location.tripType === TripType.START) {
+            return Database.updateTripStartAddress(
+              realm,
+              location.tripId,
+              address,
+            );
+          } else {
+            return Database.updateTripEndAddress(
+              realm,
+              location.tripId,
+              address,
+            );
+          }
+        })
+        .then(trip => {
+          console.log('Database.updateTrip with Address done', trip.id);
+        })
+        .catch(e => {
+          console.log('Geocoder.from error', e);
+        })
+        .finally(() => {
+          const progressValue = (index + 1) / processList.length;
+          this.setState({progress: progressValue});
+        });
+    });
+  }
+
   render() {
     const {list, realm} = this.state;
     const {emptyList, isVisibleForOverlay, progress} = this.state;
@@ -205,68 +264,7 @@ export default class TripScreen extends React.Component {
                 title="변환"
                 type="outline"
                 onPress={() => {
-                  const processList = [];
-                  emptyList.forEach(trip => {
-                    if (trip.startLatitude) {
-                      const location = {
-                        lat: trip.startLatitude,
-                        lng: trip.startLongitude,
-                        tripId: trip.id,
-                        tripType: TripType.START,
-                      };
-                      processList.push(location);
-                    }
-                    if (trip.endLatitude) {
-                      const location = {
-                        lat: trip.endLatitude,
-                        lng: trip.endLongitude,
-                        tripId: trip.id,
-                        tripType: TripType.END,
-                      };
-                      processList.push(location);
-                    }
-                  });
-                  console.log('processList', processList.length);
-                  processList.forEach((location, index) => {
-                    Geocoder.from(location)
-                      .then(response => {
-                        console.log('location', location);
-                        console.log('Geocoder.from', response.results[0]);
-                        if (
-                          !response.results ||
-                          response.results.length === 0
-                        ) {
-                          return new Error('response.results is empty');
-                        }
-                        const address = response.results[0].formatted_address;
-                        if (location.tripType === TripType.START) {
-                          return Database.updateTripStartAddress(
-                            realm,
-                            location.tripId,
-                            address,
-                          );
-                        } else {
-                          return Database.updateTripEndAddress(
-                            realm,
-                            location.tripId,
-                            address,
-                          );
-                        }
-                      })
-                      .then(trip => {
-                        console.log(
-                          'Database.updateTrip with Address done',
-                          trip.id,
-                        );
-                      })
-                      .catch(e => {
-                        console.log('Geocoder.from error', e);
-                      })
-                      .finally(() => {
-                        const progressValue = (index + 1) / processList.length;
-                        this.setState({progress: progressValue});
-                      });
-                  });
+                  this.handleAddressTransform(realm, emptyList);
                 }}
               />
             </View>
