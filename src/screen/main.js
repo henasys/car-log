@@ -1,9 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {YellowBox} from 'react-native';
 import moment from 'moment';
 import DeviceInfo from 'react-native-device-info';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 import Database from '../module/database';
 import {Locator} from '../module/locator';
