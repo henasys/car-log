@@ -36,12 +36,6 @@ const debugView = navigation => {
         name="search"
         type="material"
       />
-      <Icon
-        iconStyle={styles.menuItem}
-        onPress={() => navigation.navigate('Trip')}
-        name="playlist-edit"
-        type="material-community"
-      />
     </View>
   ) : (
     <View />
@@ -59,6 +53,12 @@ export default function MyStack() {
           headerRight: () => (
             <View style={styles.menuContainer}>
               {debugView(navigation)}
+              <Icon
+                iconStyle={styles.menuItem}
+                onPress={() => navigation.navigate('Trip')}
+                name="playlist-edit"
+                type="material-community"
+              />
               <Icon
                 iconStyle={styles.menuItem}
                 onPress={() => navigation.navigate('Share')}
