@@ -10,6 +10,7 @@ import Database from '../module/database';
 import Network from '../module/network';
 import Color from '../module/color';
 import {TripType} from '../module/type';
+import {combineAddress} from '../module/util';
 import TripList from '../view/tripListSwipeable';
 import MyAlert from '../view/alert';
 
@@ -186,7 +187,9 @@ export default class TripScreen extends React.Component {
           if (!response.results || response.results.length === 0) {
             return new Error('response.results is empty');
           }
-          const address = response.results[0].formatted_address;
+          const address = combineAddress(
+            response.results[0].address_components,
+          );
           if (location.tripType === TripType.START) {
             return Database.updateTripStartAddress(
               realm,
