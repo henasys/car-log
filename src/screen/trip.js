@@ -68,7 +68,7 @@ export default class TripScreen extends React.Component {
             onPress={() => {
               const callback = () => {
                 console.log('Network.checkNetInfo ok');
-                this.setState({isVisibleForOverlay: true});
+                this.setState({isVisibleForOverlay: true, progress: 0});
               };
               const errorCallback = () => {
                 MyAlert.showAlert(
