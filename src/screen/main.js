@@ -16,6 +16,7 @@ import {
 import {toast, toastError} from '../module/toast';
 import {TripDetector} from '../module/detector';
 import FileManager from '../module/file';
+import AndroidBackHandler from '../module/androidBackHandler';
 import YearPicker from '../view/yearPicker';
 import Color from '../module/color';
 import MonthPicker from '../view/monthPicker';
@@ -49,6 +50,7 @@ export default class MainScreen extends React.Component {
 
   componentDidMount() {
     console.log('main componentDidMount');
+    this.initBackHandler();
     this.initNavigationEvent();
     this.initDeviceInfo();
     this.openDatabase();
@@ -61,10 +63,21 @@ export default class MainScreen extends React.Component {
 
   componentWillUnmount() {
     console.log('main componentWillUnmount');
+    this.removeBackHandler();
     this.removeNavigationEvent();
     this.clearPeriodInterval();
     this.closeDatabase();
     this.locator.removeLocator();
+  }
+
+  initBackHandler() {
+    this.backHandler = new AndroidBackHandler();
+    this.backHandler.addRoutesToBeStopped(['Main']);
+    this.backHandler.initBackHandler();
+  }
+
+  removeBackHandler() {
+    this.backHandler.removeBackHandler();
   }
 
   initNavigationEvent() {
