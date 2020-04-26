@@ -5,6 +5,12 @@ import Database from '../module/database';
 import {TimeUtil, toFixed, getKilometers} from '../module/util';
 import TripTypeButton from './tripTypeButton';
 
+const addressOrLocation = (address, latitude, longitude) => {
+  const latitudeLabel = latitude ? toFixed(latitude) : 0;
+  const longitudeLabel = longitude ? toFixed(longitude) : 0;
+  return address ? address : `좌표: ${latitudeLabel}, ${longitudeLabel}`;
+};
+
 export default function TripItem({item, realm, transform = null}) {
   const tripLabel = '도착';
   const endCreated = item.endCreated
@@ -28,15 +34,24 @@ export default function TripItem({item, realm, transform = null}) {
         <Text style={styles.titleText}>
           {'출발'} {TimeUtil.timeToHourMin(item.startCreated)}
         </Text>
-        <Text style={styles.addressText}>
-          {'    '} 좌표: {toFixed(item.startLatitude)},{' '}
-          {toFixed(item.startLongitude)}
+        <Text ellipsizeMode="tail" numberOfLines={1} style={styles.addressText}>
+          {'    '}
+          {addressOrLocation(
+            item.startAddress,
+            item.startLatitude,
+            item.startLongitude,
+          )}
         </Text>
         <Text style={styles.titleText}>
           {tripLabel} {endCreated}
         </Text>
-        <Text style={styles.addressText}>
-          {'    '} 좌표: {endLatitude}, {endLongitude}
+        <Text ellipsizeMode="tail" numberOfLines={1} style={styles.addressText}>
+          {'    '}
+          {addressOrLocation(
+            item.endAddress,
+            item.endLatitude,
+            item.endLongitude,
+          )}
         </Text>
       </View>
       <View style={styles.itemColumnContainer}>
@@ -68,7 +83,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     margin: 0,
     padding: 10,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: 'white',
   },
@@ -82,6 +97,7 @@ const styles = StyleSheet.create({
   itemStartEndContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
+    width: '60%',
   },
   dateText: {
     fontSize: 16,
@@ -97,5 +113,7 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: 14,
+    flexWrap: 'wrap',
+    flexShrink: 1,
   },
 });
