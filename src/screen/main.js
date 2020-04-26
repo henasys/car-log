@@ -353,6 +353,7 @@ export default class MainScreen extends React.Component {
       Database.saveTrip(
         realm,
         trip.start,
+        null,
         trip.end,
         trip.end && trip.end.totalDistance,
       )
