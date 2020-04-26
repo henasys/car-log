@@ -3,6 +3,7 @@ import {Text, View, StyleSheet, SafeAreaView} from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import {Button} from 'react-native-elements';
 import {Overlay} from 'react-native-elements';
+import ProgressBar from 'react-native-progress/Bar';
 import {REACT_APP_GOOGLE_API_KEY} from 'react-native-dotenv';
 
 import Database from '../module/database';
@@ -18,7 +19,8 @@ export default class TripScreen extends React.Component {
     realm: null,
     list: [],
     emptyList: [],
-    isVisibleForOverlay: true,
+    isVisibleForOverlay: false,
+    progress: 0,
   };
 
   pagingStartIndex = 0;
@@ -65,6 +67,7 @@ export default class TripScreen extends React.Component {
             onPress={() => {
               const callback = () => {
                 console.log('Network.checkNetInfo ok');
+                this.setState({isVisibleForOverlay: true});
               };
               const errorCallback = () => {
                 MyAlert.showAlert(
@@ -152,7 +155,8 @@ export default class TripScreen extends React.Component {
   }
 
   render() {
-    const {list, realm, isVisibleForOverlay, emptyList} = this.state;
+    const {list, realm} = this.state;
+    const {emptyList, isVisibleForOverlay, progress} = this.state;
     console.log('trip render', list.length);
     if (list.length === 0) {
       return (
@@ -181,11 +185,15 @@ export default class TripScreen extends React.Component {
           overlayBackgroundColor="white"
           width="80%"
           height="auto">
-          <View>
-            <Text style={styles.overlayTitle}>위도/경도 -> 주소 변환</Text>
+          <View style={styles.overlayContainer}>
+            <Text style={styles.overlayTitle}>위도/경도 주소 변환</Text>
+            <View style={styles.verticalSpacer} />
             <Text style={styles.overlayContents}>
-              변환 건수: {emptyList.length}
+              변환할 건수: {emptyList.length}
             </Text>
+            <View style={styles.verticalSpacer} />
+            <ProgressBar progress={progress} width={null} />
+            <View style={styles.verticalSpacer} />
             <View style={styles.buttonsContainer}>
               <Button
                 title="닫기"
@@ -196,7 +204,37 @@ export default class TripScreen extends React.Component {
                 title="변환"
                 type="outline"
                 onPress={() => {
-                  console.log('convert');
+                  const processList = [];
+                  emptyList.forEach(trip => {
+                    if (trip.startLatitude) {
+                      const location = {
+                        lat: trip.startLatitude,
+                        lng: trip.startLongitude,
+                      };
+                      processList.push(location);
+                    }
+                    if (trip.endLatitude) {
+                      const location = {
+                        lat: trip.endLatitude,
+                        lng: trip.endLongitude,
+                      };
+                      processList.push(location);
+                    }
+                  });
+                  processList.forEach((location, index) => {
+                    Geocoder.from(location)
+                      .then(response => {
+                        console.log('location', location);
+                        console.log('Geocoder.from', response.results[0]);
+                      })
+                      .catch(e => {
+                        console.log('Geocoder.from error', e);
+                      })
+                      .finally(() => {
+                        const progressValue = (index + 1) / processList.length;
+                        this.setState({progress: progressValue});
+                      });
+                  });
                 }}
               />
             </View>
@@ -234,19 +272,21 @@ const styles = StyleSheet.create({
   menuTitle: {
     color: Color.black,
   },
-  overlayTitle: {
-    fontSize: 18,
+  verticalSpacer: {
+    marginVertical: 10,
+  },
+  overlayContainer: {
     marginVertical: 10,
     marginHorizontal: 10,
   },
+  overlayTitle: {
+    fontSize: 18,
+  },
   overlayContents: {
     fontSize: 16,
-    marginVertical: 10,
-    marginHorizontal: 10,
   },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginVertical: 10,
   },
 });
