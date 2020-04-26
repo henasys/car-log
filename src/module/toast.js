@@ -9,6 +9,15 @@ export function toast(msg) {
   });
 }
 
+export function toastLong(msg) {
+  Toast.show(msg, {
+    duration: Toast.durations.LONG,
+    position: Toast.positions.BOTTOM,
+    shadow: true,
+    animation: true,
+  });
+}
+
 export function toastError(msg) {
   Toast.show(msg, {
     duration: Toast.durations.SHORT,
