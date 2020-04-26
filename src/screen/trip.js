@@ -9,6 +9,7 @@ import {REACT_APP_GOOGLE_API_KEY} from 'react-native-dotenv';
 import Database from '../module/database';
 import Network from '../module/network';
 import Color from '../module/color';
+import {TripType} from '../module/type';
 import TripList from '../view/tripListSwipeable';
 import MyAlert from '../view/alert';
 
@@ -210,6 +211,8 @@ export default class TripScreen extends React.Component {
                       const location = {
                         lat: trip.startLatitude,
                         lng: trip.startLongitude,
+                        tripId: trip.id,
+                        tripType: TripType.START,
                       };
                       processList.push(location);
                     }
@@ -217,15 +220,44 @@ export default class TripScreen extends React.Component {
                       const location = {
                         lat: trip.endLatitude,
                         lng: trip.endLongitude,
+                        tripId: trip.id,
+                        tripType: TripType.END,
                       };
                       processList.push(location);
                     }
                   });
+                  console.log('processList', processList.length);
                   processList.forEach((location, index) => {
                     Geocoder.from(location)
                       .then(response => {
                         console.log('location', location);
                         console.log('Geocoder.from', response.results[0]);
+                        if (
+                          !response.results ||
+                          response.results.length === 0
+                        ) {
+                          return new Error('response.results is empty');
+                        }
+                        const address = response.results[0].formatted_address;
+                        if (location.tripType === TripType.START) {
+                          return Database.updateTripStartAddress(
+                            realm,
+                            location.tripId,
+                            address,
+                          );
+                        } else {
+                          return Database.updateTripEndAddress(
+                            realm,
+                            location.tripId,
+                            address,
+                          );
+                        }
+                      })
+                      .then(trip => {
+                        console.log(
+                          'Database.updateTrip with Address done',
+                          trip.id,
+                        );
                       })
                       .catch(e => {
                         console.log('Geocoder.from error', e);

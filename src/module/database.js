@@ -251,7 +251,9 @@ const getTripList = realm => {
 const getEmptyAddressTripList = realm => {
   return realm
     .objects('Trip')
-    .filtered('startAddress = null OR endAddress = null');
+    .filtered(
+      '(startLatitude != null AND startAddress = null) OR (endLatitude != null AND endAddress = null)',
+    );
 };
 /**
  * TripList By Timestamp
@@ -352,19 +354,38 @@ const updateTripEnd = (realm, id, end, totalDistance) => {
 };
 
 /**
- * update Trip with address
+ * update Trip with start address
  * @param {*} realm Realm Object
  * @param {*} id Primary key
- * @param {*} startAddress start address
- * @param {*} endAddress end address
+ * @param {*} address start address
  */
-const updateTripAddress = (realm, id, startAddress, endAddress) => {
+const updateTripStartAddress = (realm, id, address) => {
   return new Promise((resolve, reject) => {
     try {
       realm.write(() => {
         const trip = realm.objectForPrimaryKey('Trip', id);
-        trip.startAddress = startAddress;
-        trip.endAddress = endAddress;
+        trip.startAddress = address;
+        resolve(trip);
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
+};
+
+/**
+ * update Trip with end address
+ * @param {*} realm Realm Object
+ * @param {*} id Primary key
+ * @param {*} address end address
+ */
+const updateTripEndAddress = (realm, id, address) => {
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        const trip = realm.objectForPrimaryKey('Trip', id);
+        trip.endAddress = address;
         resolve(trip);
       });
     } catch (e) {
@@ -499,7 +520,8 @@ export default {
   getYearListOfTrip,
   getYearListOfTripForPicker,
   updateTripEnd,
-  updateTripAddress,
+  updateTripStartAddress,
+  updateTripEndAddress,
   updateTripType,
   mergeTrip,
   deleteTrip,
