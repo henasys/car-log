@@ -384,3 +384,21 @@ export const getKilometers = meters => {
   }
   return toFixed(m / 1000) + ' km';
 };
+
+export const combineAddress = addressList => {
+  const excludes = ['country', 'postal_code'];
+  const list = addressList.filter(address => {
+    for (let index = 0; index < excludes.length; index++) {
+      const key = excludes[index];
+      if (address.types.includes(key)) {
+        return false;
+      }
+    }
+    return true;
+  });
+  // console.log('list', list);
+  return list
+    .reverse()
+    .map(x => x.long_name)
+    .join(' ');
+};

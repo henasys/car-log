@@ -182,7 +182,7 @@ export default class TripScreen extends React.Component {
       Geocoder.from(location)
         .then(response => {
           console.log('location', location);
-          console.log('Geocoder.from', response.results[0]);
+          console.log('Geocoder.from', JSON.stringify(response.results[0]));
           if (!response.results || response.results.length === 0) {
             return new Error('response.results is empty');
           }
