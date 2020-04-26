@@ -16,8 +16,6 @@ export default function TripItem({item, realm, transform = null}) {
   const endCreated = item.endCreated
     ? TimeUtil.timeToHourMin(item.endCreated)
     : '미확정';
-  const endLatitude = item.endLatitude ? toFixed(item.endLatitude) : 0;
-  const endLongitude = item.endLongitude ? toFixed(item.endLongitude) : 0;
   const totalDistance = getKilometers(item.totalDistance);
   const containerStyle = transform
     ? {...styles.itemContainer, ...{transform: [{scaleY: -1}]}}
@@ -113,7 +111,5 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: 14,
-    flexWrap: 'wrap',
-    flexShrink: 1,
   },
 });
