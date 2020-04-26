@@ -635,7 +635,7 @@ export default class MainScreen extends React.Component {
   onTripPurposeChanged(purpose) {
     console.log('onTripPurposeChanged', purpose);
     this.tripPurpose = purpose;
-    this.updateTrip({tripPurpose: purpose});
+    // this.updateTrip({tripPurpose: purpose});
   }
 
   renderCurrentTrip(item, today) {
@@ -649,6 +649,7 @@ export default class MainScreen extends React.Component {
           </Text>
           <View style={styles.tripPurpose}>
             <TripPurposeButton
+              keepState="true"
               purpose={params.tripPurpose}
               onValueChanged={this.onTripPurposeChanged.bind(this)}
             />
