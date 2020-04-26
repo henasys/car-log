@@ -2,8 +2,8 @@ import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 
 import Database from '../module/database';
+import TripPurposeButton from '../view/tripPurposeButton';
 import {TimeUtil, toFixed, getKilometers} from '../module/util';
-import TripTypeButton from './tripTypeButton';
 
 const addressOrLocation = (address, latitude, longitude) => {
   const latitudeLabel = latitude ? toFixed(latitude) : 0;
@@ -54,20 +54,20 @@ export default function TripItem({item, realm, transform = null}) {
       </View>
       <View style={styles.itemColumnContainer}>
         <Text style={styles.totalDistanceText}>{totalDistance}</Text>
-        <TripTypeButton
+        <TripPurposeButton
           keepState="true"
-          type={item.type}
+          purpose={item.purpose}
           onValueChanged={value => {
             console.log('item', item);
             if (!realm) {
               return;
             }
-            Database.updateTripType(realm, item.id, value)
+            Database.updateTripPurposeType(realm, item.id, value)
               .then(newTrip => {
-                console.log('updateTripType done', newTrip.id);
+                console.log('updateTripPurposeType done', newTrip.id);
               })
               .catch(e => {
-                console.log('updateTripType error', e);
+                console.log('updateTripPurposeType error', e);
               });
           }}
         />

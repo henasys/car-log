@@ -120,7 +120,10 @@ export default class TripScreen extends React.Component {
     if (this.state.realm === null) {
       return [];
     }
-    const list = Database.getTripList(this.state.realm).sorted('created', true);
+    const list = Database.getTripList(this.state.realm).sorted(
+      'startCreated',
+      true,
+    );
     const sliced = list.slice(startIndex, startIndex + NUMBERS_PER_PAGE);
     // console.log('getList', sliced);
     return sliced;

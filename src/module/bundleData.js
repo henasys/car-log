@@ -20,8 +20,10 @@ const excelHeader = () => {
 const getExcelDataRow = trip => {
   const date = TimeUtil.timeToMonthDayWeek(trip.startCreated);
   const distance = parseFloat((trip.totalDistance / 1000).toFixed(2));
-  const commute = trip.type === Database.Trip.Type.COMMUTE ? distance : '';
-  const business = trip.type === Database.Trip.Type.BUSINESS ? distance : '';
+  const commute =
+    trip.purpose === Database.Trip.PurposeType.COMMUTE ? distance : '';
+  const business =
+    trip.purpose === Database.Trip.PurposeType.BUSINESS ? distance : '';
   return [date, '', '', '', '', distance, commute, business, ''];
 };
 
@@ -59,7 +61,7 @@ export const getDetailDataRow = trip => {
     ? TimeUtil.timeToHourMin(trip.endCreated)
     : null;
   const duration = TimeUtil.msToTime(trip.totalTime);
-  const purpose = Database.Trip.getTypeLabel(trip.type);
+  const purpose = Database.Trip.getPurposeTypeLabel(trip.purpose);
   const distance = parseFloat((trip.totalDistance / 1000).toFixed(2));
   return {
     date,

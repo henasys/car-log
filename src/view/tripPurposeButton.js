@@ -5,25 +5,32 @@ import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 import Database from '../module/database';
 import Color from '../module/color';
 
-export default function TripTypeButton({type, onValueChanged, keepState}) {
-  const [typeValue, setTypeValue] = useState(Database.Trip.Type.COMMUTE);
+export default function TripPurposeButton({
+  purpose,
+  onValueChanged,
+  keepState,
+}) {
+  const [purposeValue, setPurposeValue] = useState(
+    Database.Trip.PurposeType.COMMUTE,
+  );
   const initStates = () => {
-    setTypeValue(type);
+    setPurposeValue(purpose);
   };
   useEffect(() => {
     initStates();
   }, []);
-  const keepValue = keepState ? typeValue : type;
+  const keepValue = keepState ? purposeValue : purpose;
   return (
     <TouchableOpacity
       style={styles.buttonStyle}
       onPress={() => {
-        const value = (keepValue + 1) % Object.keys(Database.Trip.Type).length;
+        const value =
+          (keepValue + 1) % Object.keys(Database.Trip.PurposeType).length;
         onValueChanged && onValueChanged(value);
-        setTypeValue(value);
+        setPurposeValue(value);
       }}>
       <Text style={styles.titleStyle}>
-        {Database.Trip.getTypeLabel(keepValue)}
+        {Database.Trip.getPurposeTypeLabel(keepValue)}
       </Text>
     </TouchableOpacity>
   );

@@ -207,14 +207,14 @@ const getSetting = realm => {
  * save Trip info
  * @param {*} realm Ream object
  * @param {*} start {latitude, longitude, created}
- * @param {Number} type Trip.Type Integer
+ * @param {Number} purpose Trip.PurposeType Integer
  * @param {*} end {latitude, longitude, created} optional
  * @param {*} totalDistance start ~ end, optional
  */
 const saveTrip = (
   realm,
   start,
-  type = null,
+  purpose = null,
   end = {latitude: null, longitude: null, created: null},
   totalDistance = null,
 ) => {
@@ -232,8 +232,7 @@ const saveTrip = (
           endCreated: end.created,
           totalDistance: totalDistance,
           totalTime: totalTime,
-          type: type ? type : Trip.Type.COMMUTE,
-          created: new Date().getTime(),
+          purpose: purpose ? purpose : Trip.PurposeType.COMMUTE,
         });
         resolve(trip);
       });
@@ -265,8 +264,8 @@ const getEmptyAddressTripList = realm => {
 const getTripListByTimestamp = (realm, start, end, reverse = false) => {
   return realm
     .objects('Trip')
-    .filtered('created >= $0 AND created < $1', start, end)
-    .sorted('created', reverse);
+    .filtered('startCreated >= $0 AND startCreated < $1', start, end)
+    .sorted('startCreated', reverse);
 };
 
 const getTripListByYear = (realm, year, reverse = false) => {
@@ -399,14 +398,14 @@ const updateTripEndAddress = (realm, id, address) => {
  * update Trip with address
  * @param {*} realm Realm Object
  * @param {*} id Primary key
- * @param {*} type Trip.Type
+ * @param {*} purpose Trip.PurposeType
  */
-const updateTripType = (realm, id, type) => {
+const updateTripPurposeType = (realm, id, purpose) => {
   return new Promise((resolve, reject) => {
     try {
       realm.write(() => {
         const trip = realm.objectForPrimaryKey('Trip', id);
-        trip.type = type;
+        trip.purpose = purpose;
         resolve(trip);
       });
     } catch (e) {
@@ -522,7 +521,7 @@ export default {
   updateTripEnd,
   updateTripStartAddress,
   updateTripEndAddress,
-  updateTripType,
+  updateTripPurposeType,
   mergeTrip,
   deleteTrip,
   deleteTripById,

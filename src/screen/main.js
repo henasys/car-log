@@ -17,10 +17,10 @@ import {toast, toastError} from '../module/toast';
 import {TripDetector} from '../module/detector';
 import FileManager from '../module/file';
 import YearPicker from '../view/yearPicker';
+import Color from '../module/color';
 import MonthPicker from '../view/monthPicker';
 import TripButton from '../view/tripButton';
-import TripTypeButton from '../view/tripTypeButton';
-import Color from '../module/color';
+import TripPurposeButton from '../view/tripPurposeButton';
 import TripList from '../view/tripListSwipeable';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
@@ -43,7 +43,7 @@ export default class MainScreen extends React.Component {
   tripDetector = null;
   isEmulator = false;
   manualStartBackup = null;
-  tripType = null;
+  tripPurpose = null;
   focusEventUnsubscribe = null;
   blurEventUnsubscribe = null;
 
@@ -208,7 +208,7 @@ export default class MainScreen extends React.Component {
     const trips =
       year && month
         ? Database.getTripListByYearMonth(realm, year, month + 1, true)
-        : Database.getTripList(this.state.realm).sorted('created', true);
+        : Database.getTripList(this.state.realm).sorted('startCreated', true);
     // this.deleteTrips(list);
     // this.writeJsonToFile(list);
     // this.readJsonFromFile();
@@ -220,7 +220,7 @@ export default class MainScreen extends React.Component {
 
   // test purpose only
   deleteTrips(list) {
-    const deleteList = list.filtered('created >= $0', 1586221200000);
+    const deleteList = list.filtered('startCreated >= $0', 1586221200000);
     console.log('deleteList', deleteList);
     try {
       this.state.realm.write(() => {
@@ -271,7 +271,7 @@ export default class MainScreen extends React.Component {
 
   getLastTrip(realm) {
     const list = Database.getTripList(realm)
-      .sorted('created', true)
+      .sorted('startCreated', true)
       .slice(0, 1);
     const lastTrip = list.length === 1 ? list[0] : {};
     console.log('lastTrip', lastTrip);
@@ -389,7 +389,7 @@ export default class MainScreen extends React.Component {
       this.manualStartBackup = null;
       return;
     }
-    Database.saveTrip(this.state.realm, item, this.tripType)
+    Database.saveTrip(this.state.realm, item, this.tripPurpose)
       .then(trip => {
         console.log('saveTrip done', trip);
         trip.number = item.number;
@@ -504,7 +504,7 @@ export default class MainScreen extends React.Component {
   }
 
   newTrip(newTrip) {
-    newTrip.tripType = this.tripType;
+    newTrip.tripPurpose = this.tripPurpose;
     console.log('newTrip', newTrip);
     this.setState({trip: newTrip});
   }
@@ -531,7 +531,7 @@ export default class MainScreen extends React.Component {
       };
       console.log('item', item);
       let tripNumber = this.tripDetector.getNumber();
-      Database.saveTrip(this.state.realm, item, this.tripType)
+      Database.saveTrip(this.state.realm, item, this.tripPurpose)
         .then(trip => {
           console.log('saveTrip done', trip);
           tripNumber += 1;
@@ -609,7 +609,9 @@ export default class MainScreen extends React.Component {
     let endTime = '00:00';
     let endDisabled = true;
     let totalDistance = getKilometers(0.0);
-    let tripType = item.tripType ? item.tripType : Database.Trip.Type.COMMUTE;
+    let tripPurpose = item.tripPurpose
+      ? item.tripPurpose
+      : Database.Trip.PurposeType.COMMUTE;
     if (item.startCreated) {
       endTime = time;
       startLabel = '운행중';
@@ -626,14 +628,14 @@ export default class MainScreen extends React.Component {
       endTime,
       endDisabled,
       totalDistance,
-      tripType,
+      tripPurpose,
     };
   }
 
-  onTripTypeChanged(type) {
-    console.log('onTripTypeChanged', type);
-    this.tripType = type;
-    this.updateTrip({tripType: type});
+  onTripPurposeChanged(purpose) {
+    console.log('onTripPurposeChanged', purpose);
+    this.tripPurpose = purpose;
+    this.updateTrip({tripPurpose: purpose});
   }
 
   renderCurrentTrip(item, today) {
@@ -645,10 +647,10 @@ export default class MainScreen extends React.Component {
           <Text style={styles.todayDate}>
             {today.format('LL')} ({today.format('dd')})
           </Text>
-          <View style={styles.tripType}>
-            <TripTypeButton
-              type={params.tripType}
-              onValueChanged={this.onTripTypeChanged.bind(this)}
+          <View style={styles.tripPurpose}>
+            <TripPurposeButton
+              purpose={params.tripPurpose}
+              onValueChanged={this.onTripPurposeChanged.bind(this)}
             />
           </View>
         </View>
@@ -757,7 +759,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  tripType: {
+  tripPurpose: {
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
