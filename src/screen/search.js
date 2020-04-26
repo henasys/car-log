@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, FlatList, SafeAreaView} from 'react-native';
+import {Text, View, StyleSheet, FlatList} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';

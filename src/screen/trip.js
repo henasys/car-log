@@ -1,5 +1,6 @@
 import React from 'react';
-import {Text, View, StyleSheet, SafeAreaView} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Geocoder from 'react-native-geocoding';
 import {Button} from 'react-native-elements';
 import {Overlay} from 'react-native-elements';

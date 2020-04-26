@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, StyleSheet, View, SectionList, Text} from 'react-native';
+import {StyleSheet, View, SectionList, Text} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';

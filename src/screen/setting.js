@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  TextInput,
-  ScrollView,
-} from 'react-native';
+import {Text, View, StyleSheet, TextInput, ScrollView} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 import Database from '../module/database';
 import inputBox from '../view/inputBox';

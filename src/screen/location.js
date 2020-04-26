@@ -1,5 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
+import {StyleSheet, Text, View, FlatList} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {Icon} from 'react-native-elements';
 
 import Database from '../module/database';
