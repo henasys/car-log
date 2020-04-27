@@ -547,18 +547,6 @@ export default class MainScreen extends React.Component {
         console.log('not found current trip id', trip);
         return;
       }
-      // const lastPrevious = this.getLastPreviousOfDetector();
-      // const referTimestamp = Math.max(
-      //   trip.startCreated,
-      //   lastPrevious.created,
-      // );
-      // let item = {
-      //   id: trip.id,
-      //   latitude: lastPrevious.latitude,
-      //   longitude: lastPrevious.longitude,
-      //   totalDistance: lastPrevious.totalDistance,
-      //   created: referTimestamp,
-      // };
       const item = {
         id: trip.id,
         latitude: coords.latitude,
@@ -567,6 +555,13 @@ export default class MainScreen extends React.Component {
         totalDistance: trip.totalDistance,
         number: trip.number,
       };
+      const lastPrevious = this.getLastPreviousOfDetector();
+      if (lastPrevious.created !== 0) {
+        item.latitude = lastPrevious.latitude;
+        item.longitude = lastPrevious.longitude;
+        item.created = lastPrevious.created;
+        item.totalDistance = lastPrevious.totalDistance;
+      }
       this.updateTripEnd(item);
     };
     const errorCallback = error => {
