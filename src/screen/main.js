@@ -280,21 +280,13 @@ export default class MainScreen extends React.Component {
       console.log('no lastTrip has empty end');
       return;
     }
-    const previousLocation = this.tripDetector.getPreviousLocation();
-    let lastPrevious = this.tripDetector.getLastPrevious();
-    const totalDistance = this.tripDetector.getTotalDistance();
-    console.log('previousLocation', previousLocation);
-    console.log('lastPrevious', lastPrevious);
-    console.log('totalDistance', totalDistance);
-    const nowTimestamp = new Date().getTime();
-    console.log('nowTimestamp', nowTimestamp);
-    if (!lastPrevious) {
-      lastPrevious = {...previousLocation};
-    }
+    const {lastPrevious, totalDistance} = this.getLastPreviousOfDetector();
     const referTimestamp = Math.max(
       lastTrip.startCreated,
       lastPrevious.created,
     );
+    const nowTimestamp = new Date().getTime();
+    console.log('nowTimestamp', nowTimestamp);
     const dt = nowTimestamp - referTimestamp;
     console.log('referTimestamp', referTimestamp);
     console.log('dt', dt, TimeUtil.msToTime(dt));
@@ -311,6 +303,19 @@ export default class MainScreen extends React.Component {
       created: referTimestamp,
     };
     this.updateTripEnd(item, realm);
+  }
+
+  getLastPreviousOfDetector() {
+    const previousLocation = this.tripDetector.getPreviousLocation();
+    let lastPrevious = this.tripDetector.getLastPrevious();
+    const totalDistance = this.tripDetector.getTotalDistance();
+    console.log('previousLocation', previousLocation);
+    console.log('lastPrevious', lastPrevious);
+    console.log('totalDistance', totalDistance);
+    if (!lastPrevious) {
+      lastPrevious = {...previousLocation};
+    }
+    return {lastPrevious, totalDistance};
   }
 
   saveTripResult(realm, result, afterCallback) {
