@@ -1,5 +1,29 @@
 import {TripDetector} from '../src/module/detector';
-import {initEmptyLocation, clone} from '../src/module/util';
+import {initEmptyLocation, clone, TimeUtil} from '../src/module/util';
+
+class DetectorInMain {
+  constructor() {
+    this.tripDetector = initDetector();
+  }
+
+  doDetectOnRemainedLocationList(realm, locations, lastTimestamp) {
+    if (locations.length === 0) {
+      return;
+    }
+    this.tripDetector.setAllowTripEndAtFirst(true);
+    if (lastTimestamp === 0) {
+      this.tripDetector.setPreviousLocation();
+    } else {
+      this.tripDetector.setPreviousLocation(locations[0]);
+    }
+    for (let index = 0; index < locations.length; index++) {
+      const location = locations[index];
+      this.tripDetector.detectAtOnce(location);
+    }
+    const result = this.tripDetector.getResult();
+    console.log('doDetectOnRemainedLocationList result', result);
+  }
+}
 
 import {locations} from './location/data';
 
@@ -51,12 +75,21 @@ it('detect_all', () => {
 
 it('detect_each', () => {
   const tripStartCallback = item => {
-    console.log('tripStartCallback', item.created);
+    console.log(
+      'tripStartCallback',
+      item.created,
+      TimeUtil.timeToDateHourMin(item.created),
+    );
   };
   const tripEndCallback = item => {
-    console.log('tripEndCallback', item.created);
+    console.log(
+      'tripEndCallback',
+      item.created,
+      TimeUtil.timeToDateHourMin(item.created),
+    );
   };
-  const detector = initDetector(tripEndCallback);
+  const detector = initDetector();
+  // detector.setAllowTripEndAtFirst(true);
   detector.setTripStartCallback(tripStartCallback);
   detector.setTripEndCallback(tripEndCallback);
   let previous = initEmptyLocation();
@@ -64,4 +97,9 @@ it('detect_each', () => {
     const location = clone(locations[index]);
     previous = detector.detect(location, previous);
   }
+});
+
+it('detector_in_main', () => {
+  const detector = new DetectorInMain();
+  detector.doDetectOnRemainedLocationList(null, locations, 0);
 });
