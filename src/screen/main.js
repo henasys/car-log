@@ -44,6 +44,7 @@ export default class MainScreen extends React.Component {
   tripPurpose = null;
   focusEventUnsubscribe = null;
   blurEventUnsubscribe = null;
+  isAttachedListener = false;
 
   componentDidMount() {
     console.log('main componentDidMount');
@@ -117,7 +118,7 @@ export default class MainScreen extends React.Component {
   setMonth(month) {
     console.log('setMonth', month);
     this.setState({month}, () => {
-      // this.getList();
+      this.getList();
     });
   }
 
@@ -134,7 +135,7 @@ export default class MainScreen extends React.Component {
         this.initTripDetector(realm);
         this.setPeriodInterval(realm);
         this.getRemainedLocationList(realm);
-        // this.getList(realm);
+        this.getList(realm);
       });
     });
   }
@@ -195,8 +196,9 @@ export default class MainScreen extends React.Component {
     console.log('getList list', list.length);
     // list.removeListener(this.listListener.bind(this));
     // list.addListener(this.listListener.bind(this));
-    if (!this.state.list) {
-      console.log('this.state.list is null, very initial state');
+    if (!this.isAttachedListener) {
+      console.log('this.isAttachedListener is null, very initial state');
+      this.isAttachedListener = true;
       list.addListener(this.listListener.bind(this));
     }
     this.setState({list});
