@@ -1,0 +1,184 @@
+import React, {useState, useEffect} from 'react';
+import {Text, View, StyleSheet} from 'react-native';
+import {TouchableOpacity} from 'react-native';
+import moment from 'moment';
+
+import Database from '../module/database';
+import {TimeUtil, getKilometers} from '../module/util';
+import Color from '../module/color';
+import TripPurposeButton from '../view/tripPurposeButton';
+
+const getParamsFromCurrentTrip = (item, today, onStartButton, onEndButton) => {
+  console.log('getParamsFromCurrentTrip', item);
+  const time = today && today.format('HH:mm');
+  let status = '출발전';
+  let buttonLabel = '출발하기';
+  let buttonCallback = onStartButton;
+  let startTime = '00:00';
+  let currentTime = time;
+  let totalDistance = getKilometers(0.0);
+  let tripPurpose = item.tripPurpose
+    ? item.tripPurpose
+    : Database.Trip.PurposeType.COMMUTE;
+  if (item.startCreated) {
+    status = '운행중';
+    buttonLabel = '도착처리';
+    buttonCallback = onEndButton;
+    startTime = TimeUtil.timeToHourMin(item.startCreated);
+    currentTime = startTime;
+    totalDistance = getKilometers(item.totalDistance);
+  }
+  return {
+    status,
+    buttonLabel,
+    buttonCallback,
+    startTime,
+    currentTime,
+    totalDistance,
+    tripPurpose,
+  };
+};
+
+function TripAction({label, onPress}) {
+  return (
+    <TouchableOpacity style={styles.buttonContainer} onPress={onPress}>
+      <Text style={styles.buttonLabel}>{label}</Text>
+    </TouchableOpacity>
+  );
+}
+
+function TripDetail({status, startTime, currentTime, totalDistance}) {
+  return (
+    <View>
+      <View style={styles.tripDetail}>
+        <View style={styles.tripStatusAndDistance}>
+          <Text style={[styles.tripBasicText, styles.tripBoldText]}>
+            {status}
+          </Text>
+          <Text style={[styles.tripBasicText, styles.tripBoldText]}>
+            {totalDistance}
+          </Text>
+        </View>
+        <Text style={styles.tripBasicText}>출발: {startTime}</Text>
+        <Text style={styles.tripBasicText}>현재: {currentTime}</Text>
+      </View>
+    </View>
+  );
+}
+
+export default function CurrentTrip({
+  trip,
+  onTripPurposeChanged,
+  onStartButton,
+  onEndButton,
+}) {
+  const [today, setToday] = useState(null);
+  const params = getParamsFromCurrentTrip(
+    trip,
+    today,
+    onStartButton,
+    onEndButton,
+  );
+  useEffect(() => {
+    setToday(moment());
+  }, []);
+  console.log('CurrentTrip render');
+  return (
+    <View style={styles.currentTrip}>
+      <View style={styles.tripDate}>
+        <Text style={styles.todayDate}>
+          {today && today.format('LL')} ({today && today.format('dd')})
+        </Text>
+        <View style={styles.tripPurpose}>
+          <TripPurposeButton
+            keepState="true"
+            purpose={params.tripPurpose}
+            onValueChanged={onTripPurposeChanged}
+          />
+        </View>
+      </View>
+      <View style={styles.tripContainer}>
+        <TripDetail
+          status={params.status}
+          startTime={params.startTime}
+          currentTime={params.currentTime}
+          totalDistance={params.totalDistance}
+        />
+        <TripAction
+          label={params.buttonLabel}
+          onPress={params.buttonCallback}
+        />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  currentTrip: {
+    paddingVertical: 10,
+    backgroundColor: '#DCDCDC',
+    justifyContent: 'center',
+  },
+  tripDate: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  tripPurpose: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+    marginRight: 0,
+  },
+  todayDate: {
+    fontSize: 22,
+    fontWeight: 'normal',
+    paddingHorizontal: 10,
+    color: Color.font1,
+  },
+  tripContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginVertical: 10,
+    marginHorizontal: 20,
+  },
+  tripDetail: {
+    justifyContent: 'center',
+  },
+  tripStatusAndDistance: {
+    flexDirection: 'row',
+  },
+  tripBasicText: {
+    fontSize: 18,
+    backgroundColor: Color.bg1,
+    marginVertical: 5,
+    marginHorizontal: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+  },
+  tripBoldText: {
+    fontWeight: 'bold',
+  },
+  // button
+  buttonContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Color.main1,
+    // padding: 30,
+    width: 120,
+    height: 120,
+    borderRadius: 40,
+  },
+  buttonLabel: {
+    fontSize: 22,
+    color: 'white',
+  },
+});
