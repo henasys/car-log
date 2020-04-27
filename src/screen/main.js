@@ -311,7 +311,7 @@ export default class MainScreen extends React.Component {
 
   getLastPreviousOfDetector() {
     const previousLocation = this.tripDetector.getPreviousLocation();
-    let lastPrevious = this.tripDetector.getLastPrevious();
+    let lastPrevious = this.tripDetector.getLastValidPreviousLocation();
     const totalDistance = this.tripDetector.getTotalDistance();
     console.log('previousLocation', previousLocation);
     console.log('lastPrevious', lastPrevious);
@@ -470,7 +470,7 @@ export default class MainScreen extends React.Component {
     }
     this.tripDetector.detectAtOnce(current);
     const previousLocation = this.tripDetector.getPreviousLocation();
-    const lastPrevious = this.tripDetector.getLastPrevious();
+    const lastPrevious = this.tripDetector.getLastValidPreviousLocation();
     const totalDistance = this.tripDetector.getTotalDistance();
     const isLocationChanged = this.tripDetector.getIsLocationChanged();
     console.log('previousLocation', previousLocation);

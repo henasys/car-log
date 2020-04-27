@@ -18,6 +18,7 @@ export class TripDetector {
   result = [];
   tripIdFinder = new TripIdFinder();
   previousLocation = initEmptyLocation();
+  lastValidPreviousLocation = initEmptyLocation();
   isLocationChanged = false;
 
   constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
@@ -79,8 +80,8 @@ export class TripDetector {
     return this.totalDistance;
   }
 
-  getLastPrevious() {
-    return this.lastPrevious;
+  getLastValidPreviousLocation() {
+    return this.lastValidPreviousLocation;
   }
 
   detectList(list) {
@@ -94,11 +95,11 @@ export class TripDetector {
     }
     if (
       this.lastTripEnd &&
-      this.lastTripEnd.created !== this.lastPrevious.created
+      this.lastTripEnd.created !== this.lastValidPreviousLocation.created
     ) {
-      this.makeTripEnd(clone(this.lastPrevious), true);
+      this.makeTripEnd(clone(this.lastValidPreviousLocation), true);
     } else {
-      console.log('lastPrevious is already added into TripEnd');
+      console.log('lastValidPreviousLocation is already added into TripEnd');
     }
   }
 
@@ -128,7 +129,7 @@ export class TripDetector {
     current.dt_date = msToTime(dt);
     current.dd = dd;
     current.date = timeToDateHourMin(current.created);
-    this.lastPrevious = previous;
+    this.lastValidPreviousLocation = previous;
     if (dd <= this.radiusOfArea) {
       return previous;
     }
