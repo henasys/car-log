@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native';
 import moment from 'moment';
@@ -67,21 +67,50 @@ function TripDetail({status, startTime, currentTime, totalDistance}) {
 }
 
 export default function CurrentTrip({
+  navigation,
   trip,
   onTripPurposeChanged,
   onStartButton,
   onEndButton,
 }) {
-  const [today, setToday] = useState(null);
+  const [today, setToday] = React.useState(null);
   const params = getParamsFromCurrentTrip(
     trip,
     today,
     onStartButton,
     onEndButton,
   );
-  useEffect(() => {
+  React.useEffect(() => {
     setToday(moment());
   }, []);
+  React.useEffect(() => {
+    let timerInterval = null;
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      console.log('CurrentTrip focus');
+      timerInterval = setTimerInterval();
+      console.log('timerInterval', timerInterval);
+    });
+    const unsubscribeBlur = navigation.addListener('blur', () => {
+      console.log('CurrentTrip blur');
+      console.log('timerInterval', timerInterval);
+      clearTimerInterval(timerInterval);
+    });
+    return () => {
+      unsubscribeFocus();
+      unsubscribeBlur();
+    };
+  }, [navigation]);
+  const setTimerInterval = () => {
+    const interval = 29000;
+    const timerInterval = setInterval(() => {
+      console.log('run with timerInterval', interval);
+      setToday(moment());
+    }, interval);
+    return timerInterval;
+  };
+  const clearTimerInterval = timerInterval => {
+    clearInterval(timerInterval);
+  };
   console.log('CurrentTrip render');
   return (
     <View style={styles.currentTrip}>
