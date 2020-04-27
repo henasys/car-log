@@ -263,12 +263,12 @@ export default class MainScreen extends React.Component {
       const location = locations[index];
       this.tripDetector.detectAtOnce(location);
     }
-    const result = this.tripDetector.getResult();
-    console.log('doDetectOnRemainedLocationList result', result.length);
     const previousLocation = this.tripDetector.getPreviousLocation();
     previousLocation.totalDistance = this.tripDetector.getTotalDistance();
     const updateTrip = tripCallbackItemToTripRecord(previousLocation, true);
     this.updateTrip(updateTrip);
+    const result = this.tripDetector.getResult();
+    console.log('doDetectOnRemainedLocationList result', result.length);
     const afterCallback = _realm => {
       this.lastTripAutoEnd(_realm);
       this.setTripDetectorCallback();
@@ -582,7 +582,6 @@ export default class MainScreen extends React.Component {
   onTripPurposeChanged(purpose) {
     console.log('onTripPurposeChanged', purpose);
     this.tripPurpose = purpose;
-    // this.updateTrip({tripPurpose: purpose});
   }
 
   onDeleteRow(rowKey) {
