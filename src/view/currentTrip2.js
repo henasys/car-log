@@ -107,6 +107,7 @@ export default function CurrentTrip({
     return () => {
       unsubscribeFocus();
       unsubscribeBlur();
+      clearTimerInterval(timerInterval);
     };
   }, [navigation]);
   const setTimerInterval = () => {
