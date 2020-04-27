@@ -25,7 +25,10 @@ const getParamsFromCurrentTrip = (item, today, onStartButton, onEndButton) => {
     buttonLabel = '도착처리';
     buttonCallback = onEndButton;
     startTime = TimeUtil.timeToHourMin(item.startCreated);
-    currentTime = startTime;
+    const todayTimestamp = today.toDate().getTime();
+    if (item.startCreated >= todayTimestamp) {
+      currentTime = startTime;
+    }
     totalDistance = getKilometers(item.totalDistance);
   }
   return {
@@ -204,7 +207,7 @@ const styles = StyleSheet.create({
     // padding: 30,
     width: 120,
     height: 120,
-    borderRadius: 40,
+    borderRadius: 50,
   },
   buttonLabel: {
     fontSize: 22,
