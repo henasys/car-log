@@ -284,11 +284,18 @@ export default class MainScreen extends React.Component {
       console.log('no lastTrip has empty end');
       return;
     }
-    const {lastPrevious, totalDistance} = this.getLastPreviousOfDetector();
+    const lastPrevious = this.getLastPreviousOfDetector();
     const referTimestamp = Math.max(
       lastTrip.startCreated,
       lastPrevious.created,
     );
+    const item = {
+      id: lastTrip.id,
+      latitude: lastPrevious.latitude,
+      longitude: lastPrevious.longitude,
+      totalDistance: lastPrevious.totalDistance,
+      created: referTimestamp,
+    };
     const nowTimestamp = new Date().getTime();
     console.log('nowTimestamp', nowTimestamp);
     const dt = nowTimestamp - referTimestamp;
@@ -299,13 +306,6 @@ export default class MainScreen extends React.Component {
       return;
     }
     console.log('lastTrip auto ending required');
-    const item = {
-      id: lastTrip.id,
-      latitude: lastPrevious.latitude,
-      longitude: lastPrevious.longitude,
-      totalDistance: totalDistance,
-      created: referTimestamp,
-    };
     this.updateTripEnd(item, realm);
   }
 
@@ -319,7 +319,8 @@ export default class MainScreen extends React.Component {
     if (!lastPrevious) {
       lastPrevious = {...previousLocation};
     }
-    return {lastPrevious, totalDistance};
+    lastPrevious.totalDistance = totalDistance;
+    return lastPrevious;
   }
 
   saveTripResult(realm, result, afterCallback) {
@@ -546,6 +547,18 @@ export default class MainScreen extends React.Component {
         console.log('not found current trip id', trip);
         return;
       }
+      // const lastPrevious = this.getLastPreviousOfDetector();
+      // const referTimestamp = Math.max(
+      //   trip.startCreated,
+      //   lastPrevious.created,
+      // );
+      // let item = {
+      //   id: trip.id,
+      //   latitude: lastPrevious.latitude,
+      //   longitude: lastPrevious.longitude,
+      //   totalDistance: lastPrevious.totalDistance,
+      //   created: referTimestamp,
+      // };
       const item = {
         id: trip.id,
         latitude: coords.latitude,
