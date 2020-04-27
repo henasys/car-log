@@ -18,10 +18,9 @@ import {TripDetector} from '../module/detector';
 import FileManager from '../module/file';
 import AndroidBackHandler from '../module/androidBackHandler';
 import YearPicker from '../view/yearPicker';
-import Color from '../module/color';
 import MonthPicker from '../view/monthPicker';
 import TripList from '../view/tripListSwipeable';
-import CurrentTrip from '../view/currentTrip';
+import CurrentTrip from '../view/currentTrip2';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 
@@ -33,10 +32,9 @@ export default class MainScreen extends React.Component {
     pickerItems: [],
     trip: {},
     list: [],
-    today: moment(),
   };
 
-  timerInterval = null;
+  // timerInterval = null;
   periodInterval = null;
   locator = Locator.getInstance();
   setting = null;
@@ -50,7 +48,7 @@ export default class MainScreen extends React.Component {
   componentDidMount() {
     console.log('main componentDidMount');
     this.initBackHandler();
-    this.initNavigationEvent();
+    // this.initNavigationEvent();
     this.initDeviceInfo();
     this.openDatabase();
     this.locator.initLocator(
@@ -63,7 +61,7 @@ export default class MainScreen extends React.Component {
   componentWillUnmount() {
     console.log('main componentWillUnmount');
     this.removeBackHandler();
-    this.removeNavigationEvent();
+    // this.removeNavigationEvent();
     this.clearPeriodInterval();
     this.closeDatabase();
     this.locator.removeLocator();
@@ -79,31 +77,31 @@ export default class MainScreen extends React.Component {
     this.backHandler.removeBackHandler();
   }
 
-  initNavigationEvent() {
-    this.focusEventUnsubscribe = this.props.navigation.addListener(
-      'focus',
-      this.handleFocusEvent.bind(this),
-    );
-    this.blurEventUnsubscribe = this.props.navigation.addListener(
-      'blur',
-      this.handleBlurEvent.bind(this),
-    );
-  }
+  // initNavigationEvent() {
+  //   this.focusEventUnsubscribe = this.props.navigation.addListener(
+  //     'focus',
+  //     this.handleFocusEvent.bind(this),
+  //   );
+  //   this.blurEventUnsubscribe = this.props.navigation.addListener(
+  //     'blur',
+  //     this.handleBlurEvent.bind(this),
+  //   );
+  // }
 
-  removeNavigationEvent() {
-    this.focusEventUnsubscribe && this.focusEventUnsubscribe();
-    this.blurEventUnsubscribe && this.blurEventUnsubscribe();
-  }
+  // removeNavigationEvent() {
+  //   this.focusEventUnsubscribe && this.focusEventUnsubscribe();
+  //   this.blurEventUnsubscribe && this.blurEventUnsubscribe();
+  // }
 
-  handleFocusEvent() {
-    console.log('handleFocusEvent');
-    this.setTimerInterval();
-  }
+  // handleFocusEvent() {
+  //   console.log('handleFocusEvent');
+  //   this.setTimerInterval();
+  // }
 
-  handleBlurEvent() {
-    console.log('handleBlurEvent');
-    this.clearTimerInterval();
-  }
+  // handleBlurEvent() {
+  //   console.log('handleBlurEvent');
+  //   this.clearTimerInterval();
+  // }
 
   initDeviceInfo() {
     DeviceInfo.isEmulator()
@@ -116,17 +114,17 @@ export default class MainScreen extends React.Component {
       });
   }
 
-  setTimerInterval() {
-    const interval = 29000;
-    this.timerInterval = setInterval(() => {
-      console.log('run with timerInterval');
-      this.setState({today: moment()});
-    }, interval);
-  }
+  // setTimerInterval() {
+  //   const interval = 29000;
+  //   this.timerInterval = setInterval(() => {
+  //     console.log('run with timerInterval');
+  //     this.setState({today: moment()});
+  //   }, interval);
+  // }
 
-  clearTimerInterval() {
-    clearInterval(this.timerInterval);
-  }
+  // clearTimerInterval() {
+  //   clearInterval(this.timerInterval);
+  // }
 
   setPeriodInterval(realm) {
     const setting = Database.getSetting(realm);
@@ -650,7 +648,7 @@ export default class MainScreen extends React.Component {
 
   render() {
     console.log('main render');
-    const {today, trip, list, year, month, pickerItems, realm} = this.state;
+    const {trip, list, year, month, pickerItems, realm} = this.state;
     // console.log('list', list.length);
     console.log('trip', trip);
     // console.log('year', year, 'month', month);
@@ -658,7 +656,6 @@ export default class MainScreen extends React.Component {
       <SafeAreaView style={styles.container}>
         <CurrentTrip
           trip={trip}
-          today={today}
           onTripPurposeChanged={this.onTripPurposeChanged.bind(this)}
           onStartButton={this.onStartButton.bind(this)}
           onEndButton={this.onEndButton.bind(this)}
