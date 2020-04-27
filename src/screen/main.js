@@ -517,7 +517,7 @@ export default class MainScreen extends React.Component {
     };
     const errorCallback = error => {
       const msg = `${error.code}: ${error.message}`;
-      toast(msg);
+      toastError(msg);
     };
     this.locator.getCurrentPosition(callback, errorCallback, this.isEmulator);
   }
@@ -549,7 +549,7 @@ export default class MainScreen extends React.Component {
     };
     const errorCallback = error => {
       const msg = `${error.code}: ${error.message}`;
-      toast(msg);
+      toastError(msg);
     };
     this.locator.getCurrentPosition(callback, errorCallback, this.isEmulator);
   }
