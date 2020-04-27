@@ -296,7 +296,6 @@ export default class MainScreen extends React.Component {
     if (locations.length === 0) {
       return;
     }
-    this.tripDetector.setAllowTripEndAtFirst(true);
     if (lastTimestamp === 0) {
       this.tripDetector.setPreviousLocation();
     } else {
