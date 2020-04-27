@@ -14,7 +14,7 @@ const getParamsFromCurrentTrip = (item, today, onStartButton, onEndButton) => {
   let status = '출발전';
   let buttonLabel = '출발하기';
   let buttonCallback = onStartButton;
-  let startTime = '00:00';
+  let startTime = '';
   let currentTime = time;
   let totalDistance = getKilometers(0.0);
   let tripPurpose = item.tripPurpose
@@ -62,8 +62,14 @@ function TripDetail({status, startTime, currentTime, totalDistance}) {
             {totalDistance}
           </Text>
         </View>
-        <Text style={styles.tripBasicText}>출발: {startTime}</Text>
-        <Text style={styles.tripBasicText}>현재: {currentTime}</Text>
+        <Text style={styles.tripBasicText}>
+          출발 {'   '}
+          {startTime}
+        </Text>
+        <Text style={styles.tripBasicText}>
+          현재 {'   '}
+          {currentTime}
+        </Text>
       </View>
     </View>
   );
