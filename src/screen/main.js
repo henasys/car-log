@@ -48,7 +48,6 @@ export default class MainScreen extends React.Component {
   componentDidMount() {
     console.log('main componentDidMount');
     this.initBackHandler();
-    // this.initNavigationEvent();
     this.initDeviceInfo();
     this.openDatabase();
     this.locator.initLocator(
@@ -61,7 +60,6 @@ export default class MainScreen extends React.Component {
   componentWillUnmount() {
     console.log('main componentWillUnmount');
     this.removeBackHandler();
-    // this.removeNavigationEvent();
     this.clearPeriodInterval();
     this.closeDatabase();
     this.locator.removeLocator();
@@ -77,32 +75,6 @@ export default class MainScreen extends React.Component {
     this.backHandler.removeBackHandler();
   }
 
-  // initNavigationEvent() {
-  //   this.focusEventUnsubscribe = this.props.navigation.addListener(
-  //     'focus',
-  //     this.handleFocusEvent.bind(this),
-  //   );
-  //   this.blurEventUnsubscribe = this.props.navigation.addListener(
-  //     'blur',
-  //     this.handleBlurEvent.bind(this),
-  //   );
-  // }
-
-  // removeNavigationEvent() {
-  //   this.focusEventUnsubscribe && this.focusEventUnsubscribe();
-  //   this.blurEventUnsubscribe && this.blurEventUnsubscribe();
-  // }
-
-  // handleFocusEvent() {
-  //   console.log('handleFocusEvent');
-  //   this.setTimerInterval();
-  // }
-
-  // handleBlurEvent() {
-  //   console.log('handleBlurEvent');
-  //   this.clearTimerInterval();
-  // }
-
   initDeviceInfo() {
     DeviceInfo.isEmulator()
       .then(isEmulator => {
@@ -113,18 +85,6 @@ export default class MainScreen extends React.Component {
         console.log(e);
       });
   }
-
-  // setTimerInterval() {
-  //   const interval = 29000;
-  //   this.timerInterval = setInterval(() => {
-  //     console.log('run with timerInterval');
-  //     this.setState({today: moment()});
-  //   }, interval);
-  // }
-
-  // clearTimerInterval() {
-  //   clearInterval(this.timerInterval);
-  // }
 
   setPeriodInterval(realm) {
     const setting = Database.getSetting(realm);
@@ -655,6 +615,7 @@ export default class MainScreen extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <CurrentTrip
+          navigation={this.props.navigation}
           trip={trip}
           onTripPurposeChanged={this.onTripPurposeChanged.bind(this)}
           onStartButton={this.onStartButton.bind(this)}
