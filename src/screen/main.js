@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {YellowBox} from 'react-native';
 import moment from 'moment';
 import DeviceInfo from 'react-native-device-info';
@@ -12,7 +12,6 @@ import {
   TimeUtil,
   positionToLocation,
   tripCallbackItemToTripRecord,
-  getKilometers,
 } from '../module/util';
 import {toast, toastError} from '../module/toast';
 import {TripDetector} from '../module/detector';
@@ -21,9 +20,8 @@ import AndroidBackHandler from '../module/androidBackHandler';
 import YearPicker from '../view/yearPicker';
 import Color from '../module/color';
 import MonthPicker from '../view/monthPicker';
-import TripButton from '../view/tripButton';
-import TripPurposeButton from '../view/tripPurposeButton';
 import TripList from '../view/tripListSwipeable';
+import CurrentTrip from '../view/currentTrip';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 
@@ -614,81 +612,10 @@ export default class MainScreen extends React.Component {
       });
   }
 
-  getParamsFromCurrentTrip(item, today) {
-    console.log('getParamsFromCurrentTrip', item);
-    const time = today.format('HH:mm');
-    let startLabel = '출발';
-    let startTime = time;
-    let startDisabled = false;
-    let endLabel = '도착';
-    let endTime = '00:00';
-    let endDisabled = true;
-    let totalDistance = getKilometers(0.0);
-    let tripPurpose = item.tripPurpose
-      ? item.tripPurpose
-      : Database.Trip.PurposeType.COMMUTE;
-    if (item.startCreated) {
-      endTime = time;
-      startLabel = '운행중';
-      startTime = TimeUtil.timeToHourMin(item.startCreated);
-      startDisabled = true;
-      endDisabled = false;
-      totalDistance = getKilometers(item.totalDistance);
-    }
-    return {
-      startLabel,
-      startTime,
-      startDisabled,
-      endLabel,
-      endTime,
-      endDisabled,
-      totalDistance,
-      tripPurpose,
-    };
-  }
-
   onTripPurposeChanged(purpose) {
     console.log('onTripPurposeChanged', purpose);
     this.tripPurpose = purpose;
     // this.updateTrip({tripPurpose: purpose});
-  }
-
-  renderCurrentTrip(item, today) {
-    const params = this.getParamsFromCurrentTrip(item, today);
-    // console.log('renderCurrentTrip', params);
-    return (
-      <View>
-        <View style={styles.tripDate}>
-          <Text style={styles.todayDate}>
-            {today.format('LL')} ({today.format('dd')})
-          </Text>
-          <View style={styles.tripPurpose}>
-            <TripPurposeButton
-              keepState="true"
-              purpose={params.tripPurpose}
-              onValueChanged={this.onTripPurposeChanged.bind(this)}
-            />
-          </View>
-        </View>
-        <View style={styles.tripContainer}>
-          <TripButton
-            label={params.startLabel}
-            time={params.startTime}
-            disabled={params.startDisabled}
-            onPress={this.onStartButton.bind(this)}
-          />
-          <TripButton
-            label={params.endLabel}
-            time={params.endTime}
-            disabled={params.endDisabled}
-            onPress={this.onEndButton.bind(this)}
-          />
-        </View>
-        <View style={styles.tripDistance}>
-          <Text style={styles.tripDistanceText}>{params.totalDistance}</Text>
-        </View>
-      </View>
-    );
   }
 
   onDeleteRow(rowKey) {
@@ -729,9 +656,13 @@ export default class MainScreen extends React.Component {
     // console.log('year', year, 'month', month);
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.currentTrip}>
-          {this.renderCurrentTrip(trip, today)}
-        </View>
+        <CurrentTrip
+          trip={trip}
+          today={today}
+          onTripPurposeChanged={this.onTripPurposeChanged.bind(this)}
+          onStartButton={this.onStartButton.bind(this)}
+          onEndButton={this.onEndButton.bind(this)}
+        />
         <View style={styles.yearMonthPickerContainer}>
           <View style={{width: '45%'}}>
             <YearPicker
@@ -762,49 +693,6 @@ export default class MainScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  currentTrip: {
-    paddingVertical: 10,
-    backgroundColor: '#DCDCDC',
-    justifyContent: 'center',
-  },
-  tripDate: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  tripPurpose: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 0,
-  },
-  todayDate: {
-    fontSize: 22,
-    fontWeight: 'normal',
-    paddingHorizontal: 10,
-    color: Color.font1,
-  },
-  tripContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 10,
-    marginHorizontal: 20,
-  },
-  tripDistance: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  tripDistanceText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: Color.bg1,
-    borderRadius: 10,
   },
   ListContainer: {
     flex: 1,
