@@ -31,7 +31,7 @@ export default class MainScreen extends React.Component {
     month: null,
     pickerItems: [],
     trip: {},
-    list: [],
+    list: null,
   };
 
   // timerInterval = null;
@@ -108,14 +108,16 @@ export default class MainScreen extends React.Component {
   }
 
   setYear(year) {
+    console.log('setYear', year);
     this.setState({year}, () => {
       this.getList();
     });
   }
 
   setMonth(month) {
+    console.log('setMonth', month);
     this.setState({month}, () => {
-      this.getList();
+      // this.getList();
     });
   }
 
@@ -126,18 +128,24 @@ export default class MainScreen extends React.Component {
   openDatabase() {
     Database.open(realm => {
       this.setState({realm}, () => {
+        realm.addListener('change', this.onChangeAtRealm.bind(this));
         Database.setRealm(realm);
         this.initPicker(realm);
         this.initTripDetector(realm);
         this.setPeriodInterval(realm);
         this.getRemainedLocationList(realm);
-        this.getList();
+        // this.getList(realm);
       });
     });
   }
 
   closeDatabase() {
+    this.state.realm.removeAllListeners();
     Database.close(this.state.realm);
+  }
+
+  onChangeAtRealm() {
+    console.log('onChangeAtRealm');
   }
 
   getCurrentPosition() {
@@ -169,9 +177,10 @@ export default class MainScreen extends React.Component {
     this.setPickerItems(items);
   }
 
-  getList() {
+  getList(_realm = null) {
     console.log('main getList');
-    const {realm, year, month} = this.state;
+    const {year, month} = this.state;
+    const realm = _realm ? _realm : this.state.realm;
     if (!realm) {
       return;
     }
@@ -184,7 +193,17 @@ export default class MainScreen extends React.Component {
     // this.readJsonFromFile();
     const list = trips.filtered('endCreated != null');
     console.log('getList list', list.length);
+    // list.removeListener(this.listListener.bind(this));
+    // list.addListener(this.listListener.bind(this));
+    if (!this.state.list) {
+      console.log('this.state.list is null, very initial state');
+      list.addListener(this.listListener.bind(this));
+    }
     this.setState({list});
+  }
+
+  listListener(list, changes) {
+    console.log('listListener', changes);
   }
 
   // test purpose only

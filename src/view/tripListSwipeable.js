@@ -71,7 +71,7 @@ export default function TripList({
   const onSwipeableClose = () => {
     // console.log('onSwipeableClose', rowKey, rowIndex);
   };
-  if (list.length === 0) {
+  if (!list || list.length === 0) {
     return <View />;
   }
   console.log('TripList render');

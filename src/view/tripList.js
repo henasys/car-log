@@ -45,7 +45,7 @@ export default function TripList({
     onSetList && onSetList(newData);
     onDeleteRow && onDeleteRow(rowKey);
   };
-  if (list.length === 0) {
+  if (!list || list.length === 0) {
     return <View />;
   }
   return (
