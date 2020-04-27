@@ -215,8 +215,8 @@ export default class TripScreen extends React.Component {
           console.log('Geocoder.from error', e);
         })
         .finally(() => {
-          const progressValue = (index + 1) / processList.length;
-          this.setState({progress: progressValue});
+          const progressValue = 1 / processList.length;
+          this.setState({progress: progressValue + this.state.progress});
         });
     });
   }
