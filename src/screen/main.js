@@ -296,12 +296,14 @@ export default class MainScreen extends React.Component {
     if (locations.length === 0) {
       return;
     }
+    let indexStart = 0;
     if (lastTimestamp === 0) {
       this.tripDetector.setPreviousLocation();
     } else {
       this.tripDetector.setPreviousLocation(locations[0]);
+      indexStart = 1;
     }
-    for (let index = 1; index < locations.length; index++) {
+    for (let index = indexStart; index < locations.length; index++) {
       const location = locations[index];
       this.tripDetector.detectAtOnce(location);
     }
