@@ -13,7 +13,7 @@ import com.android.build.OutputFile
 
 ext.versionMajor = 0
 ext.versionMinor = 0
-ext.versionPatch = 4
+ext.versionPatch = 5
 ext.versionClassifier = null
 ext.isSnapshot = false
 
@@ -198,7 +198,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             shrinkResources enableProguardInReleaseBuilds            
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
