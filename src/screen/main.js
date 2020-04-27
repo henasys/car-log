@@ -185,7 +185,6 @@ export default class MainScreen extends React.Component {
     const list = trips.filtered('endCreated != null');
     console.log('getList list', list.length);
     this.setState({list});
-    // this.testNewLocation();
   }
 
   // test purpose only
@@ -236,6 +235,7 @@ export default class MainScreen extends React.Component {
     ).sorted('created', false);
     // console.log('to be processing locations', locations.map(x => x.created));
     console.log('to be processing locations', locations.length);
+    // this.testNewLocation();
     this.doDetectOnRemainedLocationList(realm, locations, lastTimestamp);
   }
 
@@ -445,13 +445,13 @@ export default class MainScreen extends React.Component {
 
   testNewLocation() {
     const location = {
-      accuracy: 48,
+      accuracy: 10,
       altitude: 68.0428826137193,
       heading: 0,
       latitude: 37.53006144198941 + 0.5,
-      longitude: 126.99286469807542,
+      longitude: 126.99286469807542 + 1.0,
       speed: 5,
-      created: 1586254156999,
+      created: new Date().getTime(),
     };
     setTimeout(() => {
       console.log('testNewLocation');
@@ -473,7 +473,7 @@ export default class MainScreen extends React.Component {
     console.log('lastPrevious', lastPrevious);
     console.log('totalDistance', totalDistance);
     if (isTest || isLocationChanged) {
-      previousLocation.totalDistance = totalDistance;
+      previousLocation.totalDistance = isTest ? 10000 : totalDistance;
       const updateTrip = tripCallbackItemToTripRecord(previousLocation, true);
       this.updateTrip(updateTrip);
     }
