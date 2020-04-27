@@ -80,21 +80,19 @@ export default function SearchScreen(props) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputContainer}>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <View style={{flexDirection: 'row'}}>
-            {inputBox({
-              label: '영역반경 ≤',
-              unitLabel: 'm',
-              defaultValue: radiusOfArea,
-              onChangeTextHandler: setRadiusOfArea,
-            })}
-            {inputBox({
-              label: '정차시간 ≥',
-              unitLabel: 'min',
-              defaultValue: period,
-              onChangeTextHandler: setPeriod,
-            })}
-          </View>
+        <View style={{justifyContent: 'center', alignItems: 'flex-start'}}>
+          {inputBox({
+            label: '영역반경 ≤',
+            unitLabel: 'm',
+            defaultValue: radiusOfArea,
+            onChangeTextHandler: setRadiusOfArea,
+          })}
+          {inputBox({
+            label: '정차시간 ≥',
+            unitLabel: 'min',
+            defaultValue: period,
+            onChangeTextHandler: setPeriod,
+          })}
           {inputBox({
             label: 'GPS 정확도 ≤',
             unitLabel: 'm',
@@ -128,7 +126,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
     margin: 10,
   },
