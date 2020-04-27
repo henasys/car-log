@@ -197,7 +197,7 @@ export default class MainScreen extends React.Component {
     // list.removeListener(this.listListener.bind(this));
     // list.addListener(this.listListener.bind(this));
     if (!this.isAttachedListener) {
-      console.log('this.isAttachedListener is null, very initial state');
+      console.log('this.isAttachedListener is false, very initial state');
       this.isAttachedListener = true;
       list.addListener(this.listListener.bind(this));
     }
