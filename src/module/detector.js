@@ -18,7 +18,7 @@ export class TripDetector {
   result = [];
   tripIdFinder = new TripIdFinder();
   previousLocation = initEmptyLocation();
-  lastValidPreviousLocation = initEmptyLocation();
+  lastValidPreviousLocation = null;
   isLocationChanged = false;
 
   constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
