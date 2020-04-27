@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     // padding: 30,
     width: 120,
     height: 120,
-    borderRadius: 50,
+    borderRadius: 30,
   },
   buttonLabel: {
     fontSize: 22,
