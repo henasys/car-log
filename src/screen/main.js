@@ -265,6 +265,10 @@ export default class MainScreen extends React.Component {
     }
     const result = this.tripDetector.getResult();
     console.log('doDetectOnRemainedLocationList result', result.length);
+    const previousLocation = this.tripDetector.getPreviousLocation();
+    previousLocation.totalDistance = this.tripDetector.getTotalDistance();
+    const updateTrip = tripCallbackItemToTripRecord(previousLocation, true);
+    this.updateTrip(updateTrip);
     const afterCallback = _realm => {
       this.lastTripAutoEnd(_realm);
       this.setTripDetectorCallback();
