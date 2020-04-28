@@ -13,6 +13,7 @@ import {
   positionToLocation,
   tripLocationToTripRecord,
   clone,
+  isEmpty,
 } from '../module/util';
 import {toast, toastError} from '../module/toast';
 import {TripDetector} from '../module/detector';
@@ -47,6 +48,7 @@ export default class MainScreen extends React.Component {
   blurEventUnsubscribe = null;
   isAttachedListenerForList = false;
   isAttachedListenerForLastTrip = false;
+  currentNewTrip = {};
 
   componentDidMount() {
     console.log('main componentDidMount');
@@ -310,12 +312,11 @@ export default class MainScreen extends React.Component {
       const location = locations[index];
       this.tripDetector.detectAtOnce(location);
     }
-    const previousLocation = this.tripDetector.getPreviousLocation();
-    previousLocation.totalDistance = this.tripDetector.getTotalDistance();
-    const updateTrip = tripLocationToTripRecord(previousLocation, true);
-    this.updateTrip(updateTrip);
     const result = this.tripDetector.getResult();
     console.log('doDetectOnRemainedLocationList result', result.length);
+    const previousLocation = this.tripDetector.getPreviousLocation();
+    const totalDistance = this.tripDetector.getTotalDistance();
+    this.updateTripWithLocation(previousLocation, totalDistance);
     const afterCallback = _realm => {
       this.lastTripAutoEnd(_realm);
       this.setTripDetectorCallback();
@@ -521,14 +522,18 @@ export default class MainScreen extends React.Component {
     const previousLocation = this.tripDetector.getPreviousLocation();
     const totalDistance = this.tripDetector.getTotalDistance();
     const isLocationChanged = this.tripDetector.getIsLocationChanged();
-    console.log('previousLocation', previousLocation);
-    console.log('totalDistance', totalDistance);
+    // console.log('previousLocation', previousLocation);
+    // console.log('totalDistance', totalDistance);
     if (isTest || isLocationChanged) {
-      const location = clone(previousLocation);
-      location.totalDistance = isTest ? 10000 : totalDistance;
-      const updateTrip = tripLocationToTripRecord(location, true);
-      this.updateTrip(updateTrip);
+      this.updateTripWithLocation(previousLocation, totalDistance);
     }
+  }
+
+  updateTripWithLocation(previousLocation, totalDistance) {
+    const location = clone(previousLocation);
+    location.totalDistance = totalDistance;
+    const updateTrip = tripLocationToTripRecord(location, true);
+    this.updateTrip(updateTrip);
   }
 
   newTrip(newTrip) {
@@ -541,12 +546,25 @@ export default class MainScreen extends React.Component {
       trip.purpose = Database.Trip.PurposeType.COMMUTE;
     }
     console.log('newTrip', trip);
-    this.setState({trip: trip});
+    this.currentNewTrip = trip;
+    this.setState({trip: trip}, () => {
+      console.log('newTrip after', this.state.trip);
+    });
   }
 
   updateTrip(updateTrip) {
     const {trip} = this.state;
-    this.setState({trip: {...trip, ...updateTrip}});
+    console.log('updateTrip before', trip);
+    console.log('updateTrip before currentNewTrip', this.currentNewTrip);
+    let update;
+    if (!isEmpty(trip)) {
+      update = {...trip, ...updateTrip};
+    } else {
+      update = {...this.currentNewTrip, ...updateTrip};
+      this.currentNewTrip = {};
+    }
+    console.log('updateTrip', update);
+    this.setState({trip: update});
   }
 
   onStartButton() {
