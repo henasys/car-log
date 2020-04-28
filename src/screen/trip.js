@@ -239,6 +239,7 @@ export default class TripScreen extends React.Component {
             list={list}
             realm={realm}
             transform
+            keepStateOfTripPurposeButton={true}
             onLoadPreviousList={this.onLoadPreviousList.bind(this)}
             onRefreshList={this.onRefreshList.bind(this)}
             onDeleteRow={this.onDeleteRow.bind(this)}

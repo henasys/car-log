@@ -10,6 +10,7 @@ export default function TripList({
   list,
   realm,
   transform = null,
+  keepStateOfTripPurposeButton = false,
   onLoadPreviousList = null,
   onRefreshList = null,
   onDeleteRow = null,
@@ -54,7 +55,12 @@ export default function TripList({
         useFlatList={true}
         data={list}
         renderItem={({item}) => (
-          <TripItem item={item} realm={realm} transform={transform} />
+          <TripItem
+            item={item}
+            realm={realm}
+            transform={transform}
+            keepStateOfTripPurposeButton={keepStateOfTripPurposeButton}
+          />
         )}
         keyExtractor={item => item.id}
         onEndReached={onLoadPreviousList}

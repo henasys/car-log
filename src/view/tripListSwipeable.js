@@ -6,12 +6,12 @@ import SwipeableRow from '../view/swipeableRow';
 import TripItem from './tripItem';
 import MyAlert from '../view/alert';
 import {getDetailDataRow} from '../module/bundleData';
-import {clone} from '../module/util';
 
 export default function TripList({
   list,
   realm,
   transform = null,
+  keepStateOfTripPurposeButton = false,
   onLoadPreviousList = null,
   onRefreshList = null,
   onDeleteRow = null,
@@ -90,7 +90,12 @@ export default function TripList({
             onSwipeableClose={onSwipeableClose}
             onMergeRow={_onMergeRow}
             transform={transform}>
-            <TripItem item={item} realm={realm} transform={transform} />
+            <TripItem
+              item={item}
+              realm={realm}
+              transform={transform}
+              keepStateOfTripPurposeButton={keepStateOfTripPurposeButton}
+            />
           </SwipeableRow>
         )}
         keyExtractor={item => item.id}

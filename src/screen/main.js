@@ -146,8 +146,8 @@ export default class MainScreen extends React.Component {
     Database.close(this.state.realm);
   }
 
-  onChangeAtRealm() {
-    console.log('onChangeAtRealm');
+  onChangeAtRealm(_realm, name, _schema) {
+    console.log('onChangeAtRealm', _realm, name, _schema);
   }
 
   getCurrentPosition() {
@@ -206,10 +206,13 @@ export default class MainScreen extends React.Component {
   }
 
   listListener(list, changes) {
-    console.log('listListener', changes);
-    console.log('list', list);
+    console.log('main listListener', changes);
     if (changes.deletions.length > 0) {
-      console.log('changes.deletions done');
+      console.log('changes.deletions exists');
+      this.setState({list});
+    }
+    if (changes.modifications.length > 0) {
+      console.log('changes.modifications exists');
       this.setState({list});
     }
   }

@@ -11,7 +11,12 @@ const addressOrLocation = (address, latitude, longitude) => {
   return address ? address : `좌표: ${latitudeLabel}, ${longitudeLabel}`;
 };
 
-export default function TripItem({item, realm, transform = null}) {
+export default function TripItem({
+  item,
+  realm,
+  transform = null,
+  keepStateOfTripPurposeButton = false,
+}) {
   const tripLabel = '도착';
   const endCreated = item.endCreated
     ? TimeUtil.timeToHourMin(item.endCreated)
@@ -55,7 +60,7 @@ export default function TripItem({item, realm, transform = null}) {
       <View style={styles.itemColumnContainer}>
         <Text style={styles.totalDistanceText}>{totalDistance}</Text>
         <TripPurposeButton
-          keepState="true"
+          keepState={keepStateOfTripPurposeButton}
           purpose={item.purpose}
           onValueChanged={value => {
             console.log('item', item);
