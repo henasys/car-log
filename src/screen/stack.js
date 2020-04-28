@@ -18,18 +18,12 @@ const Stack = createStackNavigator();
 const debugView = navigation => {
   return __DEV__ === true ? (
     <View style={styles.menuContainer}>
-      <Icon
+      {/* <Icon
         iconStyle={styles.menuItem}
         onPress={() => navigation.navigate('SwipeTest')}
         name="bug"
         type="material-community"
-      />
-      <Icon
-        iconStyle={styles.menuItem}
-        onPress={() => navigation.navigate('Location')}
-        name="location-pin"
-        type="entypo"
-      />
+      /> */}
       <Icon
         iconStyle={styles.menuItem}
         onPress={() => navigation.navigate('Search')}
@@ -53,6 +47,12 @@ export default function MyStack() {
           headerRight: () => (
             <View style={styles.menuContainer}>
               {debugView(navigation)}
+              <Icon
+                iconStyle={styles.menuItem}
+                onPress={() => navigation.navigate('Location')}
+                name="location-pin"
+                type="entypo"
+              />
               <Icon
                 iconStyle={styles.menuItem}
                 onPress={() => navigation.navigate('Trip')}
