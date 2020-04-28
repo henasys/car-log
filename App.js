@@ -7,28 +7,35 @@ import Navigator from './src/module/navigator';
 import MyStack from './src/screen/stack';
 
 function App() {
+  const [isReady, setIsReady] = React.useState(false);
   React.useEffect(() => {
+    console.log('App useEffect');
     Navigator.isMountedRef.current = true;
-    // if (RootNavigator.navigationRef.current) {
-    const state = Navigator.navigationRef.current.getRootState();
-    console.log('init state', state);
-    Navigator.routeNameRef.current = Navigator.getActiveRouteName(state);
-    // }
+    if (isReady) {
+      const currentRouteName = Navigator.getActiveRouteName();
+      Navigator.routeNameRef.current = currentRouteName;
+      console.log('init currentRouteName', currentRouteName);
+    }
     return () => (Navigator.isMountedRef.current = false);
-  }, []);
+  }, [isReady]);
+
   return (
-    <NavigationContainer
-      ref={Navigator.navigationRef}
-      onStateChange={state => {
-        console.log('New state is', state);
-        const currentRouteName = Navigator.getActiveRouteName(state);
-        Navigator.routeNameRef.current = currentRouteName;
-        console.log('currentRouteName', currentRouteName);
-      }}>
-      <SafeAreaProvider>
+    <SafeAreaProvider>
+      <NavigationContainer
+        ref={ref => {
+          console.log('NavigationContainer ref');
+          Navigator.navigationRef.current = ref;
+          setIsReady(true);
+        }}
+        onStateChange={state => {
+          // console.log('New state is', state);
+          const currentRouteName = Navigator.getActiveRouteName(state);
+          Navigator.routeNameRef.current = currentRouteName;
+          console.log('currentRouteName', currentRouteName);
+        }}>
         <MyStack />
-      </SafeAreaProvider>
-    </NavigationContainer>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 

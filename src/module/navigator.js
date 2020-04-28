@@ -15,12 +15,8 @@ function navigate(name, params) {
 }
 
 // Gets the current screen from navigation state
-const getActiveRouteName = state => {
-  console.log('getActiveRouteName', state);
-  if (!state || state.routes) {
-    return null;
-  }
-
+const getActiveRouteName = (_state = null) => {
+  const state = _state !== null ? _state : getRootState();
   const route = state.routes[state.index];
 
   if (route.state) {
@@ -31,10 +27,15 @@ const getActiveRouteName = state => {
   return route.name;
 };
 
+const getRootState = () => {
+  return navigationRef.current?.getRootState();
+};
+
 export default {
   isMountedRef,
   navigationRef,
   routeNameRef,
   navigate,
   getActiveRouteName,
+  getRootState,
 };
