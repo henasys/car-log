@@ -20,7 +20,7 @@ const getParamsFromCurrentTrip = (item, today, onStartButton, onEndButton) => {
   let purpose = item.purpose ? item.purpose : Database.Trip.PurposeType.COMMUTE;
   if (item.startCreated) {
     status = '운행중';
-    buttonLabel = '도착처리';
+    buttonLabel = '도착 처리';
     buttonCallback = onEndButton;
     startTime = TimeUtil.timeToHourMin(item.startCreated);
     const todayTimestamp = today.toDate().getTime();
