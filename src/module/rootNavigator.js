@@ -16,6 +16,11 @@ function navigate(name, params) {
 
 // Gets the current screen from navigation state
 const getActiveRouteName = state => {
+  console.log('getActiveRouteName', state);
+  if (!state || state.routes) {
+    return null;
+  }
+
   const route = state.routes[state.index];
 
   if (route.state) {

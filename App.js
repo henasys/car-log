@@ -9,6 +9,11 @@ import MyStack from './src/screen/stack';
 function App() {
   React.useEffect(() => {
     RootNavigator.isMountedRef.current = true;
+    const state = RootNavigator.navigationRef.current?.getRootState();
+    console.log('init state', state);
+    RootNavigator.routeNameRef.current = RootNavigator.getActiveRouteName(
+      state,
+    );
     return () => (RootNavigator.isMountedRef.current = false);
   }, []);
   return (
@@ -16,7 +21,7 @@ function App() {
       <NavigationContainer
         ref={RootNavigator.navigationRef}
         onStateChange={state => {
-          // console.log('New state is', state);
+          console.log('New state is', state);
           const currentRouteName = RootNavigator.getActiveRouteName(state);
           RootNavigator.routeNameRef.current = currentRouteName;
           console.log('currentRouteName', currentRouteName);

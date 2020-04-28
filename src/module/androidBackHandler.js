@@ -35,7 +35,7 @@ export default class AndroidBackHandler {
   handleBackButtonPress = () => {
     const currentRouteName = RootNavigator.routeNameRef.current;
     console.log('currentRouteName', currentRouteName);
-    if (!this.routes.includes(currentRouteName)) {
+    if (currentRouteName && !this.routes.includes(currentRouteName)) {
       console.log('The screen is not stopped with Back Button');
       return false;
     }
