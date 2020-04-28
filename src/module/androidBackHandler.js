@@ -1,7 +1,7 @@
 import {BackHandler} from 'react-native';
 
 import {toast} from './toast';
-import RootNavigator from '../module/rootNavigator';
+import Navigator from './navigator';
 
 export default class AndroidBackHandler {
   constructor() {
@@ -33,7 +33,7 @@ export default class AndroidBackHandler {
   }
 
   handleBackButtonPress = () => {
-    const currentRouteName = RootNavigator.routeNameRef.current;
+    const currentRouteName = Navigator.routeNameRef.current;
     console.log('currentRouteName', currentRouteName);
     if (currentRouteName && !this.routes.includes(currentRouteName)) {
       console.log('The screen is not stopped with Back Button');

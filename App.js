@@ -3,28 +3,26 @@ import * as React from 'react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 
-import RootNavigator from './src/module/rootNavigator';
+import Navigator from './src/module/navigator';
 import MyStack from './src/screen/stack';
 
 function App() {
   React.useEffect(() => {
-    RootNavigator.isMountedRef.current = true;
+    Navigator.isMountedRef.current = true;
     // if (RootNavigator.navigationRef.current) {
-    const state = RootNavigator.navigationRef.current.getRootState();
+    const state = Navigator.navigationRef.current.getRootState();
     console.log('init state', state);
-    RootNavigator.routeNameRef.current = RootNavigator.getActiveRouteName(
-      state,
-    );
+    Navigator.routeNameRef.current = Navigator.getActiveRouteName(state);
     // }
-    return () => (RootNavigator.isMountedRef.current = false);
+    return () => (Navigator.isMountedRef.current = false);
   }, []);
   return (
     <NavigationContainer
-      ref={RootNavigator.navigationRef}
+      ref={Navigator.navigationRef}
       onStateChange={state => {
         console.log('New state is', state);
-        const currentRouteName = RootNavigator.getActiveRouteName(state);
-        RootNavigator.routeNameRef.current = currentRouteName;
+        const currentRouteName = Navigator.getActiveRouteName(state);
+        Navigator.routeNameRef.current = currentRouteName;
         console.log('currentRouteName', currentRouteName);
       }}>
       <SafeAreaProvider>
