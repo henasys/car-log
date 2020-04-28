@@ -45,7 +45,8 @@ export default class MainScreen extends React.Component {
   tripPurpose = null;
   focusEventUnsubscribe = null;
   blurEventUnsubscribe = null;
-  isAttachedListener = false;
+  isAttachedListenerForList = false;
+  isAttachedListenerForLastTrip = false;
 
   componentDidMount() {
     console.log('main componentDidMount');
@@ -197,9 +198,8 @@ export default class MainScreen extends React.Component {
     console.log('getList list', list.length);
     // list.removeListener(this.listListener.bind(this));
     // list.addListener(this.listListener.bind(this));
-    if (!this.isAttachedListener) {
-      console.log('this.isAttachedListener is false, very initial state');
-      this.isAttachedListener = true;
+    if (!this.isAttachedListenerForList) {
+      this.isAttachedListenerForList = true;
       list.addListener(this.listListener.bind(this));
     }
     this.setState({list});
@@ -273,12 +273,26 @@ export default class MainScreen extends React.Component {
   }
 
   getLastTrip(realm) {
-    const list = Database.getTripList(realm)
-      .sorted('startCreated', true)
-      .slice(0, 1);
-    const lastTrip = list.length === 1 ? list[0] : null;
+    const list = Database.getTripList(realm).sorted('startCreated', true);
+    if (!this.isAttachedListenerForLastTrip) {
+      this.isAttachedListenerForLastTrip = true;
+      list.addListener(this.lastTripListener.bind(this));
+    }
+    const sliced = list.slice(0, 1);
+    const lastTrip = sliced.length === 1 ? sliced[0] : null;
     console.log('lastTrip', lastTrip);
     return lastTrip;
+  }
+
+  lastTripListener(list, changes) {
+    console.log('main lastTripListener', changes);
+    if (changes.modifications.length > 0) {
+      console.log('changes.modifications exists');
+      changes.modifications.forEach(index => {
+        const trip = list[index];
+        this.updateTrip({purpose: trip.purpose});
+      });
+    }
   }
 
   doDetectOnRemainedLocationList(realm, locations, lastTimestamp) {
