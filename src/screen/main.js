@@ -589,7 +589,7 @@ export default class MainScreen extends React.Component {
         number: trip.number,
       };
       const lastPrevious = this.getLastPreviousOfDetector();
-      if (lastPrevious.created !== 0) {
+      if (lastPrevious.created >= trip.startCreated) {
         item.latitude = lastPrevious.latitude;
         item.longitude = lastPrevious.longitude;
         item.created = lastPrevious.created;
