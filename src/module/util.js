@@ -311,9 +311,9 @@ export function positionToLocation(position) {
   if (!coords) {
     return initEmptyLocation();
   }
-  const locaiton = Object.assign({}, coords);
-  locaiton.created = position.timestamp;
-  return locaiton;
+  const location = Object.assign({}, coords);
+  location.created = position.timestamp;
+  return location;
 }
 
 export function clone(item) {
