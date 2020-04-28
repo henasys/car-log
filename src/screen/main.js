@@ -548,21 +548,17 @@ export default class MainScreen extends React.Component {
     console.log('newTrip', trip);
     this.currentNewTrip = trip;
     this.setState({trip: trip}, () => {
-      console.log('newTrip after', this.state.trip);
+      // console.log('newTrip after', this.state.trip);
     });
   }
 
   updateTrip(updateTrip) {
     const {trip} = this.state;
     console.log('updateTrip before', trip);
-    console.log('updateTrip before currentNewTrip', this.currentNewTrip);
-    let update;
-    if (!isEmpty(trip)) {
-      update = {...trip, ...updateTrip};
-    } else {
-      update = {...this.currentNewTrip, ...updateTrip};
-      this.currentNewTrip = {};
-    }
+    // console.log('updateTrip before currentNewTrip', this.currentNewTrip);
+    const update = isEmpty(trip)
+      ? {...this.currentNewTrip, ...updateTrip}
+      : {...trip, ...updateTrip};
     console.log('updateTrip', update);
     this.setState({trip: update});
   }
