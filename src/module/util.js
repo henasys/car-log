@@ -320,7 +320,7 @@ export function clone(item) {
   return Object.assign({}, {...item});
 }
 
-export function tripCallbackItemToTripRecord(item, isEndType = false) {
+export function tripLocationToTripRecord(item, isEndType = false) {
   const record = {};
   if (isEndType || item.type === TripType.END) {
     record.endLatitude = item.latitude;

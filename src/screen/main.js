@@ -11,7 +11,8 @@ import {Locator} from '../module/locator';
 import {
   TimeUtil,
   positionToLocation,
-  tripCallbackItemToTripRecord,
+  tripLocationToTripRecord,
+  clone,
 } from '../module/util';
 import {toast, toastError} from '../module/toast';
 import {TripDetector} from '../module/detector';
@@ -289,7 +290,7 @@ export default class MainScreen extends React.Component {
     }
     const previousLocation = this.tripDetector.getPreviousLocation();
     previousLocation.totalDistance = this.tripDetector.getTotalDistance();
-    const updateTrip = tripCallbackItemToTripRecord(previousLocation, true);
+    const updateTrip = tripLocationToTripRecord(previousLocation, true);
     this.updateTrip(updateTrip);
     const result = this.tripDetector.getResult();
     console.log('doDetectOnRemainedLocationList result', result.length);
@@ -343,8 +344,9 @@ export default class MainScreen extends React.Component {
     if (!lastPrevious) {
       lastPrevious = {...previousLocation};
     }
-    lastPrevious.totalDistance = totalDistance;
-    return lastPrevious;
+    const location = clone(lastPrevious);
+    location.totalDistance = totalDistance;
+    return location;
   }
 
   saveTripResult(realm, result, afterCallback) {
@@ -495,15 +497,14 @@ export default class MainScreen extends React.Component {
     }
     this.tripDetector.detectAtOnce(current);
     const previousLocation = this.tripDetector.getPreviousLocation();
-    const lastPrevious = this.tripDetector.getLastValidPreviousLocation();
     const totalDistance = this.tripDetector.getTotalDistance();
     const isLocationChanged = this.tripDetector.getIsLocationChanged();
     console.log('previousLocation', previousLocation);
-    console.log('lastPrevious', lastPrevious);
     console.log('totalDistance', totalDistance);
     if (isTest || isLocationChanged) {
-      previousLocation.totalDistance = isTest ? 10000 : totalDistance;
-      const updateTrip = tripCallbackItemToTripRecord(previousLocation, true);
+      const location = clone(previousLocation);
+      location.totalDistance = isTest ? 10000 : totalDistance;
+      const updateTrip = tripLocationToTripRecord(location, true);
       this.updateTrip(updateTrip);
     }
   }
