@@ -207,6 +207,11 @@ export default class MainScreen extends React.Component {
 
   listListener(list, changes) {
     console.log('listListener', changes);
+    console.log('list', list);
+    if (changes.deletions.length > 0) {
+      console.log('changes.deletions done');
+      this.setState({list});
+    }
   }
 
   // test purpose only
