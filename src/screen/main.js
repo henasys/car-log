@@ -246,8 +246,11 @@ export default class MainScreen extends React.Component {
 
   getRemainedLocationList(realm) {
     const lastTrip = this.getLastTrip(realm);
-    const lastTimestamp = lastTrip.endCreated || lastTrip.startCreated || 0;
-    if (lastTrip.startCreated && !lastTrip.endCreated) {
+    const lastTimestamp =
+      (lastTrip && lastTrip.endCreated) ||
+      (lastTrip && lastTrip.startCreated) ||
+      0;
+    if (lastTrip && lastTrip.startCreated && !lastTrip.endCreated) {
       this.newTrip(lastTrip);
     }
     const locations = Database.getLocationListByTimestamp(
@@ -264,7 +267,7 @@ export default class MainScreen extends React.Component {
     const list = Database.getTripList(realm)
       .sorted('startCreated', true)
       .slice(0, 1);
-    const lastTrip = list.length === 1 ? list[0] : {};
+    const lastTrip = list.length === 1 ? list[0] : null;
     console.log('lastTrip', lastTrip);
     return lastTrip;
   }
