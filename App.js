@@ -12,7 +12,7 @@ function App() {
       <NavigationContainer
         ref={ref}
         onStateChange={state => {
-          console.log('New state is', state);
+          // console.log('New state is', state);
         }}>
         <MyStack />
       </NavigationContainer>
