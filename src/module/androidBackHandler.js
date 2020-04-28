@@ -1,6 +1,7 @@
 import {BackHandler} from 'react-native';
 
 import {toast} from './toast';
+import RootNavigator from '../module/rootNavigator';
 
 export default class AndroidBackHandler {
   constructor() {
@@ -32,12 +33,13 @@ export default class AndroidBackHandler {
   }
 
   handleBackButtonPress = () => {
-    // const routeName = NavigationService.getCurrentRoute();
-    // console.log('routeName', routeName);
-    // if (!this.routes.includes(routeName)) {
-    //   console.log('The screen is not stopped');
-    //   return false;
-    // }
+    const currentRouteName = RootNavigator.routeNameRef.current;
+    console.log('currentRouteName', currentRouteName);
+    if (!this.routes.includes(currentRouteName)) {
+      console.log('The screen is not stopped with Back Button');
+      return false;
+    }
+
     this.backHandlerClickCount += 1;
     console.log('handleBackPress', this.backHandlerClickCount);
     if (this.backHandlerClickCount < 2) {
