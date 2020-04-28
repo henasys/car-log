@@ -402,3 +402,7 @@ export const combineAddress = addressList => {
     .map(x => x.long_name)
     .join(' ');
 };
+
+export function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
