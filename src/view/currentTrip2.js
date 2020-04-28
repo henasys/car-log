@@ -17,9 +17,7 @@ const getParamsFromCurrentTrip = (item, today, onStartButton, onEndButton) => {
   let startTime = '';
   let currentTime = time;
   let totalDistance = getKilometers(0.0);
-  let tripPurpose = item.tripPurpose
-    ? item.tripPurpose
-    : Database.Trip.PurposeType.COMMUTE;
+  let purpose = item.purpose ? item.purpose : Database.Trip.PurposeType.COMMUTE;
   if (item.startCreated) {
     status = '운행중';
     buttonLabel = '도착처리';
@@ -38,7 +36,7 @@ const getParamsFromCurrentTrip = (item, today, onStartButton, onEndButton) => {
     startTime,
     currentTime,
     totalDistance,
-    tripPurpose,
+    purpose,
   };
 };
 
@@ -130,8 +128,7 @@ export default function CurrentTrip({
         </Text>
         <View style={styles.tripPurpose}>
           <TripPurposeButton
-            keepState="true"
-            purpose={params.tripPurpose}
+            purpose={params.purpose}
             onValueChanged={onTripPurposeChanged}
           />
         </View>

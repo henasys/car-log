@@ -518,9 +518,16 @@ export default class MainScreen extends React.Component {
   }
 
   newTrip(newTrip) {
-    newTrip.tripPurpose = this.tripPurpose;
-    console.log('newTrip', newTrip);
-    this.setState({trip: newTrip});
+    const trip = clone(newTrip);
+    if (trip.purpose) {
+      this.tripPurpose = trip.purpose;
+    } else if (this.tripPurpose) {
+      trip.purpose = this.tripPurpose;
+    } else {
+      trip.purpose = Database.Trip.PurposeType.COMMUTE;
+    }
+    console.log('newTrip', trip);
+    this.setState({trip: trip});
   }
 
   updateTrip(updateTrip) {
@@ -623,6 +630,18 @@ export default class MainScreen extends React.Component {
   onTripPurposeChanged(purpose) {
     console.log('onTripPurposeChanged', purpose);
     this.tripPurpose = purpose;
+    this.updateTrip({purpose});
+    const {realm, trip} = this.state;
+    if (!trip || !trip.id) {
+      return;
+    }
+    Database.updateTripPurposeType(realm, trip.id, purpose)
+      .then(newTrip => {
+        console.log('updateTripPurposeType done', newTrip.id);
+      })
+      .catch(e => {
+        console.log('updateTripPurposeType error', e);
+      });
   }
 
   onDeleteRow(rowKey) {
