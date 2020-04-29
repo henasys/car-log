@@ -360,7 +360,7 @@ export default class MainScreen extends React.Component {
     const dt = nowTimestamp - referTimestamp;
     console.log('nowTimestamp', nowTimestamp);
     console.log('referTimestamp', referTimestamp);
-    console.log('dt', dt, TimeUtil.msToTime(dt), 'period', period);
+    console.log('dt', dt, TimeUtil.msToTime(dt), 'period', this.setting.period);
     if (dt < period) {
       return;
     }
