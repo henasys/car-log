@@ -133,7 +133,7 @@ export default class MainScreen extends React.Component {
   openDatabase() {
     Database.open(realm => {
       this.setState({realm}, () => {
-        realm.addListener('change', this.onChangeAtRealm.bind(this));
+        // realm.addListener('change', this.onChangeAtRealm.bind(this));
         Database.setRealm(realm);
         this.initPicker(realm);
         this.initTripDetector(realm);
