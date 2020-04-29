@@ -1,6 +1,7 @@
 const main1 = '#3f51b5';
 const main2 = '#354497';
 const sub1 = '#c6cae9';
+const sub2 = '#117A65';
 const point1 = '#ff524f';
 const bg1 = '#e8e8f0';
 const bg2 = '#f3f4f5';
@@ -15,6 +16,7 @@ export default {
   main1,
   main2,
   sub1,
+  sub2,
   point1,
   bg1,
   bg2,

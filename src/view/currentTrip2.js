@@ -8,10 +8,15 @@ import {TimeUtil, getKilometers} from '../module/util';
 import Color from '../module/color';
 import TripPurposeButton from '../view/tripPurposeButton';
 
+const StatusType = {
+  BEFORE_START: '출발전',
+  DRIVING: '운행중',
+};
+
 const getParamsFromCurrentTrip = (item, today, onStartButton, onEndButton) => {
   // console.log('getParamsFromCurrentTrip', item);
   const time = today && today.format('HH:mm');
-  let status = '출발전';
+  let status = StatusType.BEFORE_START;
   let buttonLabel = '출발하기';
   let buttonCallback = onStartButton;
   let startTime = '';
@@ -19,7 +24,7 @@ const getParamsFromCurrentTrip = (item, today, onStartButton, onEndButton) => {
   let totalDistance = getKilometers(0.0);
   let purpose = item.purpose ? item.purpose : Database.Trip.PurposeType.COMMUTE;
   if (item.startCreated) {
-    status = '운행중';
+    status = StatusType.DRIVING;
     buttonLabel = '도착 처리';
     buttonCallback = onEndButton;
     startTime = TimeUtil.timeToHourMin(item.startCreated);
@@ -40,20 +45,31 @@ const getParamsFromCurrentTrip = (item, today, onStartButton, onEndButton) => {
   };
 };
 
-function TripAction({label, onPress}) {
+function TripAction({status, label, onPress}) {
+  const statusColor =
+    status === StatusType.BEFORE_START ? Color.main1 : Color.sub2;
   return (
-    <TouchableOpacity style={styles.buttonContainer} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.buttonContainer, {backgroundColor: statusColor}]}
+      onPress={onPress}>
       <Text style={styles.buttonLabel}>{label}</Text>
     </TouchableOpacity>
   );
 }
 
 function TripDetail({status, startTime, currentTime, totalDistance}) {
+  const statusColor =
+    status === StatusType.BEFORE_START ? Color.main1 : Color.sub2;
   return (
     <View>
       <View style={styles.tripDetail}>
         <View style={styles.tripStatusAndDistance}>
-          <Text style={[styles.tripBasicText, styles.tripBoldText]}>
+          <Text
+            style={[
+              styles.tripBasicText,
+              styles.tripBoldText,
+              {color: statusColor},
+            ]}>
             {status}
           </Text>
           <Text style={[styles.tripBasicText, styles.tripBoldText]}>
@@ -141,6 +157,7 @@ export default function CurrentTrip({
           totalDistance={params.totalDistance}
         />
         <TripAction
+          status={params.status}
           label={params.buttonLabel}
           onPress={params.buttonCallback}
         />
