@@ -19,7 +19,7 @@ export class TripDetector {
   result = [];
   tripIdFinder = new TripIdFinder();
   previousLocation = initEmptyLocation();
-  lastValidPreviousLocation = null;
+  validPreviousLocation = null;
   isLocationChanged = false;
 
   constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
@@ -85,8 +85,8 @@ export class TripDetector {
     return this.totalDistance;
   }
 
-  getLastValidPreviousLocation() {
-    return this.lastValidPreviousLocation;
+  getValidPreviousLocation() {
+    return this.validPreviousLocation;
   }
 
   detectList(list) {
@@ -100,9 +100,9 @@ export class TripDetector {
     }
     if (
       this.lastTripEnd &&
-      this.lastTripEnd.created !== this.lastValidPreviousLocation.created
+      this.lastTripEnd.created !== this.validPreviousLocation.created
     ) {
-      this.makeTripEnd(clone(this.lastValidPreviousLocation), true);
+      this.makeTripEnd(clone(this.validPreviousLocation), true);
     } else {
       console.log('lastValidPreviousLocation is already added into TripEnd');
     }
@@ -128,22 +128,23 @@ export class TripDetector {
     if (current.speed <= this.speedMargin) {
       return previous;
     }
-    const dt = current.created - previous.created;
-    const dd = distanceCarLog(current, previous);
+    const validPrevious = previous;
+    this.validPreviousLocation = validPrevious;
+    const dt = current.created - validPrevious.created;
+    const dd = distanceCarLog(current, validPrevious);
     current.dt = dt;
     current.dt_date = msToTime(dt);
     current.dd = dd;
     current.date = timeToDateHourMin(current.created);
-    this.lastValidPreviousLocation = previous;
     if (dd <= this.radiusOfArea) {
-      return previous;
+      return validPrevious;
     }
     this.totalDistance = this.totalDistance + dd;
     if (dt >= this.period) {
       this.number += 1;
       if (this.allowTripEndAtFirst) {
-        this.makeTripEnd(previous);
-        this.lastTripEnd = previous;
+        this.makeTripEnd(validPrevious);
+        this.lastTripEnd = validPrevious;
       }
       this.allowTripEndAtFirst = true;
       this.totalDistance = 0.0;
