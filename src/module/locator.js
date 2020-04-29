@@ -71,7 +71,7 @@ export class Locator {
         console.log('getCurrentPosition Error', error);
         errorCallback && errorCallback(error);
       },
-      this.options,
+      // this.options,
     );
   }
 
