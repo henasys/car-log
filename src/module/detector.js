@@ -23,10 +23,30 @@ export class TripDetector {
   allowToSkipPeriod = false;
 
   constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
+    this.setSetting({period, accuracyMargin, radiusOfArea, speedMargin});
+  }
+
+  setPeriod(period) {
     this.period = parseInt(period, 10) * 60 * 1000;
+  }
+
+  setAccuracyMargin(accuracyMargin) {
     this.accuracyMargin = parseFloat(accuracyMargin);
+  }
+
+  setRadiusOfArea(radiusOfArea) {
     this.radiusOfArea = parseFloat(radiusOfArea);
+  }
+
+  setSpeedMargin(speedMargin) {
     this.speedMargin = parseFloat(speedMargin);
+  }
+
+  setSetting({period, accuracyMargin, radiusOfArea, speedMargin}) {
+    this.setPeriod(period);
+    this.setAccuracyMargin(accuracyMargin);
+    this.setRadiusOfArea(radiusOfArea);
+    this.setSpeedMargin(speedMargin);
   }
 
   setTripStartCallback(callback) {

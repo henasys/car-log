@@ -48,6 +48,7 @@ export default class MainScreen extends React.Component {
   blurEventUnsubscribe = null;
   isAttachedListenerForList = false;
   isAttachedListenerForLastTrip = false;
+  isAttachedListenerForSetting = false;
   currentNewTrip = {};
 
   componentDidMount() {
@@ -136,7 +137,7 @@ export default class MainScreen extends React.Component {
         // realm.addListener('change', this.onChangeAtRealm.bind(this));
         Database.setRealm(realm);
         this.initPicker(realm);
-        this.initTripDetector(realm);
+        this.initSetting(realm);
         this.setPeriodInterval(realm);
         this.getRemainedLocationList(realm);
         this.getList(realm);
@@ -169,11 +170,33 @@ export default class MainScreen extends React.Component {
     this.locator.getCurrentPosition(callback, errorCallback);
   }
 
-  initTripDetector(realm) {
-    const setting = Database.getSetting(realm);
+  initSetting(realm) {
+    if (this.isAttachedListenerForSetting) {
+      console.log('main isAttachedListenerForSetting is already true');
+      return;
+    }
+    this.isAttachedListenerForSetting = true;
+    const setting = Database.getSetting(realm, this.settingListener.bind(this));
     this.setting = setting;
-    // console.log('setting', setting);
-    this.tripDetector = this.newTripDetector();
+    console.log('setting', setting);
+    this.initTripDetector(setting);
+  }
+
+  settingListener(list, changes) {
+    console.log('main settingListener', changes);
+    if (changes.modifications.length > 0) {
+      console.log('changes.modifications exists');
+      changes.modifications.forEach(index => {
+        const setting = list[index];
+        this.setting = setting;
+        console.log('setting changed', setting);
+        this.tripDetector.setSetting(setting);
+      });
+    }
+  }
+
+  initTripDetector(setting) {
+    this.tripDetector = this.newTripDetector(setting);
   }
 
   initPicker(realm) {
@@ -471,12 +494,12 @@ export default class MainScreen extends React.Component {
     this.updateTripWithLocation(item, item.totalDistance);
   };
 
-  newTripDetector() {
+  newTripDetector(setting) {
     const detector = new TripDetector(
-      this.setting.period,
-      this.setting.accuracyMargin,
-      this.setting.radiusOfArea,
-      this.setting.speedMargin,
+      setting.period,
+      setting.accuracyMargin,
+      setting.radiusOfArea,
+      setting.speedMargin,
     );
     return detector;
   }

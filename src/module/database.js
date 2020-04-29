@@ -205,8 +205,9 @@ const saveSetting = (
   });
 };
 
-const getSetting = realm => {
+const getSetting = (realm, listener = null) => {
   const rs = realm.objects('Setting');
+  listener && rs.addListener(listener);
   if (rs.isEmpty()) {
     return {
       period: 30,
