@@ -9,7 +9,7 @@ import Color from '../module/color';
 import TripPurposeButton from '../view/tripPurposeButton';
 
 const getParamsFromCurrentTrip = (item, today, onStartButton, onEndButton) => {
-  console.log('getParamsFromCurrentTrip', item);
+  // console.log('getParamsFromCurrentTrip', item);
   const time = today && today.format('HH:mm');
   let status = '출발전';
   let buttonLabel = '출발하기';
@@ -93,13 +93,13 @@ export default function CurrentTrip({
   React.useEffect(() => {
     let timerInterval = null;
     const unsubscribeFocus = navigation.addListener('focus', () => {
-      console.log('CurrentTrip focus');
+      // console.log('CurrentTrip focus');
       timerInterval = setTimerInterval();
-      console.log('timerInterval', timerInterval);
+      // console.log('timerInterval', timerInterval);
     });
     const unsubscribeBlur = navigation.addListener('blur', () => {
-      console.log('CurrentTrip blur');
-      console.log('timerInterval', timerInterval);
+      // console.log('CurrentTrip blur');
+      // console.log('timerInterval', timerInterval);
       clearTimerInterval(timerInterval);
     });
     return () => {
@@ -111,7 +111,7 @@ export default function CurrentTrip({
   const setTimerInterval = () => {
     const interval = 29000;
     const timerInterval = setInterval(() => {
-      console.log('run with timerInterval', interval);
+      // console.log('run with timerInterval', interval);
       setToday(moment());
     }, interval);
     return timerInterval;
@@ -119,7 +119,7 @@ export default function CurrentTrip({
   const clearTimerInterval = timerInterval => {
     clearInterval(timerInterval);
   };
-  console.log('CurrentTrip render');
+  // console.log('CurrentTrip render');
   return (
     <View style={styles.currentTrip}>
       <View style={styles.tripDate}>
