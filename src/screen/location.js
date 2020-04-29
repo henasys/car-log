@@ -28,6 +28,14 @@ export default class LocationScreen extends React.Component {
           <Icon
             iconStyle={styles.menuItem}
             onPress={() => {
+              this.doDelete();
+            }}
+            name="delete-forever"
+            type="material"
+          />
+          <Icon
+            iconStyle={styles.menuItem}
+            onPress={() => {
               console.log('save');
               this.writeJsonToFile();
             }}
@@ -184,6 +192,17 @@ export default class LocationScreen extends React.Component {
           console.log('saveLocation', e);
         });
     });
+  }
+
+  doDelete() {
+    Database.deleteLocationAll(this.state.realm)
+      .then(() => {
+        console.log('deleteLocationAll done');
+        // this.initList();
+      })
+      .catch(e => {
+        console.log('deleteLocationAll', e);
+      });
   }
 
   renderItem(item) {

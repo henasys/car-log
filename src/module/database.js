@@ -130,11 +130,26 @@ const getLocationByYearMonth = (realm, year, month) => {
   return getLocationListByTimestamp(realm, thisMonth, nextMonth);
 };
 
-const deleteLocation = (realm, year, month) => {
+const deleteLocationByYearMonth = (realm, year, month) => {
   const list =
     month === null
       ? getLocationListByYear(realm, year)
       : getLocationByYearMonth(realm, year, month);
+  return new Promise((resolve, reject) => {
+    try {
+      realm.write(() => {
+        realm.delete(list);
+        resolve();
+      });
+    } catch (e) {
+      console.warn('realm.write', e);
+      reject(new Error(e));
+    }
+  });
+};
+
+const deleteLocationAll = realm => {
+  const list = realm.objects('Location');
   return new Promise((resolve, reject) => {
     try {
       realm.write(() => {
@@ -505,7 +520,8 @@ export default {
   getLocationListByTimestamp,
   getLocationListByYear,
   getLocationByYearMonth,
-  deleteLocation,
+  deleteLocationByYearMonth,
+  deleteLocationAll,
   saveSetting,
   getSetting,
   saveTrip,

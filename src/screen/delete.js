@@ -28,9 +28,9 @@ export default function DeleteScreen({route, navigation}) {
   };
   const doDelete = (year, month = null) => {
     console.log('doDelete', year, month);
-    Database.deleteLocation(realm, year, month)
+    Database.deleteLocationByYearMonth(realm, year, month)
       .then(() => {
-        console.log('Database.deleteLocation done');
+        console.log('Database.deleteLocationByYearMonth done');
         return Database.deleteTrip(realm, year, month);
       })
       .then(() => {
