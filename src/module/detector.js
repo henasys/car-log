@@ -17,10 +17,10 @@ export class TripDetector {
   totalDistance = 0;
   startTime = 0;
   result = [];
-  tripIdFinder = new TripIdFinder();
   previousLocation = initEmptyLocation();
   validPreviousLocation = null;
   isLocationChanged = false;
+  allowToSkipPeriod = false;
 
   constructor(period, accuracyMargin, radiusOfArea, speedMargin) {
     this.period = parseInt(period, 10) * 60 * 1000;
@@ -45,11 +45,21 @@ export class TripDetector {
     this.previousLocation = location ? location : initEmptyLocation();
   }
 
+  setAllowToSkipPeriod(skip = true) {
+    console.log('setAllowToSkipPeriod', skip);
+    this.allowToSkipPeriod = skip;
+  }
+
+  getAllowToSkipPeriod() {
+    return this.allowToSkipPeriod;
+  }
+
   /**
    * set first Trip End allowed or not
    * @param {*} flag true or false
    */
   setAllowTripEndAtFirst(flag) {
+    console.log('setAllowTripEndAtFirst', flag);
     this.allowTripEndAtFirst = flag;
   }
 
@@ -67,10 +77,6 @@ export class TripDetector {
 
   getNumber() {
     return this.number;
-  }
-
-  getTripIdFinder() {
-    return this.tripIdFinder;
   }
 
   getResult() {
@@ -142,7 +148,15 @@ export class TripDetector {
       return validPrevious;
     }
     this.totalDistance = this.totalDistance + dd;
-    if (dt >= this.period) {
+    const startCondition = this.allowToSkipPeriod || dt >= this.period;
+    console.log(
+      'startCondition',
+      startCondition,
+      'allowToSkipPeriod',
+      this.allowToSkipPeriod,
+    );
+    if (startCondition) {
+      this.allowToSkipPeriod = false;
       this.number += 1;
       if (this.allowTripEndAtFirst) {
         this.makeTripEnd(validPrevious);
@@ -218,35 +232,5 @@ export class TripDetector {
       }
     }
     return {};
-  }
-}
-
-export class TripIdFinder {
-  list = [];
-
-  add(number, id) {
-    const item = this.find(number);
-    if (item) {
-      item.id = id;
-    } else {
-      const newOne = {};
-      newOne.number = number;
-      newOne.id = id;
-      this.list.push(newOne);
-    }
-  }
-
-  find(number) {
-    for (let index = 0; index < this.list.length; index++) {
-      const item = this.list[index];
-      if (item.number === number) {
-        return item;
-      }
-    }
-    return null;
-  }
-
-  getList() {
-    return this.list;
   }
 }

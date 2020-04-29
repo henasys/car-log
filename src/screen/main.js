@@ -301,7 +301,12 @@ export default class MainScreen extends React.Component {
   }
 
   doDetectOnRemainedLocationList(realm, locations, lastTimestamp) {
+    const afterCallback = _realm => {
+      this.lastTripAutoEnd(_realm);
+      this.setTripDetectorCallback();
+    };
     if (locations.length === 0) {
+      afterCallback(realm);
       return;
     }
     let indexStart = 0;
@@ -320,10 +325,6 @@ export default class MainScreen extends React.Component {
     const previousLocation = this.tripDetector.getPreviousLocation();
     const totalDistance = this.tripDetector.getTotalDistance();
     this.updateTripWithLocation(previousLocation, totalDistance);
-    const afterCallback = _realm => {
-      this.lastTripAutoEnd(_realm);
-      this.setTripDetectorCallback();
-    };
     this.saveTripResult(realm, result, afterCallback);
   }
 
@@ -332,6 +333,8 @@ export default class MainScreen extends React.Component {
     const realm = _realm ? _realm : this.state.realm;
     const lastTrip = this.getLastTrip(realm);
     if (!lastTrip || lastTrip.endCreated) {
+      this.tripDetector.setAllowToSkipPeriod();
+      this.tripDetector.setAllowTripEndAtFirst(false);
       console.log('no lastTrip has empty end');
       return;
     }
@@ -622,6 +625,8 @@ export default class MainScreen extends React.Component {
         item.created = lastPrevious.created;
         item.totalDistance = lastPrevious.totalDistance;
       }
+      this.tripDetector.setAllowToSkipPeriod();
+      this.tripDetector.setAllowTripEndAtFirst(false);
       this.updateTripEnd(item);
     };
     const errorCallback = error => {
