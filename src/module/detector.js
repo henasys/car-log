@@ -137,6 +137,8 @@ export class TripDetector {
     current.dd = dd;
     current.date = timeToDateHourMin(current.created);
     if (dd <= this.radiusOfArea) {
+      // console.log('still stay in area', dd, this.radiusOfArea);
+      this.makeTripDriving(current);
       return validPrevious;
     }
     this.totalDistance = this.totalDistance + dd;

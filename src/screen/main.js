@@ -270,7 +270,6 @@ export default class MainScreen extends React.Component {
     ).sorted('created', false);
     // console.log('to be processing locations', locations.map(x => x.created));
     console.log('to be processing locations', locations.length);
-    // this.testNewLocation();
     this.doDetectOnRemainedLocationList(realm, locations, lastTimestamp);
   }
 
@@ -461,6 +460,7 @@ export default class MainScreen extends React.Component {
       TimeUtil.timeToDateHourMin(item.created),
     );
     console.log(item);
+    this.updateTripWithLocation(item, item.totalDistance);
   };
 
   newTripDetector() {
@@ -496,12 +496,12 @@ export default class MainScreen extends React.Component {
       coords.accuracy,
       position.timestamp,
     )
-      .then(log => {
-        console.log('saveLocation done', log);
-        const msg = `${coords.latitude}, ${coords.longitude}`;
+      .then(location => {
+        console.log('saveLocation done', location.created);
+        const msg = `${location.latitude}, ${location.longitude}`;
         toast(msg);
         const updater = this.locator.getUpdater();
-        updater.next(coords);
+        updater.next(location);
       })
       .catch(e => {
         console.log('saveLocation', e);
@@ -513,38 +513,12 @@ export default class MainScreen extends React.Component {
     toastError(msg);
   }
 
-  testNewLocation() {
-    const location = {
-      accuracy: 10,
-      altitude: 68.0428826137193,
-      heading: 0,
-      latitude: 37.53006144198941 + 0.5,
-      longitude: 126.99286469807542 + 1.0,
-      speed: 5,
-      created: new Date().getTime(),
-    };
-    setTimeout(() => {
-      console.log('testNewLocation');
-      this.handleWithDetector(location, true);
-    }, 3000);
-  }
-
-  handleWithDetector(current, isTest = false) {
+  handleWithDetector(current) {
     console.log('handleWithDetector', current.created);
     if (!this.tripDetector) {
       return;
     }
     this.tripDetector.detectAtOnce(current);
-    const previousLocation = this.tripDetector.getPreviousLocation();
-    const validPrevious = this.tripDetector.getValidPreviousLocation();
-    const totalDistance = this.tripDetector.getTotalDistance();
-    const isLocationChanged = this.tripDetector.getIsLocationChanged();
-    console.log('previousLocation', previousLocation);
-    console.log('validPrevious', validPrevious);
-    console.log('totalDistance', totalDistance);
-    if (isTest || isLocationChanged) {
-      this.updateTripWithLocation(previousLocation, totalDistance);
-    }
   }
 
   updateTripWithLocation(previousLocation, totalDistance) {
