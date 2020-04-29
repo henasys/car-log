@@ -11,6 +11,7 @@ import {TripType} from '../module/type';
 export class TripDetector {
   tripStartCallback = null;
   tripEndCallback = null;
+  tripDrivingCallback = null;
   number = 0;
   allowTripEndAtFirst = false;
   totalDistance = 0;
@@ -34,6 +35,10 @@ export class TripDetector {
 
   setTripEndCallback(callback) {
     this.tripEndCallback = callback;
+  }
+
+  setTripDrivingCallback(callback) {
+    this.tripDrivingCallback = callback;
   }
 
   setPreviousLocation(location = null) {
@@ -144,8 +149,18 @@ export class TripDetector {
       this.totalDistance = 0.0;
       this.startTime = current.created;
       this.makeTripStart(current);
+    } else {
+      this.makeTripDriving(current);
     }
     return current;
+  }
+
+  makeTripDriving(item) {
+    item.type = TripType.DRIVING;
+    item.totalDistance = this.totalDistance;
+    item.totalTime = item.created - this.startTime;
+    item.number = this.number;
+    this.tripDrivingCallback && this.tripDrivingCallback(item);
   }
 
   makeTripEnd(item, isLast = false) {

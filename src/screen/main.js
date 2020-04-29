@@ -450,6 +450,15 @@ export default class MainScreen extends React.Component {
     this.updateTripEnd(item);
   };
 
+  tripDrivingCallback = item => {
+    console.log(
+      'tripDrivingCallback',
+      item.created,
+      TimeUtil.timeToDateHourMin(item.created),
+    );
+    console.log(item);
+  };
+
   newTripDetector() {
     const detector = new TripDetector(
       this.setting.period,
@@ -461,8 +470,11 @@ export default class MainScreen extends React.Component {
   }
 
   setTripDetectorCallback() {
-    this.tripDetector.setTripStartCallback(this.tripStartCallback);
-    this.tripDetector.setTripEndCallback(this.tripEndCallback);
+    this.tripDetector.setTripStartCallback(this.tripStartCallback.bind(this));
+    this.tripDetector.setTripEndCallback(this.tripEndCallback.bind(this));
+    this.tripDetector.setTripDrivingCallback(
+      this.tripDrivingCallback.bind(this),
+    );
   }
 
   handleOnLocation(position) {
