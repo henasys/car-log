@@ -31,7 +31,7 @@ function App() {
           // console.log('New state is', state);
           const currentRouteName = Navigator.getActiveRouteName(state);
           Navigator.routeNameRef.current = currentRouteName;
-          console.log('currentRouteName', currentRouteName);
+          // console.log('currentRouteName', currentRouteName);
         }}>
         <MyStack />
       </NavigationContainer>
