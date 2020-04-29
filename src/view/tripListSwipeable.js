@@ -40,6 +40,11 @@ export default function TripList({
       MyAlert.showAlert(title, message);
       return;
     }
+    if (!next.endCreated) {
+      const message = '다음 항목이 아직 도착 미확정 상태입니다.';
+      MyAlert.showAlert(title, message);
+      return;
+    }
     const nextData = getDetailDataRow(next);
     const messages = [];
     messages.push(
