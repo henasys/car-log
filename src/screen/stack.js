@@ -26,6 +26,12 @@ const debugView = navigation => {
       /> */}
       <Icon
         iconStyle={styles.menuItem}
+        onPress={() => navigation.navigate('Location')}
+        name="location-pin"
+        type="entypo"
+      />
+      <Icon
+        iconStyle={styles.menuItem}
         onPress={() => navigation.navigate('Search')}
         name="search"
         type="material"
@@ -47,12 +53,6 @@ export default function MyStack() {
           headerRight: () => (
             <View style={styles.menuContainer}>
               {debugView(navigation)}
-              <Icon
-                iconStyle={styles.menuItem}
-                onPress={() => navigation.navigate('Location')}
-                name="location-pin"
-                type="entypo"
-              />
               <Icon
                 iconStyle={styles.menuItem}
                 onPress={() => navigation.navigate('Trip')}
