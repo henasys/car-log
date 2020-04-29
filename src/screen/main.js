@@ -295,6 +295,10 @@ export default class MainScreen extends React.Component {
         this.updateTrip({purpose: trip.purpose});
       });
     }
+    if (changes.deletions.length > 0) {
+      console.log('changes.deletions exists');
+      this.newTrip({});
+    }
   }
 
   doDetectOnRemainedLocationList(realm, locations, lastTimestamp) {
