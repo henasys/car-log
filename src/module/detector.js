@@ -27,22 +27,27 @@ export class TripDetector {
   }
 
   setPeriod(period) {
+    console.log('TripDetector period', period);
     this.period = parseInt(period, 10) * 60 * 1000;
   }
 
   setAccuracyMargin(accuracyMargin) {
+    console.log('TripDetector accuracyMargin', accuracyMargin);
     this.accuracyMargin = parseFloat(accuracyMargin);
   }
 
   setRadiusOfArea(radiusOfArea) {
+    console.log('TripDetector radiusOfArea', radiusOfArea);
     this.radiusOfArea = parseFloat(radiusOfArea);
   }
 
   setSpeedMargin(speedMargin) {
+    console.log('TripDetector speedMargin', speedMargin);
     this.speedMargin = parseFloat(speedMargin);
   }
 
   setSetting({period, accuracyMargin, radiusOfArea, speedMargin}) {
+    console.log('TripDetector setSetting');
     this.setPeriod(period);
     this.setAccuracyMargin(accuracyMargin);
     this.setRadiusOfArea(radiusOfArea);
