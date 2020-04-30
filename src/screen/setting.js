@@ -140,9 +140,6 @@ export default class SettingScreen extends React.Component {
               onEndEditing={() => {
                 this.saveSetting({email});
               }}
-              onSubmitEditing={({nativeEvent}) => {
-                this.saveSetting({email});
-              }}
               defaultValue={email}
               placeholder={'abc@example.org'}
               keyboardType="email-address"
@@ -160,10 +157,11 @@ export default class SettingScreen extends React.Component {
                 console.log('radiusOfArea onChange', text);
               },
               onEndEditing: () => {
+                console.log('onEndEditing');
                 this.saveSetting({radiusOfArea});
               },
               onSubmitEditing: ({nativeEvent}) => {
-                this.saveSetting({radiusOfArea});
+                console.log('onSubmitEditing');
               },
               textInputStyle: styles.textInput,
             })}
@@ -176,9 +174,6 @@ export default class SettingScreen extends React.Component {
                 console.log('period onChange', text);
               },
               onEndEditing: () => {
-                this.saveSetting({period});
-              },
-              onSubmitEditing: ({nativeEvent}) => {
                 this.saveSetting({period});
               },
               textInputStyle: styles.textInput,
@@ -194,9 +189,6 @@ export default class SettingScreen extends React.Component {
               onEndEditing: () => {
                 this.saveSetting({accuracyMargin});
               },
-              onSubmitEditing: ({nativeEvent}) => {
-                this.saveSetting({accuracyMargin});
-              },
               textInputStyle: styles.textInput,
             })}
             {InputNumericBox({
@@ -208,9 +200,6 @@ export default class SettingScreen extends React.Component {
                 console.log('speedMargin onChange', text);
               },
               onEndEditing: () => {
-                this.saveSetting({speedMargin});
-              },
-              onSubmitEditing: ({nativeEvent}) => {
                 this.saveSetting({speedMargin});
               },
               textInputStyle: styles.textInput,
