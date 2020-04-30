@@ -4,6 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 import Database from '../module/database';
 import inputBox from '../view/inputBox';
+import {checkAndAssign} from '../module/util';
 
 export default class SettingScreen extends React.Component {
   state = {
@@ -45,17 +46,16 @@ export default class SettingScreen extends React.Component {
     if (!setting) {
       return;
     }
-    const {period, accuracyMargin, radiusOfArea, speedMargin, email} = setting;
+    const {period, accuracyMargin, radiusOfArea, speedMargin} = this.state;
     this.setState({
-      period: period ? String(period) : this.state.period,
-      accuracyMargin: accuracyMargin
-        ? String(accuracyMargin)
-        : this.state.accuracyMargin,
-      radiusOfArea: radiusOfArea
-        ? String(radiusOfArea)
-        : this.state.radiusOfArea,
-      speedMargin: speedMargin ? String(speedMargin) : this.state.speedMargin,
-      email: email,
+      period: checkAndAssign(String(setting.period), period),
+      accuracyMargin: checkAndAssign(
+        String(setting.accuracyMargin),
+        accuracyMargin,
+      ),
+      radiusOfArea: checkAndAssign(String(setting.radiusOfArea), radiusOfArea),
+      speedMargin: checkAndAssign(String(setting.speedMargin), speedMargin),
+      email: setting.email,
     });
   }
 
@@ -63,14 +63,8 @@ export default class SettingScreen extends React.Component {
     if (!accuracyMargin) {
       return;
     }
-    this.setState({accuracyMargin});
-    const {radiusOfArea, period, speedMargin, email} = this.state;
-    this.saveSetting({
-      period,
-      accuracyMargin,
-      radiusOfArea,
-      speedMargin,
-      email,
+    this.setState({accuracyMargin}, () => {
+      this.saveSetting({accuracyMargin});
     });
   }
 
@@ -78,14 +72,8 @@ export default class SettingScreen extends React.Component {
     if (!period) {
       return;
     }
-    this.setState({period});
-    const {radiusOfArea, accuracyMargin, speedMargin, email} = this.state;
-    this.saveSetting({
-      period,
-      accuracyMargin,
-      radiusOfArea,
-      speedMargin,
-      email,
+    this.setState({period}, () => {
+      this.saveSetting({period});
     });
   }
 
@@ -93,14 +81,8 @@ export default class SettingScreen extends React.Component {
     if (!radiusOfArea) {
       return;
     }
-    this.setState({radiusOfArea});
-    const {period, accuracyMargin, speedMargin, email} = this.state;
-    this.saveSetting({
-      period,
-      accuracyMargin,
-      radiusOfArea,
-      speedMargin,
-      email,
+    this.setState({radiusOfArea}, () => {
+      this.saveSetting({radiusOfArea});
     });
   }
 
@@ -108,14 +90,8 @@ export default class SettingScreen extends React.Component {
     if (!speedMargin) {
       return;
     }
-    this.setState({speedMargin});
-    const {period, accuracyMargin, radiusOfArea, email} = this.state;
-    this.saveSetting({
-      period,
-      accuracyMargin,
-      radiusOfArea,
-      speedMargin,
-      email,
+    this.setState({speedMargin}, () => {
+      this.saveSetting({speedMargin});
     });
   }
 
@@ -123,26 +99,27 @@ export default class SettingScreen extends React.Component {
     if (!email) {
       return;
     }
-    this.setState({email});
-    const {period, accuracyMargin, radiusOfArea, speedMargin} = this.state;
-    this.saveSetting({
-      period,
-      accuracyMargin,
-      radiusOfArea,
-      speedMargin,
-      email,
+    this.setState({email}, () => {
+      this.saveSetting({email});
     });
   }
 
   saveSetting(setting) {
     const {realm} = this.state;
+    const {
+      period,
+      accuracyMargin,
+      radiusOfArea,
+      speedMargin,
+      email,
+    } = this.state;
     Database.saveSetting(
       realm,
-      setting.period,
-      setting.accuracyMargin,
-      setting.radiusOfArea,
-      setting.speedMargin,
-      setting.email,
+      checkAndAssign(setting.period, period),
+      checkAndAssign(setting.accuracyMargin, accuracyMargin),
+      checkAndAssign(setting.radiusOfArea, radiusOfArea),
+      checkAndAssign(setting.speedMargin, speedMargin),
+      checkAndAssign(setting.email, email),
     )
       .then(newSetting => {
         console.log(newSetting);

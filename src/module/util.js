@@ -406,3 +406,7 @@ export const combineAddress = addressList => {
 export function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
+
+export const checkAndAssign = (value, defaultValue = null) => {
+  return value ? value : defaultValue;
+};
