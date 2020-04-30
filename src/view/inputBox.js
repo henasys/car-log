@@ -7,7 +7,9 @@ const inputBox = props => {
       <Text style={styles.textInputLabel}>{props.label}</Text>
       <TextInput
         style={props.textInputStyle ? props.textInputStyle : styles.textInput}
-        onChangeText={text => props.onChangeTextHandler(text)}
+        onChangeText={props.onChangeText}
+        onEndEditing={props.onEndEditing}
+        onSubmitEditing={props.onSubmitEditing}
         defaultValue={props.defaultValue}
         keyboardType="numeric"
       />

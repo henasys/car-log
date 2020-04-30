@@ -85,19 +85,19 @@ export default function SearchScreen(props) {
             label: '영역반경 ≤',
             unitLabel: 'm',
             defaultValue: radiusOfArea,
-            onChangeTextHandler: setRadiusOfArea,
+            onChangeText: setRadiusOfArea,
           })}
           {inputBox({
             label: '정차시간 ≥',
             unitLabel: 'min',
             defaultValue: period,
-            onChangeTextHandler: setPeriod,
+            onChangeText: setPeriod,
           })}
           {inputBox({
             label: 'GPS 정확도 ≤',
             unitLabel: 'm',
             defaultValue: accuracyMargin,
-            onChangeTextHandler: setAccuracyMargin,
+            onChangeText: setAccuracyMargin,
           })}
         </View>
         <Icon

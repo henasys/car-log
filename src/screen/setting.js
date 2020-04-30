@@ -63,45 +63,35 @@ export default class SettingScreen extends React.Component {
     if (!accuracyMargin) {
       return;
     }
-    this.setState({accuracyMargin}, () => {
-      this.saveSetting({accuracyMargin});
-    });
+    this.setState({accuracyMargin});
   }
 
   setPeriod(period) {
     if (!period) {
       return;
     }
-    this.setState({period}, () => {
-      this.saveSetting({period});
-    });
+    this.setState({period});
   }
 
   setRadiusOfArea(radiusOfArea) {
     if (!radiusOfArea) {
       return;
     }
-    this.setState({radiusOfArea}, () => {
-      this.saveSetting({radiusOfArea});
-    });
+    this.setState({radiusOfArea});
   }
 
   setSpeedMargin(speedMargin) {
     if (!speedMargin) {
       return;
     }
-    this.setState({speedMargin}, () => {
-      this.saveSetting({speedMargin});
-    });
+    this.setState({speedMargin});
   }
 
   setEmail(email) {
     if (!email) {
       return;
     }
-    this.setState({email}, () => {
-      this.saveSetting({email});
-    });
+    this.setState({email});
   }
 
   saveSetting(setting) {
@@ -147,6 +137,12 @@ export default class SettingScreen extends React.Component {
               onChangeText={text => {
                 this.setEmail(text);
               }}
+              onEndEditing={() => {
+                this.saveSetting({email});
+              }}
+              onSubmitEditing={({nativeEvent}) => {
+                this.saveSetting({email});
+              }}
               defaultValue={email}
               placeholder={'abc@example.org'}
               keyboardType="email-address"
@@ -159,9 +155,15 @@ export default class SettingScreen extends React.Component {
               label: '영역반경 ≤',
               unitLabel: 'm',
               defaultValue: radiusOfArea,
-              onChangeTextHandler: text => {
+              onChangeText: text => {
                 this.setRadiusOfArea(text);
-                console.log('radiusOfArea onChange');
+                console.log('radiusOfArea onChange', text);
+              },
+              onEndEditing: () => {
+                this.saveSetting({radiusOfArea});
+              },
+              onSubmitEditing: ({nativeEvent}) => {
+                this.saveSetting({radiusOfArea});
               },
               textInputStyle: styles.textInput,
             })}
@@ -169,9 +171,15 @@ export default class SettingScreen extends React.Component {
               label: '정차시간 ≥',
               unitLabel: '분',
               defaultValue: period,
-              onChangeTextHandler: text => {
+              onChangeText: text => {
                 this.setPeriod(text);
-                console.log('period onChange');
+                console.log('period onChange', text);
+              },
+              onEndEditing: () => {
+                this.saveSetting({period});
+              },
+              onSubmitEditing: ({nativeEvent}) => {
+                this.saveSetting({period});
               },
               textInputStyle: styles.textInput,
             })}
@@ -179,9 +187,15 @@ export default class SettingScreen extends React.Component {
               label: 'Accuracy ≤',
               unitLabel: 'm',
               defaultValue: accuracyMargin,
-              onChangeTextHandler: text => {
+              onChangeText: text => {
                 this.setAccuracyMargin(text);
-                console.log('accuracyMargin onChange');
+                console.log('accuracyMargin onChange', text);
+              },
+              onEndEditing: () => {
+                this.saveSetting({accuracyMargin});
+              },
+              onSubmitEditing: ({nativeEvent}) => {
+                this.saveSetting({accuracyMargin});
               },
               textInputStyle: styles.textInput,
             })}
@@ -189,9 +203,15 @@ export default class SettingScreen extends React.Component {
               label: 'GPS Speed ≥',
               unitLabel: 'm/s',
               defaultValue: speedMargin,
-              onChangeTextHandler: text => {
+              onChangeText: text => {
                 this.setSpeedMargin(text);
-                console.log('speedMargin onChange');
+                console.log('speedMargin onChange', text);
+              },
+              onEndEditing: () => {
+                this.saveSetting({speedMargin});
+              },
+              onSubmitEditing: ({nativeEvent}) => {
+                this.saveSetting({speedMargin});
               },
               textInputStyle: styles.textInput,
             })}
