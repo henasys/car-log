@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, StyleSheet, TextInput} from 'react-native';
 
-const inputBox = props => {
+const InputNumericBox = props => {
   return (
     <View style={styles.inputBoxContainer}>
       <Text style={styles.textInputLabel}>{props.label}</Text>
@@ -36,4 +36,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default inputBox;
+export default InputNumericBox;

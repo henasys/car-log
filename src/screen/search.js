@@ -7,7 +7,7 @@ import {Icon} from 'react-native-elements';
 import Database from '../module/database';
 import {msToTime, timeToDate, timeToWeek, timeToHourMin} from '../module/util';
 import {toFixed} from '../module/util';
-import inputBox from '../view/inputBox';
+import InputNumericBox from '../view/inputNumericBox';
 import {TripDetector} from '../module/detector';
 
 const renderItem = item => {
@@ -81,19 +81,19 @@ export default function SearchScreen(props) {
     <SafeAreaView style={styles.container}>
       <View style={styles.inputContainer}>
         <View style={{justifyContent: 'center', alignItems: 'flex-start'}}>
-          {inputBox({
+          {InputNumericBox({
             label: '영역반경 ≤',
             unitLabel: 'm',
             defaultValue: radiusOfArea,
             onChangeText: setRadiusOfArea,
           })}
-          {inputBox({
+          {InputNumericBox({
             label: '정차시간 ≥',
             unitLabel: 'min',
             defaultValue: period,
             onChangeText: setPeriod,
           })}
-          {inputBox({
+          {InputNumericBox({
             label: 'GPS 정확도 ≤',
             unitLabel: 'm',
             defaultValue: accuracyMargin,

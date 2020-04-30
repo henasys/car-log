@@ -3,7 +3,7 @@ import {Text, View, StyleSheet, TextInput, ScrollView} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import Database from '../module/database';
-import inputBox from '../view/inputBox';
+import InputNumericBox from '../view/inputNumericBox';
 import {checkAndAssign} from '../module/util';
 
 export default class SettingScreen extends React.Component {
@@ -151,7 +151,7 @@ export default class SettingScreen extends React.Component {
           </View>
           <Text style={styles.sectionLabel}>{'출발점 검출 기준'}</Text>
           <View style={styles.inputContainer}>
-            {inputBox({
+            {InputNumericBox({
               label: '영역반경 ≤',
               unitLabel: 'm',
               defaultValue: radiusOfArea,
@@ -167,7 +167,7 @@ export default class SettingScreen extends React.Component {
               },
               textInputStyle: styles.textInput,
             })}
-            {inputBox({
+            {InputNumericBox({
               label: '정차시간 ≥',
               unitLabel: '분',
               defaultValue: period,
@@ -183,7 +183,7 @@ export default class SettingScreen extends React.Component {
               },
               textInputStyle: styles.textInput,
             })}
-            {inputBox({
+            {InputNumericBox({
               label: 'Accuracy ≤',
               unitLabel: 'm',
               defaultValue: accuracyMargin,
@@ -199,7 +199,7 @@ export default class SettingScreen extends React.Component {
               },
               textInputStyle: styles.textInput,
             })}
-            {inputBox({
+            {InputNumericBox({
               label: 'GPS Speed ≥',
               unitLabel: 'm/s',
               defaultValue: speedMargin,
