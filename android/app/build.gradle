@@ -167,6 +167,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode generateVersionCode()
         versionName generateVersionName()
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -252,6 +253,8 @@ dependencies {
 
     implementation "com.google.firebase:firebase-analytics:17.2.3"
     implementation "com.google.firebase:firebase-crashlytics:17.0.0-beta02"
+
+    implementation "com.android.support:multidex:1.0.3"
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
