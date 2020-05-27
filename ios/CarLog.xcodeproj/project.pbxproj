@@ -17,6 +17,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* CarLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* CarLogTests.m */; };
 		433DA05B247E406B008436CC /* CarLogUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433DA05A247E406B008436CC /* CarLogUITests.swift */; };
+		433DA063247E40FF008436CC /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433DA062247E40FF008436CC /* SnapshotHelper.swift */; };
 		82C4B06336E8E7A20F87EFE4 /* libPods-CarLog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 85B1B0DBB9286EF6CE12167C /* libPods-CarLog.a */; };
 		82ECE31E6F7B15496CB44452 /* libPods-CarLog-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FDBBCF9DC484AC48CBA0B966 /* libPods-CarLog-tvOS.a */; };
 		C2F83BA5C19F2AFF1C3CC129 /* libPods-CarLog-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 863A40FBEFB3E428CCC98678 /* libPods-CarLog-tvOSTests.a */; };
@@ -69,6 +70,7 @@
 		433DA058247E406B008436CC /* CarLogUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CarLogUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		433DA05A247E406B008436CC /* CarLogUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarLogUITests.swift; sourceTree = "<group>"; };
 		433DA05C247E406B008436CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		433DA062247E40FF008436CC /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = fastlane/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
 		44664F286E9106E326D8B49A /* libPods-CarLog-CarLogTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CarLog-CarLogTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		85B1B0DBB9286EF6CE12167C /* libPods-CarLog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CarLog.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		863A40FBEFB3E428CCC98678 /* libPods-CarLog-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CarLog-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,6 +174,7 @@
 		433DA059247E406B008436CC /* CarLogUITests */ = {
 			isa = PBXGroup;
 			children = (
+				433DA062247E40FF008436CC /* SnapshotHelper.swift */,
 				433DA05A247E406B008436CC /* CarLogUITests.swift */,
 				433DA05C247E406B008436CC /* Info.plist */,
 			);
@@ -731,6 +734,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				433DA05B247E406B008436CC /* CarLogUITests.swift in Sources */,
+				433DA063247E40FF008436CC /* SnapshotHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
