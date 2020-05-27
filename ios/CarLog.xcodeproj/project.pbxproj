@@ -16,6 +16,7 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* CarLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* CarLogTests.m */; };
+		433DA05B247E406B008436CC /* CarLogUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433DA05A247E406B008436CC /* CarLogUITests.swift */; };
 		82C4B06336E8E7A20F87EFE4 /* libPods-CarLog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 85B1B0DBB9286EF6CE12167C /* libPods-CarLog.a */; };
 		82ECE31E6F7B15496CB44452 /* libPods-CarLog-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FDBBCF9DC484AC48CBA0B966 /* libPods-CarLog-tvOS.a */; };
 		C2F83BA5C19F2AFF1C3CC129 /* libPods-CarLog-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 863A40FBEFB3E428CCC98678 /* libPods-CarLog-tvOSTests.a */; };
@@ -36,6 +37,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "CarLog-tvOS";
+		};
+		433DA05D247E406B008436CC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
+			remoteInfo = CarLog;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -58,6 +66,9 @@
 		36F5E136C4218961F020EC3B /* Pods-CarLog-CarLogTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarLog-CarLogTests.debug.xcconfig"; path = "Target Support Files/Pods-CarLog-CarLogTests/Pods-CarLog-CarLogTests.debug.xcconfig"; sourceTree = "<group>"; };
 		3A6781D3B0F1A93C6DCFBA14 /* Pods-CarLog-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarLog-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-CarLog-tvOSTests/Pods-CarLog-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		4289CACAC2A2E6B258289D5A /* Pods-CarLog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarLog.release.xcconfig"; path = "Target Support Files/Pods-CarLog/Pods-CarLog.release.xcconfig"; sourceTree = "<group>"; };
+		433DA058247E406B008436CC /* CarLogUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CarLogUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		433DA05A247E406B008436CC /* CarLogUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarLogUITests.swift; sourceTree = "<group>"; };
+		433DA05C247E406B008436CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44664F286E9106E326D8B49A /* libPods-CarLog-CarLogTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CarLog-CarLogTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		85B1B0DBB9286EF6CE12167C /* libPods-CarLog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CarLog.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		863A40FBEFB3E428CCC98678 /* libPods-CarLog-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CarLog-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +112,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2F83BA5C19F2AFF1C3CC129 /* libPods-CarLog-tvOSTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		433DA055247E406B008436CC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,6 +169,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		433DA059247E406B008436CC /* CarLogUITests */ = {
+			isa = PBXGroup;
+			children = (
+				433DA05A247E406B008436CC /* CarLogUITests.swift */,
+				433DA05C247E406B008436CC /* Info.plist */,
+			);
+			path = CarLogUITests;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +191,7 @@
 				13B07FAE1A68108700A75B9A /* CarLog */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* CarLogTests */,
+				433DA059247E406B008436CC /* CarLogUITests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D7098592C5549FAFBEE66F9C /* Pods */,
@@ -181,6 +209,7 @@
 				00E356EE1AD99517003FC87E /* CarLogTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* CarLog-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* CarLog-tvOSTests.xctest */,
+				433DA058247E406B008436CC /* CarLogUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -292,12 +321,31 @@
 			productReference = 2D02E4901E0B4A5D006451C7 /* CarLog-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		433DA057247E406B008436CC /* CarLogUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 433DA061247E406B008436CC /* Build configuration list for PBXNativeTarget "CarLogUITests" */;
+			buildPhases = (
+				433DA054247E406B008436CC /* Sources */,
+				433DA055247E406B008436CC /* Frameworks */,
+				433DA056247E406B008436CC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				433DA05E247E406B008436CC /* PBXTargetDependency */,
+			);
+			name = CarLogUITests;
+			productName = CarLogUITests;
+			productReference = 433DA058247E406B008436CC /* CarLogUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1150;
 				LastUpgradeCheck = 940;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
@@ -317,6 +365,12 @@
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
+					};
+					433DA057247E406B008436CC = {
+						CreatedOnToolsVersion = 11.5;
+						DevelopmentTeam = 8CNAK8DRQG;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 				};
 			};
@@ -338,6 +392,7 @@
 				00E356ED1AD99517003FC87E /* CarLogTests */,
 				2D02E47A1E0B4A5D006451C7 /* CarLog-tvOS */,
 				2D02E48F1E0B4A5D006451C7 /* CarLog-tvOSTests */,
+				433DA057247E406B008436CC /* CarLogUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -368,6 +423,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2D02E48E1E0B4A5D006451C7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		433DA056247E406B008436CC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -664,6 +726,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		433DA054247E406B008436CC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				433DA05B247E406B008436CC /* CarLogUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -676,6 +746,11 @@
 			isa = PBXTargetDependency;
 			target = 2D02E47A1E0B4A5D006451C7 /* CarLog-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
+		};
+		433DA05E247E406B008436CC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 13B07F861A680F5B00A75B9A /* CarLog */;
+			targetProxy = 433DA05D247E406B008436CC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -926,6 +1001,61 @@
 			};
 			name = Release;
 		};
+		433DA05F247E406B008436CC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8CNAK8DRQG;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = CarLogUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.henasys.app.booklover.CarLogUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CarLog;
+			};
+			name = Debug;
+		};
+		433DA060247E406B008436CC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8CNAK8DRQG;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = CarLogUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.henasys.app.booklover.CarLogUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CarLog;
+			};
+			name = Release;
+		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1072,6 +1202,15 @@
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
 				2D02E49A1E0B4A5E006451C7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		433DA061247E406B008436CC /* Build configuration list for PBXNativeTarget "CarLogUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				433DA05F247E406B008436CC /* Debug */,
+				433DA060247E406B008436CC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
