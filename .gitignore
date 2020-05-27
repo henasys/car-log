@@ -79,3 +79,7 @@ __tests__/map/
 
 # keys
 .env
+
+# java
+android/.settings/org.eclipse.buildship.core.prefs
+
