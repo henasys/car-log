@@ -21,6 +21,12 @@
 # The name of the scheme which contains the UI Tests
 # scheme("SchemeName")
 
+languages([
+  "en-US"
+])
+
+scheme "CarLog"
+
 # Where should the resulting screenshots be stored?
 # output_directory("./screenshots")
 
