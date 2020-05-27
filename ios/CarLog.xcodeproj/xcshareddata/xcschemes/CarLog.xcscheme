@@ -48,6 +48,20 @@
                ReferencedContainer = "container:CarLog.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "433DA057247E406B008436CC"
+               BuildableName = "CarLogUITests.xctest"
+               BlueprintName = "CarLogUITests"
+               ReferencedContainer = "container:CarLog.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
