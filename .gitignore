@@ -79,3 +79,11 @@ __tests__/map/
 
 # keys
 .env
+
+# some generated file while gradlew
+android/*.hprof
+android/.project
+android/.settings/org.eclipse.buildship.core.prefs
+android/app/.classpath
+android/app/.project
+android/app/.settings/org.eclipse.buildship.core.prefs
