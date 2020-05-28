@@ -13,7 +13,7 @@ import com.android.build.OutputFile
 
 ext.versionMajor = 0
 ext.versionMinor = 0
-ext.versionPatch = 10
+ext.versionPatch = 11
 ext.versionClassifier = null
 ext.isSnapshot = false
 
@@ -202,7 +202,7 @@ android {
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
-            shrinkResources enableProguardInReleaseBuilds            
+            shrinkResources false            
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
