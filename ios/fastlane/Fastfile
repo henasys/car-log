@@ -16,8 +16,88 @@
 default_platform(:ios)
 
 platform :ios do
+  def get_target()
+    "CarLog"
+  end
+  def get_version()
+    version = get_version_number(target:get_target())
+    build_number = get_build_number()
+    [version, build_number]
+  end
+
+  def display_version()
+    version, build_number = get_version()
+    UI.message("version: #{version}, build_number: #{build_number}")
+  end
+
+  desc "Display version"
+  lane :version do
+    display_version()
+  end
+
+  def increase_version_patch()
+    versionPatch = get_build_number()
+    increment_build_number()
+    increment_version_number(bump_type: "patch")
+    versionPatchPlus = get_build_number()
+    [versionPatch, versionPatchPlus]
+  end
+
+  desc "Increase version patch"
+  lane :increase_patch do
+    version, build_number = get_version()
+    UI.message("version: #{version}, build_number: #{build_number}")
+    prev_patch, current_patch = increase_version_patch()
+    UI.message("patch #{prev_patch} -> #{current_patch}")
+    version, build_number = get_version()
+    UI.message("version: #{version}, build_number: #{build_number}")
+  end
+
+  desc "Set version like 1.2.3"
+  lane :set_version do |options|
+    if options[:version]
+      version = options[:version]
+    else
+      version = prompt(text: "Enter the specific version like 1.2.3): ")
+    end
+    increment_version_number(version_number: version)
+    version, build_number = get_version()
+    UI.message("version: #{version}, build_number: #{build_number}")
+  end
+
+  desc "Set build_number like 10099"
+  lane :set_build_number do |options|
+    if options[:build_number]
+      build_number = options[:build_number]
+    else
+      build_number = prompt(text: "Enter build_number like 10099): ")
+    end
+    increment_build_number(build_number: build_number)
+    version, build_number2 = get_version()
+    UI.message("version: #{version}, build_number: #{build_number2}")
+  end  
+
   desc "Generate new localized screenshots"
   lane :screenshots do
-    capture_screenshots(workspace: "CarLog.xcworkspace", scheme: "CarLog")
+    capture_screenshots(
+      stop_after_first_error: true, 
+      workspace: "#{get_target()}.xcworkspace", 
+      scheme: get_target()
+    )
+  end
+
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    get_certificates
+    get_provisioning_profile
+    display_version()
+    build_app(workspace: "#{get_target()}.xcworkspace", scheme: get_target())
+    upload_to_testflight
+  end
+
+  desc "Push a new release build to the App Store"
+  lane :release do
+    build_app(workspace: "#{get_target()}.xcworkspace", scheme: get_target())
+    upload_to_app_store(skip_metadata: true, skip_screenshots: true)
   end
 end
