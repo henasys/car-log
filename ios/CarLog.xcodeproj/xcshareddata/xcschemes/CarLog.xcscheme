@@ -48,20 +48,6 @@
                ReferencedContainer = "container:CarLog.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "433DA057247E406B008436CC"
-               BuildableName = "CarLogUITests.xctest"
-               BlueprintName = "CarLogUITests"
-               ReferencedContainer = "container:CarLog.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -86,16 +72,6 @@
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
                BuildableName = "CarLogTests.xctest"
                BlueprintName = "CarLogTests"
-               ReferencedContainer = "container:CarLog.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "433DA057247E406B008436CC"
-               BuildableName = "CarLogUITests.xctest"
-               BlueprintName = "CarLogUITests"
                ReferencedContainer = "container:CarLog.xcodeproj">
             </BuildableReference>
          </TestableReference>
