@@ -18,6 +18,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* CarLogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* CarLogTests.m */; };
 		43224F91247E4780004BDE6F /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43224F90247E4780004BDE6F /* SnapshotHelper.swift */; };
 		433DA05B247E406B008436CC /* CarLogUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433DA05A247E406B008436CC /* CarLogUITests.swift */; };
+		43FBADA62482849C00964162 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 43FBADA82482849C00964162 /* InfoPlist.strings */; };
 		82C4B06336E8E7A20F87EFE4 /* libPods-CarLog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 85B1B0DBB9286EF6CE12167C /* libPods-CarLog.a */; };
 		82ECE31E6F7B15496CB44452 /* libPods-CarLog-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FDBBCF9DC484AC48CBA0B966 /* libPods-CarLog-tvOS.a */; };
 		C2F83BA5C19F2AFF1C3CC129 /* libPods-CarLog-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 863A40FBEFB3E428CCC98678 /* libPods-CarLog-tvOSTests.a */; };
@@ -71,6 +72,9 @@
 		433DA058247E406B008436CC /* CarLogUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CarLogUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		433DA05A247E406B008436CC /* CarLogUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarLogUITests.swift; sourceTree = "<group>"; };
 		433DA05C247E406B008436CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		43FBADA72482849C00964162 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		43FBADA9248284C000964162 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		43FBADAA248284C000964162 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		44664F286E9106E326D8B49A /* libPods-CarLog-CarLogTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CarLog-CarLogTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		85B1B0DBB9286EF6CE12167C /* libPods-CarLog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CarLog.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		863A40FBEFB3E428CCC98678 /* libPods-CarLog-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CarLog-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +158,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				43FBADA82482849C00964162 /* InfoPlist.strings */,
 			);
 			name = CarLog;
 			sourceTree = "<group>";
@@ -385,6 +390,7 @@
 				English,
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
@@ -413,6 +419,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				43FBADA62482849C00964162 /* InfoPlist.strings in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -763,8 +770,19 @@
 			isa = PBXVariantGroup;
 			children = (
 				13B07FB21A68108700A75B9A /* Base */,
+				43FBADA9248284C000964162 /* ko */,
 			);
 			name = LaunchScreen.xib;
+			path = CarLog;
+			sourceTree = "<group>";
+		};
+		43FBADA82482849C00964162 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				43FBADA72482849C00964162 /* en */,
+				43FBADAA248284C000964162 /* ko */,
+			);
+			name = InfoPlist.strings;
 			path = CarLog;
 			sourceTree = "<group>";
 		};
