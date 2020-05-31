@@ -74,5 +74,7 @@
 	<string>Used to get location of your vehicle, keep tracks for car tax saving</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Used to get location of your vehicle, keep tracks for car tax saving</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Used to get location of your vehicle, keep tracks for car tax saving</string>
 </dict>
 </plist>
