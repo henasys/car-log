@@ -5881,6 +5881,11 @@ react-native-mail@^4.1.0:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-4.1.0.tgz#2ebe2df2211a84862a3aea77316736189e23435b"
   integrity sha512-3IHQmUQJwFFV7HwDONeIEahhaEvK9u23liqIUQajPy7frk/AoIGhkdKf4FVSTeq+VlUx97qls4uNizP7hBXIIw==
 
+react-native-permissions@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.1.5.tgz#6cfc4f1ab1590f4952299b7cdc9698525ad540e0"
+  integrity sha512-b9KO/4UEV9qddl+kcSybmdk8nlAifclSDBR2rSvc5KZM06vIaJWJNIzK2ZwPXqDQ5yD3CJLuKTRj7Fz+jM9qyQ==
+
 react-native-picker-select@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-6.6.0.tgz#a424e2a68dae228c492684a41745c0194cee01f0"
