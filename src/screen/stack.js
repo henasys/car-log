@@ -16,7 +16,7 @@ import Example from '../screen/swipeable';
 const Stack = createStackNavigator();
 
 const debugView = navigation => {
-  return __DEV__ === true ? (
+  return __DEV__ === false ? (
     <View style={styles.menuContainer}>
       {/* <Icon
         iconStyle={styles.menuItem}
