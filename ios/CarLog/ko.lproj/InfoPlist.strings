@@ -8,3 +8,4 @@
 
 NSLocationWhenInUseUsageDescription = "차량의 위치 정보를 추적하여 세금 절감을 위한 운행 기록부를 작성하는 데 사용합니다.";
 NSLocationAlwaysUsageDescription = "차량의 위치 정보를 추적하여 세금 절감을 위한 운행 기록부를 작성하는 데 사용합니다.";
+NSLocationAlwaysAndWhenInUseUsageDescription = "차량의 위치 정보를 추적하여 세금 절감을 위한 운행 기록부를 작성하는 데 사용합니다.";
