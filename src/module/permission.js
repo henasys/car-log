@@ -114,7 +114,7 @@ const checkPermissionForFineLocation = (
 ) => {
   const permission = Platform.select({
     android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-    ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+    ios: PERMISSIONS.IOS.LOCATION_ALWAYS,
   });
   checkPermission(permission, callback, errorCallback);
 };

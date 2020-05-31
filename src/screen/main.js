@@ -19,6 +19,8 @@ import {toast, toastError} from '../module/toast';
 import {TripDetector} from '../module/detector';
 import FileManager from '../module/file';
 import AndroidBackHandler from '../module/androidBackHandler';
+import Permission from '../module/permission';
+
 import YearPicker from '../view/yearPicker';
 import MonthPicker from '../view/monthPicker';
 import TripList from '../view/tripListSwipeable';
@@ -53,22 +55,34 @@ export default class MainScreen extends React.Component {
 
   componentDidMount() {
     console.log('main componentDidMount');
+    this.initLocator();
     this.initBackHandler();
     this.initDeviceInfo();
     this.openDatabase();
-    this.locator.initLocator(
-      this.handleOnLocation.bind(this),
-      this.handleOnLocationError.bind(this),
-    );
-    this.getCurrentPosition();
   }
 
   componentWillUnmount() {
     console.log('main componentWillUnmount');
+    this.locator.removeLocator();
     this.removeBackHandler();
     this.clearPeriodInterval();
     this.closeDatabase();
-    this.locator.removeLocator();
+  }
+
+  initLocator() {
+    const callback = () => {
+      this.locator.initLocator(
+        this.handleOnLocation.bind(this),
+        this.handleOnLocationError.bind(this),
+      );
+      this.getCurrentPosition();
+    };
+    const errorCallback = code => {
+      const msg = `권한 오류: ${code}`;
+      console.log(msg);
+      toast.show(msg);
+    };
+    Permission.checkPermissionForFineLocation(callback, errorCallback);
   }
 
   initBackHandler() {
@@ -620,7 +634,7 @@ export default class MainScreen extends React.Component {
       const msg = `${error.code}: ${error.message}`;
       toastError(msg);
     };
-    this.locator.getCurrentPosition(callback, errorCallback, this.isEmulator);
+    this.locator.getCurrentPosition(callback, errorCallback);
   }
 
   onEndButton() {
@@ -661,7 +675,7 @@ export default class MainScreen extends React.Component {
       const msg = `${error.code}: ${error.message}`;
       toastError(msg);
     };
-    this.locator.getCurrentPosition(callback, errorCallback, this.isEmulator);
+    this.locator.getCurrentPosition(callback, errorCallback);
   }
 
   updateTripEnd(item, _realm = null) {
