@@ -96,6 +96,10 @@ target 'CarLog' do
   pod 'RNFS', :path => '../node_modules/react-native-fs'
   # pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways.podspec"
+  # pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse.podspec"
+
   # # React-Native is not great about React double-including from the Podfile
   # post_install do |installer|
   #   installer.pods_project.targets.each do |target|
