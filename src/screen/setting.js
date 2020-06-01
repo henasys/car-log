@@ -1,10 +1,13 @@
 import React from 'react';
 import {Text, View, StyleSheet, TextInput, ScrollView} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {Button, Icon} from 'react-native-elements';
+import {openSettings} from 'react-native-permissions';
 
 import Database from '../module/database';
-import InputNumericBox from '../view/inputNumericBox';
 import {checkAndAssign} from '../module/util';
+
+import InputNumericBox from '../view/inputNumericBox';
 
 export default class SettingScreen extends React.Component {
   state = {
@@ -205,6 +208,16 @@ export default class SettingScreen extends React.Component {
               textInputStyle: styles.textInput,
             })}
           </View>
+          <Text style={styles.sectionLabel}>{'앱 권한 설정'}</Text>
+          <View style={styles.inputContainer}>
+            <Button
+              title=" 폰 설정 화면"
+              type="outline"
+              onPress={() => openSettings()}
+              icon={<Icon name="settings" type="material" />}
+            />
+            <View style={styles.spacer} />
+          </View>
         </ScrollView>
       </SafeAreaView>
     );
@@ -214,6 +227,9 @@ export default class SettingScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  spacer: {
+    paddingVertical: 5,
   },
   sectionLabel: {
     fontSize: 18,
