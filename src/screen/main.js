@@ -181,7 +181,7 @@ export default class MainScreen extends React.Component {
       const msg = `init: ${error.code}: ${error.message}`;
       toastError(msg);
     };
-    this.locator.getCurrentPosition(callback, errorCallback);
+    this.locator.getCurrentPosition(callback, errorCallback, this.isEmulator);
   }
 
   initSetting(realm) {
@@ -635,7 +635,7 @@ export default class MainScreen extends React.Component {
       toastError(msg);
     };
     Permission.checkPermissionForFineLocation(() => {
-      this.locator.getCurrentPosition(callback, errorCallback);
+      this.locator.getCurrentPosition(callback, errorCallback, this.isEmulator);
     }, permissionErrorCallback);
   }
 
@@ -677,7 +677,7 @@ export default class MainScreen extends React.Component {
       const msg = `${error.code}: ${error.message}`;
       toastError(msg);
     };
-    this.locator.getCurrentPosition(callback, errorCallback);
+    this.locator.getCurrentPosition(callback, errorCallback, this.isEmulator);
   }
 
   updateTripEnd(item, _realm = null) {
