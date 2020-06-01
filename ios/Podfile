@@ -122,6 +122,19 @@ target 'CarLog' do
 
   use_native_modules!
   
+  # Convert all permission pods into static libraries
+  pre_install do |installer|
+    installer.pod_targets.each do |pod|
+      if pod.name.eql?('RNPermissions') || pod.name.start_with?('Permission-')
+        def pod.build_type;
+          # Uncomment one line depending on your CocoaPods version
+          # Pod::BuildType.static_library # >= 1.9
+          Pod::Target::BuildType.static_library # < 1.9
+        end
+      end
+    end
+  end
+
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
