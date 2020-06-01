@@ -208,7 +208,7 @@ export default class SettingScreen extends React.Component {
               textInputStyle: styles.textInput,
             })}
           </View>
-          <Text style={styles.sectionLabel}>{'앱 권한 설정'}</Text>
+          {/* <Text style={styles.sectionLabel}>{'앱 권한 설정'}</Text>
           <View style={styles.inputContainer}>
             <Button
               title=" 폰 설정 화면"
@@ -217,7 +217,7 @@ export default class SettingScreen extends React.Component {
               icon={<Icon name="settings" type="material" />}
             />
             <View style={styles.spacer} />
-          </View>
+          </View> */}
         </ScrollView>
       </SafeAreaView>
     );
