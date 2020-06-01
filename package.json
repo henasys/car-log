@@ -9,6 +9,7 @@
     "test": "jest",
     "lint": "eslint .",
     "clean-i": "react-native-clean-project",
+    "deep-clean": "./node_modules/.bin/react-native-clean-project --keep-node-modules --remove-iOS-build --keep-brew --keep-pods --remove-iOS-pods --remove-android-build && yarn clean",
     "clean": "rm -rf node_modules && yarn install && watchman watch-del-all && rm -fr $TMPDIR/metro*"
   },
   "dependencies": {
