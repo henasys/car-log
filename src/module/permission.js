@@ -114,7 +114,27 @@ const checkPermissionForFineLocation = (
 ) => {
   const permission = Platform.select({
     android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-    ios: PERMISSIONS.IOS.LOCATION_ALWAYS,
+    ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+    // ios: PERMISSIONS.IOS.LOCATION_ALWAYS,
+  });
+  checkPermission(permission, callback, errorCallback);
+};
+
+const checkPermissionForCamera = (callback = null, errorCallback = null) => {
+  const permission = Platform.select({
+    android: PERMISSIONS.ANDROID.CAMERA,
+    ios: PERMISSIONS.IOS.CAMERA,
+  });
+  checkPermission(permission, callback, errorCallback);
+};
+
+const checkPermissionForPhotoLibray = (
+  callback = null,
+  errorCallback = null,
+) => {
+  const permission = Platform.select({
+    android: PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+    ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
   });
   checkPermission(permission, callback, errorCallback);
 };
@@ -126,4 +146,6 @@ export default {
   checkPermissionForReadExternalStorage,
   checkPermissionForCoarseLocation,
   checkPermissionForFineLocation,
+  checkPermissionForCamera,
+  checkPermissionForPhotoLibray,
 };
