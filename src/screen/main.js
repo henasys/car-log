@@ -28,6 +28,12 @@ import CurrentTrip from '../view/currentTrip2';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 
+const permissionErrorCallback = code => {
+  const msg = `권한 오류: ${code}`;
+  console.log(msg);
+  toastError(msg);
+};
+
 export default class MainScreen extends React.Component {
   state = {
     realm: null,
@@ -70,19 +76,13 @@ export default class MainScreen extends React.Component {
   }
 
   initLocator() {
-    const callback = () => {
+    Permission.checkPermissionForFineLocation(() => {
       this.locator.initLocator(
         this.handleOnLocation.bind(this),
         this.handleOnLocationError.bind(this),
       );
       this.getCurrentPosition();
-    };
-    const errorCallback = code => {
-      const msg = `권한 오류: ${code}`;
-      console.log(msg);
-      toast.show(msg);
-    };
-    Permission.checkPermissionForFineLocation(callback, errorCallback);
+    }, permissionErrorCallback);
   }
 
   initBackHandler() {
@@ -175,7 +175,7 @@ export default class MainScreen extends React.Component {
         return;
       }
       const msg = `init: ${coords.latitude}, ${coords.longitude}`;
-      toast(msg);
+      console.log('getCurrentPosition', msg);
     };
     const errorCallback = error => {
       const msg = `init: ${error.code}: ${error.message}`;
@@ -634,7 +634,9 @@ export default class MainScreen extends React.Component {
       const msg = `${error.code}: ${error.message}`;
       toastError(msg);
     };
-    this.locator.getCurrentPosition(callback, errorCallback);
+    Permission.checkPermissionForFineLocation(() => {
+      this.locator.getCurrentPosition(callback, errorCallback);
+    }, permissionErrorCallback);
   }
 
   onEndButton() {
