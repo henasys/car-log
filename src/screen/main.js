@@ -29,7 +29,7 @@ import CurrentTrip from '../view/currentTrip2';
 YellowBox.ignoreWarnings(['Setting a timer']);
 
 const permissionErrorCallback = code => {
-  const msg = `권한 오류: ${code}`;
+  const msg = `위치 정보 권한 오류: ${code}`;
   console.log(msg);
   toastError(msg);
 };
