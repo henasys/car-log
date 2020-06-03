@@ -69,9 +69,6 @@ default.realm
 # some running file
 android/*.hprof
 
-# Google Firebase
-google-services.json
-
 # data
 __tests__/data/
 __tests__/map/
@@ -88,3 +85,7 @@ android/.settings/org.eclipse.buildship.core.prefs
 android/app/.classpath
 android/app/.project
 android/app/.settings/org.eclipse.buildship.core.prefs
+
+# Firebase
+android/app/google-services.json
+ios/GoogleService-Info.plist
