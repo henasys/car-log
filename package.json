@@ -38,7 +38,7 @@
     "realm": "4.0.0-beta.2",
     "rxjs": "^6.5.4",
     "uuid": "^7.0.3",
-    "xlsx": "^0.15.6"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
